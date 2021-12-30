@@ -110,7 +110,7 @@ void main(void)
     // Set system clock. Remove this line if system clock is already set by STC-ISP
     SYS_SetClock();
     // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200, HAL_State_OFF);
+    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
     // Timer0 configuration: 16-bit auto-reload, interrupt enabled
     TIM_Timer0_Config(HAL_State_ON, TIM_TimerMode_16BitAuto, 1000);
     EXTI_Timer0_SetIntState(HAL_State_ON);

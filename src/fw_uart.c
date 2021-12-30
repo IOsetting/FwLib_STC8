@@ -20,9 +20,11 @@ static const char hexTable[16] = { '0','1','2','3','4','5','6','7','8','9','A','
 char wptr, rptr, UART1_RxBuffer[UART_RX_BUFF_SIZE];
 __bit busy;
 
-/***************************** /
+
+/**************************************************************************** /
  * UART1
 */
+
 int16_t _UART1_Timer_InitValueCalculate(HAL_State_t freq1t, uint32_t baudrate)
 {
     uint32_t value, sysclk = SYS_GetSysClock();
@@ -35,7 +37,7 @@ int16_t _UART1_Timer_InitValueCalculate(HAL_State_t freq1t, uint32_t baudrate)
         return 0xFFFF - value + 1;
 }
 
-void _UART1_ConfigDynUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate, HAL_State_t enableInterrupt)
+void _UART1_ConfigDynUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate)
 {
     uint16_t init = _UART1_Timer_InitValueCalculate(freq1t, baudrate);
     UART1_SetBaudSource(baudSource);
@@ -55,39 +57,29 @@ void _UART1_ConfigDynUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uin
         TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
         TIM_Timer2_SetRunState(HAL_State_ON);
     }
-    if (enableInterrupt)
-    {
-        // Enable UART1 interrupt
-        EXTI_Global_SetIntState(HAL_State_ON);
-        EXTI_UART1_SetIntState(HAL_State_ON);
-        EXTI_UART1_SetIntPriority(EXTI_IntPriority_Highest);
-    }
 }
-
-void UART1_ConfigMode1Dyn8bitUart(
-    UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate, HAL_State_t enableInterrupt)
+void UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate)
 {
     SM0=0; SM1=1;
-    _UART1_ConfigDynUart(baudSource, freq1t, baudrate, enableInterrupt);
+    _UART1_ConfigDynUart(baudSource, freq1t, baudrate);
 }
 
-void UART1_ConfigMode3Dyn9bitUart(
-    UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate, HAL_State_t enableInterrupt)
+void UART1_ConfigMode3Dyn9bitUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate)
 {
     SM0=1; SM1=1;
-    _UART1_ConfigDynUart(baudSource, freq1t, baudrate, enableInterrupt);
+    _UART1_ConfigDynUart(baudSource, freq1t, baudrate);
 }
 
 void UART1_InterruptHandler(void)
 {
     if (TI)
     {
-        TI = 0;
+        UART1_ClearTxInterrupt();
         busy = 0;
     }
     if (RI)
     {
-        RI = 0;
+        UART1_ClearRxInterrupt();
         UART1_RxBuffer[rptr++] = SBUF;
         rptr = rptr % UART_RX_BUFF_SIZE;
     }
@@ -97,7 +89,7 @@ void UART1_IntTxChar(char dat)
 {
     while (busy);
     busy = 1;
-    SBUF = dat;
+    UART1_WriteBuffer(dat);
 }
 
 void UART1_IntTxHex(uint8_t hex)
@@ -113,9 +105,9 @@ void UART1_IntTxString(uint8_t *str)
 
 void UART1_TxChar(char dat)
 {
-    SBUF = dat;
+    UART1_WriteBuffer(dat);
     while(!TI);
-    SBIT_RESET(TI);
+    UART1_ClearTxInterrupt();
 }
 
 void UART1_TxHex(uint8_t hex)
@@ -130,47 +122,24 @@ void UART1_TxString(uint8_t *str)
 }
 
 
-/***************************** /
+/**************************************************************************** /
  * UART2
 */
 
-void _UART2_ConfigDynUart(HAL_State_t freq1t, uint32_t baudrate, HAL_State_t enableInterrupt)
+void UART2_Config(HAL_State_t freq1t, uint32_t baudrate)
 {
     uint16_t init = _UART1_Timer_InitValueCalculate(freq1t, baudrate);
     // Timer2: 1T mode and initial value. prescaler is ignored, no interrupt.
     TIM_Timer2_Set1TMode(freq1t);
     TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
     TIM_Timer2_SetRunState(HAL_State_ON);
-    if (enableInterrupt)
-    {
-        // Enable UART1 interrupt
-        EXTI_Global_SetIntState(HAL_State_ON);
-        EXTI_UART2_SetIntState(HAL_State_ON);
-        EXTI_UART2_SetIntPriority(EXTI_IntPriority_Highest);
-    }
-}
-
-void UART2_ConfigMode0Dyn8bitUart(
-    HAL_State_t freq1t, uint32_t baudrate, HAL_State_t enableInterrupt)
-{
-    SFR_RESET(S2CON, 7);
-    _UART2_ConfigDynUart(freq1t, baudrate, enableInterrupt);
-}
-/**
- * Mode1: 9-bit UART, dynamic baud-rate, provided by Timer2
-*/
-void UART2_ConfigMode1Dyn9bitUart(
-    HAL_State_t freq1t, uint32_t baudrate, HAL_State_t enableInterrupt)
-{
-    SFR_SET(S2CON, 7);
-    _UART2_ConfigDynUart(freq1t, baudrate, enableInterrupt);
 }
 
 void UART2_TxChar(char dat)
 {
-    S2BUF = dat;
-    while(!(S2CON & B00000010));
-    SFR_RESET(S2CON, 1);
+    UART2_WriteBuffer(dat);
+    while(!UART2_TxFinished());
+    UART2_ClearTxInterrupt();
 }
 
 void UART2_TxHex(uint8_t hex)
@@ -182,4 +151,52 @@ void UART2_TxHex(uint8_t hex)
 void UART2_TxString(uint8_t *str)
 {
     while (*str) UART2_TxChar(*str++);
+}
+
+
+/**************************************************************************** /
+ * UART3
+*/
+
+void UART3_ConfigOnTimer2(HAL_State_t freq1t, uint32_t baudrate)
+{
+    UART3_SetBaudSource(0x00);
+    uint16_t init = _UART1_Timer_InitValueCalculate(freq1t, baudrate);
+    // Timer2: 1T mode and initial value. prescaler is ignored, no interrupt.
+    TIM_Timer2_Set1TMode(freq1t);
+    TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
+    TIM_Timer2_SetRunState(HAL_State_ON);
+}
+
+void UART3_ConfigOnTimer3(HAL_State_t freq1t, uint32_t baudrate)
+{
+    UART3_SetBaudSource(0x01);
+    uint16_t init = _UART1_Timer_InitValueCalculate(freq1t, baudrate);
+    // Timer3: 1T mode and initial value. prescaler is ignored, no interrupt.
+    TIM_Timer3_Set1TMode(freq1t);
+    TIM_Timer3_SetInitValue(init >> 8, init & 0xFF);
+    TIM_Timer3_SetRunState(HAL_State_ON);
+}
+
+
+/**************************************************************************** /
+ * UART4
+*/
+
+void UART4_ConfigOnTimer2(HAL_State_t freq1t, uint32_t baudrate)
+{
+    UART4_SetBaudSource(0x00);
+    uint16_t init = _UART1_Timer_InitValueCalculate(freq1t, baudrate);
+    TIM_Timer2_Set1TMode(freq1t);
+    TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
+    TIM_Timer2_SetRunState(HAL_State_ON);
+}
+
+void UART4_ConfigOnTimer4(HAL_State_t freq1t, uint32_t baudrate)
+{
+    UART4_SetBaudSource(0x01);
+    uint16_t init = _UART1_Timer_InitValueCalculate(freq1t, baudrate);
+    TIM_Timer4_Set1TMode(freq1t);
+    TIM_Timer4_SetInitValue(init >> 8, init & 0xFF);
+    TIM_Timer4_SetRunState(HAL_State_ON);
 }
