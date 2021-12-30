@@ -59,11 +59,11 @@
 #endif
 
 #ifndef __CONF_VRTRIM
-    #define __CONF_VRTRIM 0x20
+    #define __CONF_VRTRIM 0x00
 #endif
 
 #ifndef __CONF_IRTRIM
-    #define __CONF_IRTRIM 0xC8
+    #define __CONF_IRTRIM 0x00
 #endif
 
 #ifndef __CONF_LIRTRIM
