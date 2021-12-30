@@ -42,7 +42,7 @@
     # define SFR16X(addr)             (*(unsigned char volatile *)(addr))
     #define INTERRUPT(name, vector) void name (void) 
     #define INTERRUPT_USING(name, vector, regnum) void name (void)
-    #define NOP() ()
+    #define NOP() 
 
 #endif
 

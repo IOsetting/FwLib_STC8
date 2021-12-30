@@ -23,6 +23,7 @@
 #include "fw_gpio.h"
 #include "fw_tim.h"
 #include "fw_uart.h"
+#include "fw_adc.h"
 #include "fw_util.h"
 
 #endif

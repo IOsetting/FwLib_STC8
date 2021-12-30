@@ -19,8 +19,9 @@
 #include "fw_types.h"
 
 #define ADC_SetPowerState(__STATE__)        SFR_ASSIGN(ADC_CONTR, 7, __STATE__)
-#define ADC_Start                           SFR_SET(ADC_CONTR, 6)
-#define ADC_ClearInterrupt                  SFR_RESET(ADC_CONTR, 5)
+#define ADC_Start()                         SFR_SET(ADC_CONTR, 6)
+#define ADC_SamplingUnfinished()            (ADC_CONTR & (0x01 << 5))
+#define ADC_ClearInterrupt()                SFR_RESET(ADC_CONTR, 5)
 #define ADC_SetPWMTriggerState(__STATE__)   SFR_ASSIGN(ADC_CONTR, 4, __STATE__)
 /**
  * ADC input channels selection
@@ -53,8 +54,8 @@
  * 10-bit in [ADC_RES,ADC_RESL]: STC8H1K28,STC8H1K08
  * 12-bit in [ADC_RES,ADC_RESL]: STC8H3K64S4,STC8H3K64S2,STC8H8K64U,STC8H2K64T,STC8H4K64TLR,STC8H4K64TLCD,STC8H4K64LCD
 */
-#define ADC_SetResultAlignmentLeft          SFR_RESET(ADCCFG, 5)
-#define ADC_SetResultAlignmentright         SFR_SET(ADCCFG, 5)
+#define ADC_SetResultAlignmentLeft()        SFR_RESET(ADCCFG, 5)
+#define ADC_SetResultAlignmentRight()       SFR_SET(ADCCFG, 5)
 
 /**
  * ADC conversion speed calculation:
