@@ -20,7 +20,7 @@
 
 #define ADC_SetPowerState(__STATE__)        SFR_ASSIGN(ADC_CONTR, 7, __STATE__)
 #define ADC_Start()                         SFR_SET(ADC_CONTR, 6)
-#define ADC_SamplingUnfinished()            (ADC_CONTR & (0x01 << 5))
+#define ADC_SamplingFinished()              (ADC_CONTR & (0x01 << 5))
 #define ADC_ClearInterrupt()                SFR_RESET(ADC_CONTR, 5)
 #define ADC_SetPWMTriggerState(__STATE__)   SFR_ASSIGN(ADC_CONTR, 4, __STATE__)
 /**

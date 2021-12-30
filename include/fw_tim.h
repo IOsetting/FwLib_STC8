@@ -27,6 +27,7 @@ typedef enum
     TIM_TimerMode_16BitAutoNoInt    = 0x03    // Uninterruptable 16-bit auto-reload, Timer0 only
 } TIM_TimerMode_t;
 
+int16_t TIM_Timer0n1_CalculateInitValue(uint16_t frequency, HAL_State_t freq1t, uint16_t limit);
 
 /***************************** /
  * Timer 0
@@ -42,12 +43,7 @@ typedef enum
 #define TIM_Timer0_SetMode(__TIM_TIMER_MODE__)  (TMOD = TMOD & ~(0x03 << 0) | ((__TIM_TIMER_MODE__) << 0))
 #define TIM_Timer0_SetInitValue(__TH__, __TL__)  do{ TH0 = (__TH__); TL0 = (__TL__); }while(0)
 
-void TIM_Timer0_Config(
-    HAL_State_t freq1t,
-    TIM_TimerMode_t mode,
-    uint16_t frequency,
-    HAL_State_t intState,
-    EXTI_IntPriority_t intPriority);
+void TIM_Timer0_Config(HAL_State_t freq1t, TIM_TimerMode_t mode, uint16_t frequency);
 
 
 /***************************** /
@@ -64,12 +60,7 @@ void TIM_Timer0_Config(
 #define TIM_Timer1_SetMode(__TIM_TIMER_MODE__)  (TMOD = TMOD & ~(0x03 << 4) | ((__TIM_TIMER_MODE__) << 4))
 #define TIM_Timer1_SetInitValue(__TH__, __TL__)  do{ TH1 = (__TH__); TL1 = (__TL__); }while(0)
 
-void TIM_Timer1_Config(
-    HAL_State_t freq1t,
-    TIM_TimerMode_t mode,
-    uint16_t frequency,
-    HAL_State_t intState,
-    EXTI_IntPriority_t intPriority);
+void TIM_Timer1_Config(HAL_State_t freq1t, TIM_TimerMode_t mode, uint16_t frequency);
 
 
 /***************************** /
@@ -92,7 +83,7 @@ void TIM_Timer1_Config(
 // Timer2 Prescaler: [0, 255]
 #define TIM_Timer2_SetPreScaler(__PRE__)  do{P_SW2 = 0x80; TM2PS = (__PRE__); P_SW2 = 0x00;}while(0)
 
-void TIM_Timer2_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency, HAL_State_t intState);
+void TIM_Timer2_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency);
 
 
 /***************************** /

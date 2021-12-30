@@ -54,6 +54,10 @@
     #define __CONF_FOSC 24000000UL
 #endif
 
+#ifndef __CONF_CLKDIV
+    #define __CONF_CLKDIV 0x00
+#endif
+
 #ifndef __CONF_IRCBAND
     #define __CONF_IRCBAND 0x00
 #endif

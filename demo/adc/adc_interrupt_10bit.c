@@ -42,8 +42,7 @@ INTERRUPT(ADC_Routine, EXTI_VectADC)
 
 void main(void)
 {
-    
-    SYS_Init();
+    SYS_SetClock();
     // For debug print
     UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200, HAL_State_OFF);
     // Set ADC1(GPIO P1.1) HIP

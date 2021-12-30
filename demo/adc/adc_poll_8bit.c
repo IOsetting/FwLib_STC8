@@ -32,7 +32,7 @@
 void main(void)
 {
     uint8_t res;
-    SYS_Init();
+    SYS_SetClock();
     // For debug print
     UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200, HAL_State_OFF);
     // Set ADC1(GPIO P1.1) HIP
@@ -51,7 +51,7 @@ void main(void)
         ADC_Start();
         NOP();
         NOP();
-        while (!ADC_SamplingUnfinished());
+        while (!ADC_SamplingFinished());
         ADC_ClearInterrupt();
         res = ADC_RES;
 

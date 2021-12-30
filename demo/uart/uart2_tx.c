@@ -2,7 +2,8 @@
 
 void main(void)
 {
-    SYS_Init();
+    SYS_SetClock();
+    // UART2, baud 115200, baud source Timer2, 1T mode, no interrupt
     UART2_ConfigMode0Dyn8bitUart(HAL_State_ON, 115200, HAL_State_OFF);
     while(1)
     {

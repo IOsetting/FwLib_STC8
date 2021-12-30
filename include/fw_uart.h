@@ -30,6 +30,14 @@ typedef enum
     UART1_BaudSource_Timer2 = 0x01,
 } UART1_BaudSource_t;
 
+typedef enum
+{
+    UART1_AlterPort_P30_P31      = 0x00,
+    UART1_AlterPort_P36_P37      = 0x01,
+    UART1_AlterPort_P16_P17      = 0x10,
+    UART1_AlterPort_P43_P44      = 0x11,
+} UART1_AlterPort_t;
+
 #define UART1_SetRxState(__STATE__)         SBIT_ASSIGN(REN, __STATE__)
 #define UART1_ClearTxInterrupt              SBIT_RESET(TI)
 #define UART1_ClearRxInterrupt              SBIT_RESET(RI)
@@ -48,6 +56,10 @@ typedef enum
 */
 #define UART1_ConfigMode2Fixed9bitUart(__STATE__)            do{ SM0=1; SM1=0; SFR_ASSIGN(PCON, 7, __STATE__);}while(0)
 #define UART1_SetTimer1Mode2Baudx2(__STATE__)   SFR_ASSIGN(PCON, 7, __STATE__)
+/**
+ * Alternative port selection: P30/P31, P36/P37, P16/P17, P43/P44
+*/
+#define UART1_SwitchPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 6) | ((__ALTER_PORT__) << 6))
 /**
  * Mode1: 8-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
 */

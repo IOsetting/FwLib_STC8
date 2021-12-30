@@ -18,16 +18,26 @@ static const uint16_t ticks_ms = (__CONF_FOSC / (float)1000 / 13 - 46);
 static const uint8_t ticks_us = (__CONF_FOSC / (float)12100000UL);
 static uint8_t clkdiv = 0x1;
 
-void SYS_Init(void)
+/**
+ * Change system clock
+ * - invoke this in the beginning of code
+ * - don't invoke this if the target frequency is already set by STC-ISP
+*/
+void SYS_SetClock(void)
 {
-    if (__CONF_IRCBAND != 0x00 || __CONF_VRTRIM != 0x00 || __CONF_IRTRIM != 0x00)
+    uint16_t i = 0; uint8_t j = 5;
+    P_SW2 = 0x80;
+    if (CLKDIV != (__CONF_CLKDIV))
     {
-        SYS_SetSysClkDiv(0);
-        SYS_SetFOSC(__CONF_IRCBAND, __CONF_VRTRIM, __CONF_IRTRIM, __CONF_LIRTRIM);
-        // Wait a while till sysclk stable, or it may block the main process
-        uint16_t i = ticks_ms;
-        while (--i);
+        CLKDIV = (__CONF_CLKDIV);
+        do { // Wait a while after clock changed, or it may block the main process
+            while (--i);
+        } while (--j);
     }
+    P_SW2 = 0x00;
+    clkdiv = (__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV;
+    SYS_SetFOSC(__CONF_IRCBAND, __CONF_VRTRIM, __CONF_IRTRIM, __CONF_LIRTRIM);
+    while (--i); // Wait
 }
 
 void SYS_Delay(uint16_t t)
@@ -50,15 +60,7 @@ void SYS_DelayUs(uint16_t t)
     } while (--t);
 }
 
-void SYS_SetSysClkDiv(uint8_t div)
-{
-    P_SW2 = 0x80;
-	CLKDIV = div;
-	P_SW2 = 0x00;
-    clkdiv = (div == 0)? 1 : div;
-}
-
-uint32_t SYS_GetSysClk(void)
+uint32_t SYS_GetSysClock(void)
 {
     return ((uint32_t)__CONF_FOSC) / clkdiv;
 }

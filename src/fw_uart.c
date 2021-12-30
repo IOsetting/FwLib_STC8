@@ -25,7 +25,7 @@ __bit busy;
 */
 int16_t _UART1_Timer_InitValueCalculate(HAL_State_t freq1t, uint32_t baudrate)
 {
-    uint32_t value, sysclk = SYS_GetSysClk();
+    uint32_t value, sysclk = SYS_GetSysClock();
     value = sysclk / (4 * baudrate);
     if (!freq1t)
         value = value / 12;

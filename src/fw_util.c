@@ -100,6 +100,7 @@ void UTIL_Uart1_36M864_115200_Init(void)
 	TR1 = 1;
 }
 
+/*
 void UTIL_ItrimScan(uint8_t ircband, uint8_t *str)
 {
 	uint8_t i = 0xFF, j;
@@ -114,14 +115,14 @@ void UTIL_ItrimScan(uint8_t ircband, uint8_t *str)
 		{
 			SYS_SetFOSC(ircband, 0, i, j);
             SYS_Delay(1);
-			// UTIL_PrintHex(IRCBAND);
-			// UTIL_PrintChar(' ');
-			// UTIL_PrintHex(IRTRIM);
-			// UTIL_PrintChar(0x20);
-			// UTIL_PrintHex(LIRTRIM);
-			// UTIL_PrintChar(0x20);
-			// UTIL_PrintString(str);
+			UTIL_PrintHex(IRCBAND);
+			UTIL_PrintChar(' ');
+			UTIL_PrintHex(IRTRIM);
+			UTIL_PrintChar(0x20);
+			UTIL_PrintHex(LIRTRIM);
+			UTIL_PrintChar(0x20);
+			UTIL_PrintString(str);
 			SYS_Delay(5);
 		} while (j--);
 	} while (i--);
-}
+}*/

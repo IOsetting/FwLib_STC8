@@ -18,13 +18,6 @@
 #include "fw_conf.h"
 #include "fw_types.h"
 
-#define SYS_SetFOSC(__IRCBAND__, __VRTRIM__, __IRTRIM__, __LIRTRIM__)  do {      \
-                                     IRCBAND = ((__IRCBAND__) & 0x03);           \
-                                     VRTRIM = (__VRTRIM__);                      \
-                                     IRTRIM = (__IRTRIM__);                      \
-                                     LIRTRIM = ((__LIRTRIM__) & 0x03);           \
-                                 } while(0)
-
 /**
  * STC8H Clock: 
  *  MCKSEL                     ||===> MCLKODIV ==> MCLKO_S => P1.6/P5.4
@@ -33,10 +26,17 @@
  *  10 External 32KHz  |
  *  11 Internal 32KHz  |
 */
-void SYS_Init(void);
+
+#define SYS_SetFOSC(__IRCBAND__, __VRTRIM__, __IRTRIM__, __LIRTRIM__)  do {      \
+                                     IRCBAND = ((__IRCBAND__) & 0x03);           \
+                                     VRTRIM = (__VRTRIM__);                      \
+                                     IRTRIM = (__IRTRIM__);                      \
+                                     LIRTRIM = ((__LIRTRIM__) & 0x03);           \
+                                 } while(0)
+
+void SYS_SetClock(void);
 void SYS_Delay(uint16_t t);
 void SYS_DelayUs(uint16_t t);
-void SYS_SetSysClkDiv(uint8_t div);
-uint32_t SYS_GetSysClk(void);
+uint32_t SYS_GetSysClock(void);
 
 #endif

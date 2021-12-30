@@ -93,18 +93,16 @@ INTERRUPT(Timer0_Routine, EXTI_VectTimer0)
 
 void main(void)
 {
-    SYS_Init();
+    // Set system clock. Remove this line if system clock is already set by STC-ISP
+    SYS_SetClock();
     // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
     UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200, HAL_State_OFF);
-    // Timer0 configuration: 1T mode, 16-bit auto-reload, frequency 1000, interrupt enabled
-    TIM_Timer0_Config(
-        HAL_State_ON, 
-        TIM_TimerMode_16BitAuto, 
-        1000, 
-        HAL_State_ON, 
-        EXTI_IntPriority_High);
-    TIM_Timer0_SetRunState(HAL_State_ON);
+    // Timer0 configuration: 16-bit auto-reload, interrupt enabled
+    TIM_Timer0_Config(HAL_State_ON, TIM_TimerMode_16BitAuto, 1000);
+    EXTI_Timer0_SetIntState(HAL_State_ON);
+    EXTI_Timer0_SetIntPriority(EXTI_IntPriority_High);
     EXTI_Global_SetIntState(HAL_State_ON);
+    TIM_Timer0_SetRunState(HAL_State_ON);
 
     while(1);
 }
