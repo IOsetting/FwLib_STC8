@@ -43,9 +43,10 @@ typedef enum
     SPI_ClockPreScaler_32or2   = 0x03,
 } SPI_ClockPreScaler_t;
 
-#define SPI_RxTxFinished()                  (SPSTAT & (0x01 << 7))
-#define SPI_ClearInterrupt()                SFR_RESET(SPSTAT, 7)
-#define SPI_ClearWriteConflictInterrupt()   SFR_RESET(SPSTAT, 6)
+#define SPI_RxTxFinished()                  (SPSTAT & 0x80)
+#define SPI_ClearInterrupt()                SFR_SET(SPSTAT, 7)
+#define SPI_ClearWriteConflictInterrupt()   SFR_SET(SPSTAT, 6)
+#define SPI_ClearInterrupts()               (SPSTAT |= 0xC0)
 
 #define SPI_IgnoreSlaveSelect(__STATE__)    SFR_ASSIGN(SPCTL, 7, __STATE__)
 #define SPI_SetEnableState(__STATE__)       SFR_ASSIGN(SPCTL, 6, __STATE__)
@@ -63,5 +64,7 @@ typedef enum
  * Alternative port selection
 */
 #define SPI_SwitchPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 2) | ((__ALTER_PORT__) << 2))
+
+uint8_t SPI_TxRx(uint8_t dat);
 
 #endif
