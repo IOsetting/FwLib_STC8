@@ -84,14 +84,14 @@ typedef enum
  * central alignment: 
  *      Fpwm = SYSCLK / (PWMx_PSCR + 1) / PWMx_ARR / 2
 */
-#define PWMA_SetPrescaler(__16BIT_VAL__)        do{   \
+#define PWMA_SetPrescaler(__16BIT_VAL__)     do {   \
                         P_SW2 = 0x80; \
                         (PWMA_PSCRH = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_PSCRL = ((__16BIT_VAL__) & 0xFF)); \
                         P_SW2 = 0x00; \
                     }while(0)
 
-#define PWMA_SetAutoReloadPeriod(__16BIT_VAL__)        do{   \
+#define PWMA_SetPeriod(__16BIT_VAL__)        do {   \
                         P_SW2 = 0x80; \
                         (PWMA_ARRH = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_ARRL = ((__16BIT_VAL__) & 0xFF)); \
@@ -107,24 +107,27 @@ typedef enum
                         PWMA_ENO = PWMA_ENO & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
                         P_SW2 = 0x00;                                                                   \
                     } while(0)
+
 // Enable/Disable PWMB_BKR Control on Pins
 #define PWMA_SetPinBrakeControl(__PINS__, __STATE__) do {  \
                         P_SW2 = 0x80;                                                                   \
                         PWMA_IOAUX = PWMA_IOAUX & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
                         P_SW2 = 0x00;                                                                   \
                     } while(0)
+
 /**
  * 0: New period will be written to [PWMA_ARRH,PWMA_ARRL] and take effect immediately
  * 1: New period will be written to shadow register and loaded to [PWMA_ARRH,PWMA_ARRL] on next update event
 */
-#define PWMA_SetAutoReloadPeriodPreload(__STATE__)  SFRX_ASSIGN(PWMA_CR1, 7, (__STATE__))
+#define PWMA_SetAutoReloadPreload(__STATE__)    SFRX_ASSIGN(PWMA_CR1, 7, (__STATE__))
 
 /**
  * Turn off counter (call PWMA_SetCounterState()) before changing to different alignment
 */
 #define PWMA_SetEdgeAlignment(__ALIGN__)        do{   \
-                        P_SW2 = 0x80;(PWMA_CR1 = PWMA_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5)); P_SW2 = 0x00; \
+                        P_SW2 = 0x80;(PWMA_CR1 = PWMA_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));P_SW2 = 0x00;  \
                     }while(0)
+
 /**
  * 0: count from 0 to [PWMA_ARRH,PWMA_ARRL], then send an event and restart from 0
  * 1: count from [PWMA_ARRH,PWMA_ARRL] to 0, then send an event and restart from [PWMA_ARRH,PWMA_ARRL]
@@ -183,6 +186,7 @@ typedef enum
     PWMA_PortDirIn_TI2FP1_TI1FP2_TI4FP3_TI3FP4  = 0x10,
     PWMA_PortDirInTRC     = 0x11,
 } PWMA_PortDirection_t;
+
 #define PWMA_PWM1_SetPortDirection(__PORT_DIR__)    do{   \
                         P_SW2 = 0x80;(PWMA_CCMR1 = PWMA_CCMR1 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
                     }while(0)
@@ -209,16 +213,16 @@ typedef enum
 /**
  * Configurate PWMA.1 - PWMA.4 out mode 
 */
-#define PWMA_PWM1_SetOutputMode(__MODE__) do{   \
+#define PWMA_PWM1_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMA_CCMR1 = PWMA_CCMR1 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
-#define PWMA_PWM2_SetOutputMode(__MODE__) do{   \
+#define PWMA_PWM2_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMA_CCMR2 = PWMA_CCMR2 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
-#define PWMA_PWM3_SetOutputMode(__MODE__) do{   \
+#define PWMA_PWM3_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMA_CCMR3 = PWMA_CCMR3 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
-#define PWMA_PWM4_SetOutputMode(__MODE__) do{   \
+#define PWMA_PWM4_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMA_CCMR4 = PWMA_CCMR4 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
 
@@ -311,22 +315,30 @@ typedef enum
  * central alignment: 
  *      Fpwm = SYSCLK / (PWMx_PSCR + 1) / PWMx_ARR / 2
 */
-#define PWMB_SetPrescaler(__16BIT_PRESCALER__)   do {   \
+#define PWMB_SetPrescaler(__16BIT_VAL__)     do {   \
                         P_SW2 = 0x80; \
-                        (PWMB_PSCRH = ((__16BIT_PRESCALER__) >> 8)); \
-                        (PWMB_PSCRL = ((__16BIT_PRESCALER__) & 0xFF)); \
+                        (PWMB_PSCRH = ((__16BIT_VAL__) >> 8)); \
+                        (PWMB_PSCRL = ((__16BIT_VAL__) & 0xFF)); \
                         P_SW2 = 0x00; \
-                    } while(0)
+                    }while(0)
+
+#define PWMB_SetPeriod(__16BIT_VAL__)        do {   \
+                        P_SW2 = 0x80; \
+                        (PWMB_ARRH = ((__16BIT_VAL__) >> 8)); \
+                        (PWMB_ARRL = ((__16BIT_VAL__) & 0xFF)); \
+                        P_SW2 = 0x00; \
+                    }while(0)
 
 // PWMA all pins input/output OFF/ON
 #define PWMB_SetOverallState(__STATE__)   SFRX_ASSIGN(PWMB_BKR, 7, (__STATE__))
 
-// Enable/Disable PWMB Pins Output
+// PWMB Pins Output OFF/ON
 #define PWMB_SetPinOutputState(__PINS__, __STATE__) do {  \
                         P_SW2 = 0x80;                                                                   \
                         PWMB_ENO = PWMB_ENO & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
                         P_SW2 = 0x00;                                                                   \
                     } while(0)
+
 // Enable/Disable PWMB_BKR Control on Pins
 #define PWMB_SetPinBrakeControl(__PINS__, __STATE__) do {  \
                         P_SW2 = 0x80;                                                                   \
@@ -335,17 +347,21 @@ typedef enum
                     } while(0)
 
 /**
- * 0:no preload, 1:enable auto preload
+ * 0: New period will be written to [PWMB_ARRH,PWMB_ARRL] and take effect immediately
+ * 1: New period will be written to shadow register and loaded to [PWMB_ARRH,PWMB_ARRL] on next update event
 */
-#define PWMB_SetAutoPreloadState(__STATE__)       SFRX_ASSIGN(PWMB_CR1, 7, (__STATE__))
+#define PWMB_SetAutoReloadPreload(__STATE__)    SFRX_ASSIGN(PWMB_CR1, 7, (__STATE__))
 
-#define PWMB_SetEdgeAlignment(__ALIGN__)        do{   \
-                        P_SW2 = 0x80;                 \
-                        (PWMB_CR1 = PWMB_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));                      \
-                        P_SW2 = 0x00;                 \
-                    }while(0)
 /**
- * 0: count upwards, 1: count downwards
+ * Turn off counter (call PWMB_SetCounterState()) before changing to different alignment
+*/
+#define PWMB_SetEdgeAlignment(__ALIGN__)        do{   \
+                        P_SW2 = 0x80;(PWMB_CR1 = PWMB_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));P_SW2 = 0x00;  \
+                    }while(0)
+
+/**
+ * 0: count from 0 to [PWMB_ARRH,PWMB_ARRL], then send an event and restart from 0
+ * 1: count from [PWMB_ARRH,PWMB_ARRL] to 0, then send an event and restart from [PWMB_ARRH,PWMB_ARRL]
 */
 #define PWMB_SetCounterDirection(__DIR__)       SFRX_ASSIGN(PWMB_CR1, 4, (__DIR__))
 /**
@@ -364,10 +380,9 @@ typedef enum
 */
 #define PWMB_SetNonUpdateEvent(__STATE__)       SFRX_ASSIGN(PWMB_CR1, 1, (__STATE__))
 /**
- * 0:disable counter, 1:enable counter
+ * 0:stop counter, 1:start counter
 */
 #define PWMB_SetCounterState(__STATE__)         SFRX_ASSIGN(PWMB_CR1, 0, (__STATE__))
-
 
 /**
  * PWMB.1(PWM5) - PWMB.4(PWM8) io polar and on/off state
@@ -410,6 +425,8 @@ typedef enum
 
 /**
  * PWMB.1 - PWMB.4 comparison value preload OFF/ON
+ *   0: New values will be written to PWMx_CCRx and take effect immediately
+ *   1: New values will be written to shadow register and loaded to PWMx_CCRx on next update event
 */
 #define PWMB_PWM1_SetComparePreload(__STATE__)      SFRX_ASSIGN(PWMB_CCMR1, 3, (__STATE__))
 #define PWMB_PWM2_SetComparePreload(__STATE__)      SFRX_ASSIGN(PWMB_CCMR2, 3, (__STATE__))
@@ -419,16 +436,16 @@ typedef enum
 /**
  * Configurate PWMB.1(PWM5) - PWMB.4(PWM8) output mode 
 */
-#define PWMB_PWM1_SetOutputMode(__MODE__) do{   \
+#define PWMB_PWM1_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMB_CCMR1 = PWMB_CCMR1 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
-#define PWMB_PWM2_SetOutputMode(__MODE__) do{   \
+#define PWMB_PWM2_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMB_CCMR2 = PWMB_CCMR2 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
-#define PWMB_PWM3_SetOutputMode(__MODE__) do{   \
+#define PWMB_PWM3_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMB_CCMR3 = PWMB_CCMR3 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
-#define PWMB_PWM4_SetOutputMode(__MODE__) do{   \
+#define PWMB_PWM4_ConfigOutputMode(__MODE__) do{   \
                         P_SW2 = 0x80;(PWMB_CCMR4 = PWMB_CCMR4 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
                     }while(0)
 

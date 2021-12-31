@@ -17,6 +17,7 @@
 
 #if defined (SDCC) || defined (__SDCC)
     
+    #define __BIT   __bit
     #define __IDATA __idata
     #define __XDATA __xdata
     #define __CODE  __code
@@ -30,6 +31,7 @@
     #define NOP() __asm NOP __endasm
 
 #elif defined __CX51__
+    #define __BIT   bit
 	#define __IDATA idata
     #define __XDATA xdata
     #define __CODE  code
@@ -47,13 +49,14 @@
     #include <stdbool.h>
     #include <lint.h>
     # warning unrecognized compiler
-    # define __IDATA 
-    # define __XDATA 
-    # define __CODE 
-    # define SBIT(name, addr, bit)    volatile bool           name
-    # define SFR(name, addr)          volatile unsigned char  name
-    # define SFRX(addr)               (*(unsigned char volatile *)(addr))
-    # define SFR16X(addr)             (*(unsigned char volatile *)(addr))
+    #define __BIT   bool
+    #define __IDATA
+    #define __XDATA 
+    #define __CODE 
+    #define SBIT(name, addr, bit)    volatile bool           name
+    #define SFR(name, addr)          volatile unsigned char  name
+    #define SFRX(addr)               (*(unsigned char volatile *)(addr))
+    #define SFR16X(addr)             (*(unsigned char volatile *)(addr))
     #define INTERRUPT(name, vector) void name (void) 
     #define INTERRUPT_USING(name, vector, regnum) void name (void)
     #define NOP() 

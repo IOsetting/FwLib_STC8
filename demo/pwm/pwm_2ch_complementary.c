@@ -25,7 +25,8 @@
 
 void main(void)
 {
-    uint16_t dc = 0;
+    __BIT dir = SET;
+    uint8_t dc = 0; 
 
     SYS_SetClock();
     // UART1, baud 115200, baud source Timer2, 1T mode
@@ -39,7 +40,7 @@ void main(void)
     // Set PWMA.1 port direction output
     PWMA_PWM1_SetPortDirection(PWMB_PortDirOut);
     // Set PWMA.1 output low voltage when counter is less than target value
-    PWMA_PWM1_SetOutputMode(PWM_OutputMode_PWM_LowIfLess);
+    PWMA_PWM1_ConfigOutputMode(PWM_OutputMode_PWM_LowIfLess);
     // Enable comparison value preload to make duty cycle changing smooth
     PWMA_PWM1_SetComparePreload(HAL_State_ON);
     // Turn on PWMA.1
@@ -48,12 +49,12 @@ void main(void)
     PWMA_PWM1N_SetPortState(HAL_State_ON);
     // Set highest PWM clock
     PWMA_SetPrescaler(0);
-    // PWM width = AutoReloadPeriod + 1 (side alignment), or AutoReloadPeriod * 2 (center alignment)
-    PWMA_SetAutoReloadPeriod(0xFF);
+    // PWM width = Period + 1 (side alignment), or AutoReloadPeriod * 2 (center alignment)
+    PWMA_SetPeriod(0xFF);
     // Counter direction, down:from [PWMA_ARRH,PWMA_ARRL] to 0
     PWMA_SetCounterDirection(PWM_CounterDirection_Down);
     // Enable preload on reload-period
-    PWMA_SetAutoReloadPeriodPreload(HAL_State_ON);
+    PWMA_SetAutoReloadPreload(HAL_State_ON);
     // Enable output on PWMA.1P, PWMA.1N
     PWMA_SetPinOutputState(PWM_Pin_1|PWM_Pin_1N, HAL_State_ON);
     // Set PWMA.1 alternative ports to P1.0 and P1.1
@@ -66,11 +67,18 @@ void main(void)
     while(1)
     {
         PWMA_PWM1_SetCaptureCompareValue(dc);
-        UART1_TxHex(dc >> 8);
-        UART1_TxHex(dc & 0xFF);
-        dc++;
+        UART1_TxHex(0xFF);
+        if (dir)
+        {
+            dc++;
+            if (dc == 0xFF) dir = !dir;
+        }
+        else
+        {
+            dc--;
+            if (dc == 0) dir = !dir;
+        }
         UART1_TxString("\r\n");
-        if (dc == 0xFF) dc = 0;
         SYS_Delay(10);
     }
 }
