@@ -63,6 +63,7 @@ typedef int32_t int64_t[2];
 #define B11111100   0xFC
 #define B11111110   0xFE
 #define B11111111   0xFF
+#define B01010101   0x55
 
 typedef enum
 {

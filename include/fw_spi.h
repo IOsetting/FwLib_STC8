@@ -63,7 +63,7 @@ typedef enum
 /**
  * Alternative port selection
 */
-#define SPI_SwitchPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 2) | ((__ALTER_PORT__) << 2))
+#define SPI_SetPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 2) | ((__ALTER_PORT__) << 2))
 
 uint8_t SPI_TxRx(uint8_t dat);
 

@@ -137,6 +137,10 @@ SFR(RSTCFG,             0xFF);
 #define TM4PS             (*(unsigned char volatile __XDATA *)0xfea4)
 #define ADCTIM            (*(unsigned char volatile __XDATA *)0xfea8)
 
+/**
+ * suppress xdata space memory overlap
+ */
+/*
 #define PWM1_ETRPS        (*(unsigned char volatile __XDATA *)0xfeb0)
 #define PWM1_ENO          (*(unsigned char volatile __XDATA *)0xfeb1)
 #define PWM1_PS           (*(unsigned char volatile __XDATA *)0xfeb2)
@@ -223,11 +227,8 @@ SFR(RSTCFG,             0xFF);
 #define PWM2_BKR          (*(unsigned char volatile __XDATA *)0xfefd)
 #define PWM2_DTR          (*(unsigned char volatile __XDATA *)0xfefe)
 #define PWM2_OISR         (*(unsigned char volatile __XDATA *)0xfeff)
+*/
 
-/**
- * suppress xdata space memory overlap
- */
-/*
 #define PWMA_ETRPS        (*(unsigned char volatile __XDATA *)0xfeb0)
 #define PWMA_ENO          (*(unsigned char volatile __XDATA *)0xfeb1)
 #define PWMA_PS           (*(unsigned char volatile __XDATA *)0xfeb2)
@@ -244,6 +245,7 @@ SFR(RSTCFG,             0xFF);
 #define PWMA_SR1          (*(unsigned char volatile __XDATA *)0xfec5)
 #define PWMA_SR2          (*(unsigned char volatile __XDATA *)0xfec6)
 #define PWMA_EGR          (*(unsigned char volatile __XDATA *)0xfec7)
+#define PWMA_CCMRx                                            0xfec8
 #define PWMA_CCMR1        (*(unsigned char volatile __XDATA *)0xfec8)
 #define PWMA_CCMR2        (*(unsigned char volatile __XDATA *)0xfec9)
 #define PWMA_CCMR3        (*(unsigned char volatile __XDATA *)0xfeca)
@@ -283,6 +285,7 @@ SFR(RSTCFG,             0xFF);
 #define PWMB_SR1          (*(unsigned char volatile __XDATA *)0xfee5)
 #define PWMB_SR2          (*(unsigned char volatile __XDATA *)0xfee6)
 #define PWMB_EGR          (*(unsigned char volatile __XDATA *)0xfee7)
+#define PWMB_CCMRx                                            0xfee8
 #define PWMB_CCMR1        (*(unsigned char volatile __XDATA *)0xfee8)
 #define PWMB_CCMR2        (*(unsigned char volatile __XDATA *)0xfee9)
 #define PWMB_CCMR3        (*(unsigned char volatile __XDATA *)0xfeea)
@@ -314,7 +317,7 @@ SFR(RSTCFG,             0xFF);
 #define PWMB_BKR          (*(unsigned char volatile __XDATA *)0xfefd)
 #define PWMB_DTR          (*(unsigned char volatile __XDATA *)0xfefe)
 #define PWMB_OISR         (*(unsigned char volatile __XDATA *)0xfeff)
-*/
+
 
 /////////////////////////////////////////////////
 //FD00H-FDFFH

@@ -25,6 +25,7 @@
 #include "fw_uart.h"
 #include "fw_adc.h"
 #include "fw_spi.h"
+#include "fw_pwm.h"
 #include "fw_util.h"
 
 #endif

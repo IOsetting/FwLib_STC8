@@ -65,11 +65,11 @@ typedef enum
 /**
  * Mode1: 8-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
 */
-void UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate);
+void UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
 /**
  * Mode3: 9-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
 */
-void UART1_ConfigMode3Dyn9bitUart(UART1_BaudSource_t baudSource, HAL_State_t freq1t, uint32_t baudrate);
+void UART1_ConfigMode3Dyn9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
 
 void UART1_InterruptHandler(void);
 
@@ -99,7 +99,7 @@ void UART1_TxString(uint8_t *str);
 /**
  * Dynamic baud-rate, provided by Timer2
 */
-void UART2_Config(HAL_State_t freq1t, uint32_t baudrate);
+void UART2_Config(HAL_State_t _1TMode, uint32_t baudrate);
 
 
 void UART2_TxChar(char dat);
@@ -122,8 +122,8 @@ void UART2_TxString(uint8_t *str);
 /**
  * dynamic baud-rate from timer2 or timer3
 */
-void UART3_ConfigOnTimer2(HAL_State_t freq1t, uint32_t baudrate);
-void UART3_ConfigOnTimer3(HAL_State_t freq1t, uint32_t baudrate);
+void UART3_ConfigOnTimer2(HAL_State_t _1TMode, uint32_t baudrate);
+void UART3_ConfigOnTimer3(HAL_State_t _1TMode, uint32_t baudrate);
 
 
 /**************************************************************************** /
@@ -141,8 +141,8 @@ void UART3_ConfigOnTimer3(HAL_State_t freq1t, uint32_t baudrate);
 /**
  * dynamic baud-rate from timer2 or timer4
 */
-void UART4_ConfigOnTimer2(HAL_State_t freq1t, uint32_t baudrate);
-void UART4_ConfigOnTimer4(HAL_State_t freq1t, uint32_t baudrate);
+void UART4_ConfigOnTimer2(HAL_State_t _1TMode, uint32_t baudrate);
+void UART4_ConfigOnTimer4(HAL_State_t _1TMode, uint32_t baudrate);
 
 
 #endif
