@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * Demo: 2-channel complementary output
+ * Demo: 2-channel with timer2 interrupt
  * 
  * P1.0  -> 1k Ω resistor -> LED1+
  * P1.1  -> 1k Ω resistor -> LED2+
@@ -22,15 +22,31 @@
 */
 #include "fw_hal.h"
 
+__BIT dir = SET;
+uint8_t dc = 0;
+
+INTERRUPT(Timer2_Routine, EXTI_VectTimer2)
+{
+	PWMA_PWM1_SetCaptureCompareValue(dc);
+    UART1_TxHex(dc);
+    UART1_TxString("\r\n");
+    if (dir)
+    {
+        dc++;
+        if (dc == 0xFF) dir = !dir;
+    }
+    else
+    {
+        dc--;
+        if (dc == 0) dir = !dir;
+    }
+}
 
 void main(void)
 {
-    __BIT dir = SET;
-    uint8_t dc = 0; 
-
     SYS_SetClock();
-    // UART1, baud 115200, baud source Timer2, 1T mode
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+    // UART1, baud 115200, baud source Timer1, 1T mode
+    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
 
     // Set GPIO pins output mode
     GPIO_P1_SetMode(GPIO_Pin_0|GPIO_Pin_1, GPIO_Mode_Output_PP);
@@ -64,21 +80,12 @@ void main(void)
     // Start counter
     PWMA_SetCounterState(HAL_State_ON);
 
-    while(1)
-    {
-        PWMA_PWM1_SetCaptureCompareValue(dc);
-        UART1_TxHex(0xFF);
-        if (dir)
-        {
-            dc++;
-            if (dc == 0xFF) dir = !dir;
-        }
-        else
-        {
-            dc--;
-            if (dc == 0) dir = !dir;
-        }
-        UART1_TxString("\r\n");
-        SYS_Delay(10);
-    }
+	// 1T mode, prescaler:255+1, frequency: 100
+	TIM_Timer2_Config(HAL_State_ON, 0xFF, 100);
+    // Timer2 interrupt: ON
+	EXTI_Timer2_SetIntState(HAL_State_ON);
+	EXTI_Global_SetIntState(HAL_State_ON);
+	TIM_Timer2_SetRunState(HAL_State_ON);
+
+    while(1);
 }
