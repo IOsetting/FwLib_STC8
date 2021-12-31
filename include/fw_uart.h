@@ -32,6 +32,12 @@ typedef enum
     UART1_BaudSource_Timer2 = 0x01,
 } UART1_BaudSource_t;
 
+/**
+ * Alternative ports
+ * 
+ * The ports for STC8G1K08-8Pin and STC8G1K08A are different:
+ * 00 - P3.0 P3.1, 01 - P3.2 P3.3, 10 - P5.4 P5.5, 11 - n/a
+*/
 typedef enum
 {
     UART1_AlterPort_P30_P31      = 0x00,

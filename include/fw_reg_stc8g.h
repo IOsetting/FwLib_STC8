@@ -283,7 +283,7 @@ SFR(RSTCFG,             0xFF);
 #define     MCLKOCR     (*(unsigned char volatile __XDATA *)0xfe05)
 #define     IRCDB       (*(unsigned char volatile __XDATA *)0xfe06)
 #define     X32KCR      (*(unsigned char volatile __XDATA *)0xfe08)
-
+#define     PxPU                                            0xfe10
 #define     P0PU        (*(unsigned char volatile __XDATA *)0xfe10)
 #define     P1PU        (*(unsigned char volatile __XDATA *)0xfe11)
 #define     P2PU        (*(unsigned char volatile __XDATA *)0xfe12)
@@ -292,6 +292,7 @@ SFR(RSTCFG,             0xFF);
 #define     P5PU        (*(unsigned char volatile __XDATA *)0xfe15)
 #define     P6PU        (*(unsigned char volatile __XDATA *)0xfe16)
 #define     P7PU        (*(unsigned char volatile __XDATA *)0xfe17)
+#define     PxNCS                                           0xfe18
 #define     P0NCS       (*(unsigned char volatile __XDATA *)0xfe18)
 #define     P1NCS       (*(unsigned char volatile __XDATA *)0xfe19)
 #define     P2NCS       (*(unsigned char volatile __XDATA *)0xfe1a)
@@ -300,6 +301,7 @@ SFR(RSTCFG,             0xFF);
 #define     P5NCS       (*(unsigned char volatile __XDATA *)0xfe1d)
 #define     P6NCS       (*(unsigned char volatile __XDATA *)0xfe1e)
 #define     P7NCS       (*(unsigned char volatile __XDATA *)0xfe1f)
+#define     PxSR                                            0xfe20
 #define     P0SR        (*(unsigned char volatile __XDATA *)0xfe20)
 #define     P1SR        (*(unsigned char volatile __XDATA *)0xfe21)
 #define     P2SR        (*(unsigned char volatile __XDATA *)0xfe22)
@@ -308,6 +310,7 @@ SFR(RSTCFG,             0xFF);
 #define     P5SR        (*(unsigned char volatile __XDATA *)0xfe25)
 #define     P6SR        (*(unsigned char volatile __XDATA *)0xfe26)
 #define     P7SR        (*(unsigned char volatile __XDATA *)0xfe27)
+#define     PxDR                                            0xfe28
 #define     P0DR        (*(unsigned char volatile __XDATA *)0xfe28)
 #define     P1DR        (*(unsigned char volatile __XDATA *)0xfe29)
 #define     P2DR        (*(unsigned char volatile __XDATA *)0xfe2a)
@@ -316,6 +319,7 @@ SFR(RSTCFG,             0xFF);
 #define     P5DR        (*(unsigned char volatile __XDATA *)0xfe2d)
 #define     P6DR        (*(unsigned char volatile __XDATA *)0xfe2e)
 #define     P7DR        (*(unsigned char volatile __XDATA *)0xfe2f)
+#define     PxIE                                            0xfe30
 #define     P0IE        (*(unsigned char volatile __XDATA *)0xfe30)
 #define     P1IE        (*(unsigned char volatile __XDATA *)0xfe31)
 #define     P2IE        (*(unsigned char volatile __XDATA *)0xfe32)

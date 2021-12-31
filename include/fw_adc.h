@@ -23,30 +23,31 @@
 #define ADC_SamplingFinished()              (ADC_CONTR & (0x01 << 5))
 #define ADC_ClearInterrupt()                SFR_RESET(ADC_CONTR, 5)
 #define ADC_SetPWMTriggerState(__STATE__)   SFR_ASSIGN(ADC_CONTR, 4, __STATE__)
+
 /**
  * ADC input channels selection
  *   Set PxM0/PxM1 to high-impedance input for selected I/O port, and set PxIE
  *   to shutdown digital input if you want to enable ADC in powerdown mode
  * 
  *                                                         STC8H8K64U                                                       
- *                                         STC8H3K64S4     STC8H2K64T       STC8H4K64TLCD            
- * STC8H1K28:             STC8H1K08        STC8H3K64S2     STC8H4K64TLR     STC8H4K64LCD
- *  0000 P1.0/ADC0         P1.0/ADC0        P1.0/ADC0       P1.0/ADC0        P1.0/ADC0                                  
- *  0001 P1.1/ADC1         P1.1/ADC1        P1.1/ADC1       P1.1/ADC1        P1.1/ADC1                                  
- *  0010 P1.2/ADC2         N/A              P1.2/ADC2       P5.4/ADC2        P5.4/ADC2                            
- *  0011 P1.3/ADC3         N/A              N/A             P1.3/ADC3        P1.3/ADC3                      
- *  0100 P1.4/ADC4         N/A              N/A             P1.4/ADC4        P1.4/ADC4                      
- *  0101 P1.5/ADC5         N/A              N/A             P1.5/ADC5        P1.5/ADC5                      
- *  0110 P1.6/ADC6         N/A              P1.6/ADC6       P1.6/ADC6        P6.2/ADC6                            
- *  0111 P1.7/ADC7         N/A              P1.7/ADC7       P1.7/ADC7        P6.3/ADC7                            
- *  1000 P0.0/ADC8         P3.0/ADC8        P0.0/ADC8       P0.0/ADC8        P0.0/ADC8                                  
- *  1001 P0.1/ADC9         P3.1/ADC9        P0.1/ADC9       P0.1/ADC9        P0.1/ADC9                                  
- *  1010 P0.2/ADC10        P3.2/ADC10       P0.2/ADC10      P0.2/ADC10       P0.2/ADC10                                      
- *  1011 P0.3/ADC11        P3.3/ADC11       P0.3/ADC11      P0.3/ADC11       P0.3/ADC11                                      
- *  1100 N/A               P3.4/ADC12       P0.4/ADC12      P0.4/ADC12       P0.4/ADC12                               
- *  1101 N/A               P3.5/ADC13       P0.5/ADC13      P0.5/ADC13       P0.5/ADC13                               
- *  1110 N/A               P3.6/ADC14       P0.6/ADC14      P0.6/ADC14       P0.6/ADC14                               
- *  1111 Internal 1.19V    Internal 1.19V   Internal 1.19V  Internal 1.19V   Internal 1.19V
+ *                                         STC8H3K64S4     STC8H2K64T       STC8H4K64TLCD               STC8G1K08     STC8G2K64S4        
+ * STC8H1K28:             STC8H1K08        STC8H3K64S2     STC8H4K64TLR     STC8H4K64LCD    STC8G1K08A  STC8G1K08T    STC8G2K64S2                   
+ *  0000 P1.0/ADC0         P1.0/ADC0        P1.0/ADC0       P1.0/ADC0        P1.0/ADC0       P3.0/ADC0   P1.0/ADC0     P1.0/ADC0                      
+ *  0001 P1.1/ADC1         P1.1/ADC1        P1.1/ADC1       P1.1/ADC1        P1.1/ADC1       P3.1/ADC1   P1.1/ADC1     P1.1/ADC1                      
+ *  0010 P1.2/ADC2         N/A              P1.2/ADC2       P5.4/ADC2        P5.4/ADC2       P3.2/ADC2   P1.2/ADC2     P1.2/ADC2                
+ *  0011 P1.3/ADC3         N/A              N/A             P1.3/ADC3        P1.3/ADC3       P3.3/ADC3   P1.3/ADC3     P1.3/ADC3                  
+ *  0100 P1.4/ADC4         N/A              N/A             P1.4/ADC4        P1.4/ADC4       P5.4/ADC4   P1.4/ADC4     P1.4/ADC4                   
+ *  0101 P1.5/ADC5         N/A              N/A             P1.5/ADC5        P1.5/ADC5       P5.5/ADC5   P1.5/ADC5     P1.5/ADC5                     
+ *  0110 P1.6/ADC6         N/A              P1.6/ADC6       P1.6/ADC6        P6.2/ADC6       N/A         P1.6/ADC6     P1.6/ADC6          
+ *  0111 P1.7/ADC7         N/A              P1.7/ADC7       P1.7/ADC7        P6.3/ADC7       N/A         P1.7/ADC7     P1.7/ADC7          
+ *  1000 P0.0/ADC8         P3.0/ADC8        P0.0/ADC8       P0.0/ADC8        P0.0/ADC8       N/A         P3.0/ADC8     P0.0/ADC8                
+ *  1001 P0.1/ADC9         P3.1/ADC9        P0.1/ADC9       P0.1/ADC9        P0.1/ADC9       N/A         P3.1/ADC9     P0.1/ADC9                
+ *  1010 P0.2/ADC10        P3.2/ADC10       P0.2/ADC10      P0.2/ADC10       P0.2/ADC10      N/A         P3.2/ADC10    P0.2/ADC10                      
+ *  1011 P0.3/ADC11        P3.3/ADC11       P0.3/ADC11      P0.3/ADC11       P0.3/ADC11      N/A         P3.3/ADC11    P0.3/ADC11                      
+ *  1100 N/A               P3.4/ADC12       P0.4/ADC12      P0.4/ADC12       P0.4/ADC12      N/A         P3.4/ADC12    P0.4/ADC12               
+ *  1101 N/A               P3.5/ADC13       P0.5/ADC13      P0.5/ADC13       P0.5/ADC13      N/A         P3.5/ADC13    P0.5/ADC13               
+ *  1110 N/A               P3.6/ADC14       P0.6/ADC14      P0.6/ADC14       P0.6/ADC14      N/A         P3.6/ADC14    P0.6/ADC14               
+ *  1111 Internal 1.19V voltage reference 
 */
 #define ADC_SetChannel(__CHANNEL__)         (ADC_CONTR = ADC_CONTR & ~0x0F | ((__CHANNEL__) << 0))
 

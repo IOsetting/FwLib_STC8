@@ -25,6 +25,10 @@
  * SPI MOSI -> 2 15           15(P34)
  * SPI MISO -> 3 14           14(P33)
  * SPI CLK  -> 4 13           13(P32)
+ * 
+ * The ports for STC8G1K08-8Pin, STC8G1K08A are different:
+ *      SS   MO   MI   SCLK
+ * 00 - P5.5 P5.4 P3.3 P3.2,  01/10/11 - n/a
 */
 typedef enum
 {

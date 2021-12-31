@@ -93,7 +93,7 @@
 #endif
 
 #if (__CONF_MCU_MODEL == MCU_MODEL_STC8A8K64D4)
-    #include "fw_reg_stc8a.h"
+    #define __CONF_MCU_TYPE_STC8A8K64D4 1
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8G1K04   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G1K08     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G1K12     ) || \
@@ -103,8 +103,8 @@
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G2K48     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G2K60     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G2K64     )
-    #include "fw_reg_stc8g.h"
-    #include "fw_cid_stc8g.h"
+    #define __CONF_MCU_TYPE_STC8G 1
+
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K08   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K12     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K16     ) || \
@@ -136,6 +136,15 @@
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64TLCD ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64LCD  )
+    #define __CONF_MCU_TYPE_STC8H 1
+#endif
+
+#if __CONF_MCU_TYPE_STC8A8K64D4
+    #include "fw_reg_stc8a.h"
+#elif __CONF_MCU_TYPE_STC8G
+    #include "fw_reg_stc8g.h"
+    #include "fw_cid_stc8g.h"
+#elif __CONF_MCU_TYPE_STC8H
     #include "fw_reg_stc8h.h"
     #include "fw_cid_stc8h.h"
 #endif
