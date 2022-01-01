@@ -18,19 +18,19 @@
 #include "fw_reg_base.h"
 
 #if (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K08   )
-    #define __CID_ADDR     0x1FE9
+    #define __CID_ADDR     0x1FE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K12 )
-    #define __CID_ADDR     0x2FE9
+    #define __CID_ADDR     0x2FE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K16 )
-    #define __CID_ADDR     0x3FE9
+    #define __CID_ADDR     0x3FE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K17 )
-    #define __CID_ADDR     0x43E9
+    #define __CID_ADDR     0x43E7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K24 )
-    #define __CID_ADDR     0x5FE9
+    #define __CID_ADDR     0x5FE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K28 )
-    #define __CID_ADDR     0x6FE9
+    #define __CID_ADDR     0x6FE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K33 )
-    #define __CID_ADDR     0x83E9
+    #define __CID_ADDR     0x83E7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K32S4 ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K32S2   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K32T    ) || \
@@ -44,21 +44,22 @@
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48TLCD ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48LCD  )
-    #define __CID_ADDR     0xBFE9
+    #define __CID_ADDR     0xBFE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K60S4 ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K60S2   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K60T    ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60TLCD ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60LCD  )
-    #define __CID_ADDR     0xEFE9
+    #define __CID_ADDR     0xEFE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K64S4 ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K64S2   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K64T    ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64TLCD ) || \
-    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64LCD  )
-    #define __CID_ADDR     0xFDE9
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64LCD  ) || \
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H8K64U    )
+    #define __CID_ADDR     0xFDE7
 #endif
 
 #define ID_ROMADDR        ( (unsigned char __CODE *)(__CID_ADDR + 15)) // MCU ID 7 bytes

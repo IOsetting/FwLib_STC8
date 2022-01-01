@@ -63,6 +63,8 @@
 #define MCU_MODEL_STC8H4K64TLCD     0x2D
 #define MCU_MODEL_STC8H4K64LCD      0x2E
 
+#define MCU_MODEL_STC8H8K64U        0x2F
+
 
 #ifndef __CONF_FOSC
     #define __CONF_FOSC 24000000UL
@@ -93,7 +95,7 @@
 #endif
 
 #if (__CONF_MCU_MODEL == MCU_MODEL_STC8A8K64D4)
-    #define __CONF_MCU_TYPE_STC8A8K64D4 1
+    #define __CONF_MCU_TYPE 1
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8G1K04   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G1K08     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G1K12     ) || \
@@ -103,7 +105,7 @@
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G2K48     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G2K60     ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8G2K64     )
-    #define __CONF_MCU_TYPE_STC8G 1
+    #define __CONF_MCU_TYPE 2
 
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K08   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H1K12     ) || \
@@ -135,16 +137,17 @@
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K64T    ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64TLCD ) || \
-    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64LCD  )
-    #define __CONF_MCU_TYPE_STC8H 1
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K64LCD  ) || \
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H8K64U  )
+    #define __CONF_MCU_TYPE 3
 #endif
 
-#if __CONF_MCU_TYPE_STC8A8K64D4
+#if (__CONF_MCU_TYPE == 1  )
     #include "fw_reg_stc8a.h"
-#elif __CONF_MCU_TYPE_STC8G
+#elif (__CONF_MCU_TYPE == 2 )
     #include "fw_reg_stc8g.h"
     #include "fw_cid_stc8g.h"
-#elif __CONF_MCU_TYPE_STC8H
+#elif (__CONF_MCU_TYPE == 3  )
     #include "fw_reg_stc8h.h"
     #include "fw_cid_stc8h.h"
 #endif

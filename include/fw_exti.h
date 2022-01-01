@@ -56,7 +56,7 @@ typedef enum
 #define EXTI_VectI2C        24
 #define EXTI_VectTKSU       35
 
-#if __CONF_MCU_TYPE_STC8G
+#if (__CONF_MCU_TYPE == 2  )
     #define EXTI_VectPWM0       22
     #define EXTI_VectPWM0FD     23
     #define EXTI_VectPWM1       28
@@ -67,7 +67,7 @@ typedef enum
     #define EXTI_VectPWM2FD     33
     #define EXTI_VectPWM4FD     34
 
-#elif __CONF_MCU_TYPE_STC8H
+#elif (__CONF_MCU_TYPE == 3  )
     #define EXTI_VectUSB        25
     #define EXTI_VectPWMA       26
     #define EXTI_VectPWMB       27

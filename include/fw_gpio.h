@@ -34,7 +34,7 @@ typedef enum
     GPIO_Port_3     = 3U,
     GPIO_Port_4     = 4U,
     GPIO_Port_5     = 5U,
-#if __CONF_MCU_TYPE_STC8H
+#if (__CONF_MCU_TYPE == 3  )
     GPIO_Port_6     = 6U,
     GPIO_Port_7     = 7U,
 #endif
@@ -101,7 +101,7 @@ typedef enum
                             P5M1 = P5M1 & ~(__PINS__) | (((__MODE__) & 0x02)? (__PINS__) : 0x00); \
                         } while(0)
 
-#if __CONF_MCU_TYPE_STC8H
+#if (__CONF_MCU_TYPE == 3  )
 #define GPIO_P6_SetMode(__PINS__, __MODE__) do {  \
                             P6M0 = P6M0 & ~(__PINS__) | (((__MODE__) & 0x01)? (__PINS__) : 0x00); \
                             P6M1 = P6M1 & ~(__PINS__) | (((__MODE__) & 0x02)? (__PINS__) : 0x00); \
