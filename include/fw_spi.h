@@ -35,8 +35,9 @@ typedef enum
     //            SS MOSI MISO SCLK
     SPI_AlterPort_P12P54_P13_P14_P15    = 0x00,
     SPI_AlterPort_P22_P23_P24_P25       = 0x01,
-    SPI_AlterPort_P54_P40_P41_P43       = 0x10,
-    SPI_AlterPort_P35_P34_P33_P32       = 0x11,
+    SPI_AlterPort_P54_P40_P41_P43       = 0x02,
+    SPI_AlterPort_P35_P34_P33_P32       = 0x03,
+    SPI_AlterPort_8G1K08_8Pin           = 0x00,
 } SPI_AlterPort_t;
 
 typedef enum
@@ -47,6 +48,18 @@ typedef enum
     SPI_ClockPreScaler_32or2   = 0x03,
 } SPI_ClockPreScaler_t;
 
+typedef enum
+{
+    SPI_ClockPhase_LeadingEdge  = 0x00, // Bits are sampled on the leading edge of SCLK
+    SPI_ClockPhase_TrailingEdge = 0x01, // Bits are sampled on the trailing edge of SCLK
+} SPI_ClockPhase_t;
+
+typedef enum
+{
+    SPI_DataOrder_MSB       = 0x00, // High bits first
+    SPI_DataOrder_LSB       = 0x01, // Low bits first
+} SPI_DataOrder_t;
+
 #define SPI_RxTxFinished()                  (SPSTAT & 0x80)
 #define SPI_ClearInterrupt()                SFR_SET(SPSTAT, 7)
 #define SPI_ClearWriteConflictInterrupt()   SFR_SET(SPSTAT, 6)
@@ -54,18 +67,27 @@ typedef enum
 
 #define SPI_IgnoreSlaveSelect(__STATE__)    SFR_ASSIGN(SPCTL, 7, __STATE__)
 #define SPI_SetEnableState(__STATE__)       SFR_ASSIGN(SPCTL, 6, __STATE__)
-#define SPI_SetDataOrderLSB(__STATE__)      SFR_ASSIGN(SPCTL, 5, __STATE__)
+#define SPI_SetDataOrder(__ORDER__)         SFR_ASSIGN(SPCTL, 5, __ORDER__)
 #define SPI_SetMasterMode(__STATE__)        SFR_ASSIGN(SPCTL, 4, __STATE__)
-// CPOL, 0:idle low, 1:idl high
-#define SPI_SetClockPolarHigh(__STATE__)    SFR_ASSIGN(SPCTL, 3, __STATE__)
-// CPHA, 0:SS low drive, 1:SCLK front edge drive
-#define SPI_SetClockFrontEdgeDrive(__STATE__) SFR_ASSIGN(SPCTL, 2, __STATE__)
+// 
+/**
+ * Clock Polarity, CPOL
+ *  0: clock line idles low
+ *  1: clock line idles high
+*/
+#define SPI_SetClockPolarity(__STATE__)        SFR_ASSIGN(SPCTL, 3, __STATE__)
+/**
+ * Clock Phase (CPHA)
+ *  0: bits are sampled on the leading clock edge
+ *  1: bits are sampled on the trailing clock edge
+*/
+#define SPI_SetClockPhase(__PHASE__)        SFR_ASSIGN(SPCTL, 2, __PHASE__)
 /**
  * SPI Clock
 */
 #define SPI_SetClockPrescaler(__PRE_SCALER__) (SPCTL = SPCTL & ~0x03 | ((__PRE_SCALER__) << 0))
 /**
- * Alternative port selection
+ * Alternative ports
 */
 #define SPI_SetPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 2) | ((__ALTER_PORT__) << 2))
 

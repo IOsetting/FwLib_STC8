@@ -19,7 +19,6 @@
 
 uint8_t SPI_TxRx(uint8_t dat)
 {
-    SPI_ClearInterrupts();
 	SPDAT = dat;
     while (!SPI_RxTxFinished());
     SPI_ClearInterrupts();
