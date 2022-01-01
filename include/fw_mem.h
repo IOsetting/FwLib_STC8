@@ -18,6 +18,10 @@
 #include "fw_conf.h"
 #include "fw_types.h"
 
+#define MEM_ReadCODE(__ADDR__)      (*(unsigned char volatile __CODE *)(__ADDR__))
+// Set P_SW2 = 0x80 before using this macro
+#define MEM_ReadXDATA(__ADDR__)     (*(unsigned char volatile __XDATA *)(__ADDR__))
+
 typedef enum
 {
     MEM_WorkRegGroup_00H_07H    = 0x00,
@@ -28,5 +32,6 @@ typedef enum
 
 void MEM_SelectWorkRegGroup(MEM_WorkRegGroup_t WorkRegGroup);
 void MEM_SetOnchipExtRAM(HAL_State_t HAL_State);
+void MEM_ReadChipID(uint8_t *buff);
 
 #endif

@@ -368,6 +368,8 @@ SFR(RSTCFG,             0xFF);
 #define P7WKUE            (*(unsigned char volatile __XDATA *)0xfd47)
 #define PIN_IP            (*(unsigned char volatile __XDATA *)0xfd60)
 #define PIN_IPH           (*(unsigned char volatile __XDATA *)0xfd61)
+#define CHIPIDxx                                              0xfde0
+#define CHIPID00          (*(unsigned char volatile __XDATA *)0xfde0)
 
 /////////////////////////////////////////////////
 //FC00H-FCFFH

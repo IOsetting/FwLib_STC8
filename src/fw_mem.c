@@ -24,3 +24,13 @@ void MEM_SetOnchipExtRAM(HAL_State_t HAL_State)
 {
 	AUXR = AUXR & ~B00000010 | (HAL_State << 1);
 }
+
+void MEM_ReadChipID(uint8_t *buff)
+{
+	P_SW2 = 0x80;
+	for (uint8_t i = 0; i < 32; i++)
+	{
+		*(buff + i) = MEM_ReadXDATA(CHIPIDxx + i);
+	}
+	P_SW2 = 0x00;
+}

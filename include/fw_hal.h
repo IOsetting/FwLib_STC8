@@ -25,7 +25,13 @@
 #include "fw_uart.h"
 #include "fw_adc.h"
 #include "fw_spi.h"
-#include "fw_pwm.h"
 #include "fw_util.h"
+
+#if (__CONF_MCU_TYPE == 2  )
+#include "fw_pca.h"
+#endif
+#if (__CONF_MCU_TYPE == 3  )
+#include "fw_pwm.h"
+#endif
 
 #endif

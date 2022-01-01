@@ -36,21 +36,24 @@
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K32T    ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K32TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K32TLCD ) || \
-    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K32LCD  )
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K32LCD  ) || \
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H8K32U    )
     #define __CID_ADDR     0x7FE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K48S4 ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K48S2   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K48T    ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48TLCD ) || \
-    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48LCD  )
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K48LCD  ) || \
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H8K48U    )
     #define __CID_ADDR     0xBFE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K60S4 ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K60S2   ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H2K60T    ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60TLR  ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60TLCD ) || \
-    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60LCD  )
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H4K60LCD  ) || \
+    (__CONF_MCU_MODEL == MCU_MODEL_STC8H8K60U    )
     #define __CID_ADDR     0xEFE7
 #elif (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K64S4 ) || \
     (__CONF_MCU_MODEL == MCU_MODEL_STC8H3K64S2   ) || \
@@ -62,18 +65,22 @@
     #define __CID_ADDR     0xFDE7
 #endif
 
-#define ID_ROMADDR        ( (unsigned char __CODE *)(__CID_ADDR + 15)) // MCU ID 7 bytes
-#define VREF_ROMADDR      (*(unsigned int  __CODE *)(__CID_ADDR + 13))
-#define F32K_ROMADDR      (*(unsigned int  __CODE *)(__CID_ADDR + 11))
-#define T22M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 10)) //22.1184MHz (20M)
-#define T24M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 9)) //24MHz (20M)
-#define T20M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 8)) //20MHz (20M)
-#define T27M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 7)) //27MHz (35M)
-#define T30M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 6)) //30MHz (35M)
-#define T33M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 5)) //33.1776MHz (35M)
-#define T35M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 4)) //35MHz (35M)
-#define T36M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 3)) //36.864MHz (35M)
-#define VRT20M_ROMADDR    (*(unsigned char __CODE *)(__CID_ADDR + 1)) //VRTRIM of 20M
-#define VRT35M_ROMADDR    (*(unsigned char __CODE *)(__CID_ADDR + 0)) //VRTRIM of 35M
+#define ID_ROMADDR        ( (unsigned char __CODE *)(__CID_ADDR + 18)) // MCU ID 7 bytes
+#define VREF_ROMADDR      (*(unsigned int  __CODE *)(__CID_ADDR + 16)) //1.19Vref
+#define F32K_ROMADDR      (*(unsigned int  __CODE *)(__CID_ADDR + 14)) //32kHz frequency
+#define T22M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 13)) //22.1184MHz (20M)
+#define T24M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 12)) //24MHz (20M)
+#define T20M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 11)) //20MHz (20M)
+#define T27M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 10)) //27MHz (35M)
+#define T30M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 9)) //30MHz (35M)
+#define T33M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 8)) //33.1776MHz (35M)
+#define T35M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 7)) //35MHz (35M)
+#define T36M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 6)) //36.864MHz (35M)
+#define T40M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 5)) //
+#define T45M_ROMADDR      (*(unsigned char __CODE *)(__CID_ADDR + 4)) //
+#define VRT20M_ROMADDR    (*(unsigned char __CODE *)(__CID_ADDR + 3)) //VRTRIM of IRCBAND 0
+#define VRT35M_ROMADDR    (*(unsigned char __CODE *)(__CID_ADDR + 2)) //VRTRIM of IRCBAND 1
+#define VRT24M_ROMADDR    (*(unsigned char __CODE *)(__CID_ADDR + 1)) //VRTRIM of IRCBAND 2
+#define VRT40M_ROMADDR    (*(unsigned char __CODE *)(__CID_ADDR + 0)) //VRTRIM of IRCBAND 3
 
 #endif
