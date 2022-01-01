@@ -27,8 +27,9 @@ void MEM_SetOnchipExtRAM(HAL_State_t HAL_State)
 
 void MEM_ReadChipID(uint8_t *buff)
 {
+    uint8_t i;
 	P_SW2 = 0x80;
-	for (uint8_t i = 0; i < 32; i++)
+	for (i = 0; i < 32; i++)
 	{
 		*(buff + i) = MEM_ReadXDATA(CHIPIDxx + i);
 	}
