@@ -12,28 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "fw_mem.h"
+#include "fw_hal.h"
 
-void MEM_SelectWorkRegGroup(MEM_WorkRegGroup_t WorkRegGroup)
+void main(void)
 {
-	RS0 = WorkRegGroup & B00000001;
-	RS1 = (WorkRegGroup >> 1) & B00000001;
+    SYS_SetClock();
+    // UART1, baud 115200, baud source Timer1, 1T mode, no interrupt
+    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
+    while(1)
+    {
+        UART1_TxChar('T');
+        UART1_TxHex(0x41);
+        UART1_TxString("U");
+        UART1_TxString(" string\r\n");
+        SYS_Delay(1000);
+    }
 }
-
-void MEM_SetOnchipExtRAM(HAL_State_t HAL_State)
-{
-	AUXR = AUXR & ~B00000010 | (HAL_State << 1);
-}
-
-#if (__CONF_MCU_TYPE == 3  )
-void MEM_ReadChipID(uint8_t *buff)
-{
-    uint8_t i;
-	P_SW2 = 0x80;
-	for (i = 0; i < 32; i++)
-	{
-		*(buff + i) = MEM_ReadXDATA(CHIPIDxx + i);
-	}
-	P_SW2 = 0x00;
-}
-#endif

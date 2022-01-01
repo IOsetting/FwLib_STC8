@@ -32,6 +32,9 @@ typedef enum
 
 void MEM_SelectWorkRegGroup(MEM_WorkRegGroup_t WorkRegGroup);
 void MEM_SetOnchipExtRAM(HAL_State_t HAL_State);
+
+#if (__CONF_MCU_TYPE == 3  )
 void MEM_ReadChipID(uint8_t *buff);
+#endif
 
 #endif
