@@ -14,6 +14,7 @@
 
 /**
  * Demo: MAX7219 8x8 LED Matrix
+ * Board: STC8H1K08
  * 
  * P1.3  -> DIN
  * P1.5  -> SCLK
