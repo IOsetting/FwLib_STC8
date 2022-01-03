@@ -23,7 +23,7 @@
  *    P36(INT2)        => IRQ
  *    P37(IO)          => CE
  * 
- * test-board: Minimum System; test-MCU: STC8H3K32S2
+ * test-board: Minimum System; test-MCU: STC8H1K08,STC8H3K32S2
  */
 
 #include "nrf24l01.h"
