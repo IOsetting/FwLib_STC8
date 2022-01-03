@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef __ST7567_H_
-#define __ST7567_H_
+#ifndef __FW_ST7567__
+#define __FW_ST7567__
 
 #include "fw_hal.h"
 

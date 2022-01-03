@@ -21,6 +21,8 @@
 
 #define UART_RX_BUFF_SIZE 0x20
 
+int16_t UART_Timer_InitValueCalculate(uint32_t sysclk, HAL_State_t _1TMode, uint32_t baudrate);
+
 
 /**************************************************************************** /
  * UART1

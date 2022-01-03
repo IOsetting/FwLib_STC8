@@ -1,5 +1,5 @@
-#ifndef __IO_REG_STC8G_H__
-#define __IO_REG_STC8G_H__
+#ifndef __FW_REG_STC8G_H__
+#define __FW_REG_STC8G_H__
 
 #include "fw_reg_base.h"
 

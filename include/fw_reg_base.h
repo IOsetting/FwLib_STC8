@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef __IO_REG_BASE_H__
-#define __IO_REG_BASE_H__
+#ifndef __FW_REG_BASE_H__
+#define __FW_REG_BASE_H__
 
 #if defined (SDCC) || defined (__SDCC)
     
