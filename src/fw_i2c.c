@@ -12,27 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ___FW_INC_H___
-#define ___FW_INC_H___
-
-#include "fw_conf.h"
-#include "fw_sys.h"
-#include "fw_rcc.h"
-#include "fw_mem.h"
-#include "fw_exti.h"
-#include "fw_gpio.h"
-#include "fw_tim.h"
-#include "fw_uart.h"
-#include "fw_adc.h"
 #include "fw_i2c.h"
-#include "fw_spi.h"
-#include "fw_util.h"
+#include "fw_tim.h"
+#include "fw_sys.h"
 
-#if (__CONF_MCU_TYPE == 2  )
-#include "fw_pca.h"
-#endif
-#if (__CONF_MCU_TYPE == 3  )
-#include "fw_pwm.h"
-#endif
 
-#endif
+uint8_t I2C_MasterRecv(void)
+{
+    P_SW2 = 0x80;
+    I2C_SendMasterCmd(I2C_MasterCmd_Recv);
+    P_SW2 = 0x00;
+    return I2CRXD;
+}
+
+uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size)
+{
+    uint16_t i;
+    I2C_MasterStart();
+    I2C_MasterSendData(devAddr & 0xFE);
+    I2C_MasterRxAck();
+    I2C_MasterSendData(memAddr);
+    I2C_MasterRxAck();
+    while(size--)
+    {
+        I2C_MasterSendData(*dat++);
+        I2C_MasterRxAck();
+    }
+    I2C_MasterStop();
+    return 0;
+}

@@ -1,0 +1,107 @@
+// Copyright 2021 IOsetting <iosetting(at)outlook.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef ___FW_I2C_H___
+#define ___FW_I2C_H___
+
+#include "fw_conf.h"
+#include "fw_types.h"
+
+typedef enum
+{
+    I2C_WorkMode_Slave              = 0x00,
+    I2C_WorkMode_Master             = 0x01,
+} I2C_WorkMode_t;
+
+typedef enum
+{
+    I2C_MasterCmd_Wait          = 0x00, // Wait, idle
+    I2C_MasterCmd_Start         = 0x01, // START
+    I2C_MasterCmd_Send          = 0x02, // Send data
+    I2C_MasterCmd_RxAck         = 0x03, // Recive Ack
+    I2C_MasterCmd_Recv          = 0x04, // Recive data
+    I2C_MasterCmd_TxAck         = 0x05, // Send Ack
+    I2C_MasterCmd_Stop          = 0x06, // STOP
+    I2C_MasterCmd_StartSendRxAck = 0x09, // START + Send data + RxAck
+    I2C_MasterCmd_SendRxAck     = 0x0A, // Send data + RxAck
+    I2C_MasterCmd_RecvTxAck0    = 0x0B, // Receive data + TxAck(0)
+    I2C_MasterCmd_RecvNAck      = 0x0C, // Receive data + NAck
+} I2C_MasterCmd_t;
+
+typedef enum
+{
+    //           SCL  SDA
+    I2C_AlterPort_P15_P14       = 0x00,
+    I2C_AlterPort_P25_P24       = 0x01,
+    I2C_AlterPort_P77_P76       = 0x02,
+    I2C_AlterPort_P32_P33       = 0x03,
+} I2C_AlterPort_t;
+
+#define I2C_SetEnabled(__STATE__)           SFRX_ASSIGN(I2CCFG, 7, __STATE__)
+#define I2C_SetWorkMode(__MODE__)           SFRX_ASSIGN(I2CCFG, 6, __MODE__)
+
+/**
+ * I2C bus clock = SYSCLK / 2 / (__DIV__ * 2 + 4)
+ * __DIV__ values range [0, 63]
+*/
+#define I2C_SetClockPrescaler(__DIV__) do {                                                     \
+                SFRX_ON();                                                             \
+                (I2CCFG) =  (I2CCFG) & ~(0x3F) | ((__DIV__) & 0x3F); \
+                SFRX_OFF();                                                             \
+            } while(0)
+
+#define I2C_SendMasterCmd(__CMD__) {                                 \
+                (I2CMSCR) =  (I2CMSCR) & ~(0x0F) | ((__CMD__) & 0x0F);  \
+                while (!(I2CMSST & 0x40));                              \
+                I2CMSST &= ~0x40;                                       \
+            }
+
+#define I2C_MasterStart()               do{SFRX_ON();I2C_SendMasterCmd(I2C_MasterCmd_Start);SFRX_OFF();}while(0)
+#define I2C_MasterSendData(__DATA__)    do{SFRX_ON();I2CTXD = (__DATA__); I2C_SendMasterCmd(I2C_MasterCmd_Send);SFRX_OFF();}while(0)
+#define I2C_MasterRxAck()               do{SFRX_ON();I2C_SendMasterCmd(I2C_MasterCmd_RxAck);SFRX_OFF();}while(0)
+#define I2C_MasterAck()                 do{SFRX_ON();I2CMSST &= ~(0x01); I2C_SendMasterCmd(I2C_MasterCmd_TxAck);SFRX_OFF();}while(0)
+#define I2C_MasterNAck()                do{SFRX_ON();I2CMSST |= 0x01; I2C_SendMasterCmd(I2C_MasterCmd_TxAck);SFRX_OFF();}while(0)
+#define I2C_MasterStop()                do{SFRX_ON();I2C_SendMasterCmd(I2C_MasterCmd_Stop);SFRX_OFF();}while(0)
+
+/**
+ * If enabled, `Send Data`+`RxAck` will be executed automatically after write operation on I2CTXD
+*/
+#define I2C_SetMasterAutoSend(__STATE__)    SFRX_ASSIGN(I2CMSAUX, 0, __STATE__)
+/**
+ * Call P_SW2=0x80 before invoking this
+*/
+#define I2C_IsMasterBusy()                  (I2CMSST & 0x80)
+#define I2C_ClearMasterCmdInterrupt()       do {SFRX_ON(); I2CMSST &=  ~(0x01 << 6); SFRX_OFF();} while(0)
+
+#define I2C_ResetSlaveMode()                SFRX_SET(I2CSLCR, 0)
+/**
+ * Call P_SW2=0x80 before invoking this
+*/
+#define I2C_IsSlaveBusy()                   (I2CSLST & 0x80)
+#define I2C_ClearSlaveStartInterrupt()      do {SFRX_ON(); I2CSLST &=  ~(0x01 << 6); SFRX_OFF();} while(0)
+#define I2C_ClearSlaveRecvInterrupt()       do {SFRX_ON(); I2CSLST &=  ~(0x01 << 5); SFRX_OFF();} while(0)
+#define I2C_ClearSlaveSendInterrupt()       do {SFRX_ON(); I2CSLST &=  ~(0x01 << 4); P_SW2 = 0x00;} while(0)
+#define I2C_ClearSlaveStopInterrupt()       do {SFRX_ON(); I2CSLST &=  ~(0x01 << 3); P_SW2 = 0x00;} while(0)
+
+#define I2C_SetSlaveAddrControl(__STATE__)  SFRX_ASSIGN(I2CSLADR, 0, __STATE__)
+/**
+ * Alternative ports
+*/
+#define I2C_SetPort(__ALTER_PORT__)    (P_SW2 = P_SW2 & ~(0x03 << 4) | ((__ALTER_PORT__) << 4))
+
+
+uint8_t I2C_MasterRecv(void);
+uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size);
+
+#endif
