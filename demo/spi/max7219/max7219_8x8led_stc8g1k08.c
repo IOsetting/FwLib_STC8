@@ -113,7 +113,7 @@ void SPI_init(void)
     // Master mode
     SPI_SetMasterMode(HAL_State_ON);
     // Start SPI
-    SPI_SetEnableState(HAL_State_ON);
+    SPI_SetEnabled(HAL_State_ON);
 }
 
 void main()

@@ -43,7 +43,7 @@ INTERRUPT(ADC_Routine, EXTI_VectADC)
     {
         /**
          * Uncomment these lines in high speed ADC
-        GPIO_P1_SetMode(GPIO_Pin_1, GPIO_Mode_Output_OD);
+        GPIO_P1_SetMode(GPIO_Pin_1, GPIO_Mode_InOut_OD);
         GPIO_P1_SetMode(GPIO_Pin_1, GPIO_Mode_Input_HIP);
         */
         ADC_SetChannel(0x01);
@@ -52,7 +52,7 @@ INTERRUPT(ADC_Routine, EXTI_VectADC)
     {
         /**
          * Uncomment these lines in high speed ADC
-        GPIO_P1_SetMode(GPIO_Pin_2, GPIO_Mode_Output_OD);
+        GPIO_P1_SetMode(GPIO_Pin_2, GPIO_Mode_InOut_OD);
         GPIO_P1_SetMode(GPIO_Pin_2, GPIO_Mode_Input_HIP);
         */
         ADC_SetChannel(0x02);

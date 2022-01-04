@@ -131,16 +131,11 @@ typedef enum
 #define EXTI_INT_CompFall_ON        SFR_SET(CMPCR1, 4)
 #define EXTI_INT_CompFall_OFF       SFR_RESET(CMPCR1, 4)
 
-#define EXTI_INT_I2cMaster_ON       SFRX_SET(I2CMSCR, 7)
-#define EXTI_INT_I2cMaster_OFF      SFRX_RESET(I2CMSCR, 7)
-#define EXTI_INT_I2cSlvRxStart_ON   SFRX_SET(I2CSLCR, 6)
-#define EXTI_INT_I2cSlvRxStart_OFF  SFRX_RESET(I2CSLCR, 6)
-#define EXTI_INT_I2cSlvRxEnd_ON     SFRX_SET(I2CSLCR, 5)
-#define EXTI_INT_I2cSlvRxEnd_OFF    SFRX_RESET(I2CSLCR, 5)
-#define EXTI_INT_I2cSlvTxEnd_ON     SFRX_SET(I2CSLCR, 4)
-#define EXTI_INT_I2cSlvTxEnd_OFF    SFRX_RESET(I2CSLCR, 4)
-#define EXTI_INT_I2cSlvRxStop_ON    SFRX_SET(I2CSLCR, 3)
-#define EXTI_INT_I2cSlvRxStop_OFF   SFRX_RESET(I2CSLCR, 3)
+#define EXTI_I2C_SetMstIntState(__STATE__)      SFR_ASSIGN(I2CMSCR, 7, __STATE__)
+#define EXTI_I2C_SetSlvStartIntState(__STATE__) SFRX_SET(I2CSLCR, 6, __STATE__)
+#define EXTI_I2C_SetSlvRecvIntState(__STATE__)  SFRX_SET(I2CSLCR, 5, __STATE__)
+#define EXTI_I2C_SetSlvSendIntState(__STATE__)  SFRX_SET(I2CSLCR, 4, __STATE__)
+#define EXTI_I2C_SetSlvStopIntState(__STATE__)  SFRX_SET(I2CSLCR, 3, __STATE__)
 
 #define EXTI_INT_PWMA_Break_ON      SFRX_SET(PWMA_IER, 7)
 #define EXTI_INT_PWMA_Break_OFF     SFRX_RESET(PWMA_IER, 7)
@@ -179,8 +174,8 @@ typedef enum
 #define EXTI_INT_LCM_ON             SFRX_SET(LCMIFCFG, 7)
 #define EXTI_INT_LCM_OFF            SFRX_RESET(LCMIFCFG, 7)
 
-#define EXTI_Port_SetInterrupt_ON(__PORT__, __PINS__)  do {P_SW2 = 0x80; SFRX(PxINTE + (__PORT__)) |=  (__PINS__); P_SW2 = 0x00;} while(0)
-#define EXTI_Port_SetInterrupt_OFF(__PORT__, __PINS__) do {P_SW2 = 0x80; SFRX(PxINTE + (__PORT__)) &= ~(__PINS__); P_SW2 = 0x00;} while(0)
+#define EXTI_Port_SetInterrupt_ON(__PORT__, __PINS__)  do {SFRX_ON(); SFRX(PxINTE + (__PORT__)) |=  (__PINS__); SFRX_OFF();} while(0)
+#define EXTI_Port_SetInterrupt_OFF(__PORT__, __PINS__) do {SFRX_ON(); SFRX(PxINTE + (__PORT__)) &= ~(__PINS__); SFRX_OFF();} while(0)
 
 #define EXTI_Int0_SetIntPriority(__PRIORITY__)     SFR_DUAL_SET(IP, IPH, 0, __PRIORITY__)
 #define EXTI_Timer0_SetIntPriority(__PRIORITY__)   SFR_DUAL_SET(IP, IPH, 1, __PRIORITY__)
@@ -205,9 +200,9 @@ typedef enum
 
 #define EXTI_Port_SetIntPriority(__PORT__, __PRIORITY__)    SFRX_DUAL_SET(PIN_IP, PIN_IPH, __PORT__, __PRIORITY__)
 
-#define EXTI_Port_SetIntMode(__PORT__, __PINS__, __PORT_INT_MODE__) do { P_SW2 = 0x80;                                          \
+#define EXTI_Port_SetIntMode(__PORT__, __PINS__, __PORT_INT_MODE__) do { SFRX_ON();                                          \
             SFRX(PxIM0 + (__PORT__)) = SFRX(PxIM0 + (__PORT__)) & ~(__PINS__) | (((__PORT_INT_MODE__) & 0x01)? (__PINS__) : 0x00);  \
             SFRX(PxIM1 + (__PORT__)) = SFRX(PxIM1 + (__PORT__)) & ~(__PINS__) | (((__PORT_INT_MODE__) & 0x02)? (__PINS__) : 0x00);  \
-        P_SW2 = 0x00; } while(0)
+        SFRX_OFF(); } while(0)
 
 #endif

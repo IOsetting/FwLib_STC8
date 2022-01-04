@@ -66,10 +66,10 @@ typedef enum
 #define SPI_ClearInterrupts()               (SPSTAT |= 0xC0)
 
 #define SPI_IgnoreSlaveSelect(__STATE__)    SFR_ASSIGN(SPCTL, 7, __STATE__)
-#define SPI_SetEnableState(__STATE__)       SFR_ASSIGN(SPCTL, 6, __STATE__)
+#define SPI_SetEnabled(__STATE__)           SFR_ASSIGN(SPCTL, 6, __STATE__)
 #define SPI_SetDataOrder(__ORDER__)         SFR_ASSIGN(SPCTL, 5, __ORDER__)
 #define SPI_SetMasterMode(__STATE__)        SFR_ASSIGN(SPCTL, 4, __STATE__)
-// 
+
 /**
  * Clock Polarity, CPOL
  *  0: clock line idles low

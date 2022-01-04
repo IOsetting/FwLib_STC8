@@ -85,17 +85,17 @@ typedef enum
  *      Fpwm = SYSCLK / (PWMx_PSCR + 1) / PWMx_ARR / 2
 */
 #define PWMA_SetPrescaler(__16BIT_VAL__)     do {   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMA_PSCRH = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_PSCRL = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 
 #define PWMA_SetPeriod(__16BIT_VAL__)        do {   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMA_ARRH = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_ARRL = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 
 // PWMA all pins input/output OFF/ON
@@ -103,16 +103,16 @@ typedef enum
 
 // PWMA Pins Output OFF/ON
 #define PWMA_SetPinOutputState(__PINS__, __STATE__) do {  \
-                        P_SW2 = 0x80;                                                                   \
+                        SFRX_ON();                                                                   \
                         PWMA_ENO = PWMA_ENO & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
-                        P_SW2 = 0x00;                                                                   \
+                        SFRX_OFF();                                                                   \
                     } while(0)
 
 // Enable/Disable PWMB_BKR Control on Pins
 #define PWMA_SetPinBrakeControl(__PINS__, __STATE__) do {  \
-                        P_SW2 = 0x80;                                                                   \
+                        SFRX_ON();                                                                   \
                         PWMA_IOAUX = PWMA_IOAUX & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
-                        P_SW2 = 0x00;                                                                   \
+                        SFRX_OFF();                                                                   \
                     } while(0)
 
 /**
@@ -125,7 +125,7 @@ typedef enum
  * Turn off counter (call PWMA_SetCounterState()) before changing to different alignment
 */
 #define PWMA_SetEdgeAlignment(__ALIGN__)        do{   \
-                        P_SW2 = 0x80;(PWMA_CR1 = PWMA_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));P_SW2 = 0x00;  \
+                        SFRX_ON();(PWMA_CR1 = PWMA_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));SFRX_OFF();  \
                     }while(0)
 
 /**
@@ -188,16 +188,16 @@ typedef enum
 } PWMA_PortDirection_t;
 
 #define PWMA_PWM1_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR1 = PWMA_CCMR1 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR1 = PWMA_CCMR1 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM2_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR2 = PWMA_CCMR2 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR2 = PWMA_CCMR2 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM3_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR3 = PWMA_CCMR3 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR3 = PWMA_CCMR3 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM4_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR4 = PWMA_CCMR4 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR4 = PWMA_CCMR4 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 
 /**
@@ -214,44 +214,44 @@ typedef enum
  * Configurate PWMA.1 - PWMA.4 out mode 
 */
 #define PWMA_PWM1_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR1 = PWMA_CCMR1 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR1 = PWMA_CCMR1 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM2_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR2 = PWMA_CCMR2 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR2 = PWMA_CCMR2 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM3_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR3 = PWMA_CCMR3 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR3 = PWMA_CCMR3 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM4_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMA_CCMR4 = PWMA_CCMR4 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_CCMR4 = PWMA_CCMR4 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 
 /**
  * Configurate PWMA.1 - PWMA.4 capture/comparison value, this will affect duty cycle
 */
 #define PWMA_PWM1_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMA_CCR1H = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_CCR1L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM2_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMA_CCR2H = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_CCR2L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM3_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMA_CCR3H = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_CCR3L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM4_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMA_CCR4H = ((__16BIT_VAL__) >> 8)); \
                         (PWMA_CCR4L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 
 /**
@@ -289,16 +289,16 @@ typedef enum
 
 // Alternative port selection
 #define PWMA_PWM1_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMA_PS = PWMA_PS & ~(0x03 << 0) | ((__ALTER_PORT__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_PS = PWMA_PS & ~(0x03 << 0) | ((__ALTER_PORT__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM2_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMA_PS = PWMA_PS & ~(0x03 << 2) | ((__ALTER_PORT__) << 2)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_PS = PWMA_PS & ~(0x03 << 2) | ((__ALTER_PORT__) << 2)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM3_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMA_PS = PWMA_PS & ~(0x03 << 4) | ((__ALTER_PORT__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_PS = PWMA_PS & ~(0x03 << 4) | ((__ALTER_PORT__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMA_PWM4_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMA_PS = PWMA_PS & ~(0x03 << 6) | ((__ALTER_PORT__) << 6)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMA_PS = PWMA_PS & ~(0x03 << 6) | ((__ALTER_PORT__) << 6)); SFRX_OFF(); \
                     }while(0)
 
 
@@ -316,17 +316,17 @@ typedef enum
  *      Fpwm = SYSCLK / (PWMx_PSCR + 1) / PWMx_ARR / 2
 */
 #define PWMB_SetPrescaler(__16BIT_VAL__)     do {   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMB_PSCRH = ((__16BIT_VAL__) >> 8)); \
                         (PWMB_PSCRL = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 
 #define PWMB_SetPeriod(__16BIT_VAL__)        do {   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMB_ARRH = ((__16BIT_VAL__) >> 8)); \
                         (PWMB_ARRL = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 
 // PWMA all pins input/output OFF/ON
@@ -334,16 +334,16 @@ typedef enum
 
 // PWMB Pins Output OFF/ON
 #define PWMB_SetPinOutputState(__PINS__, __STATE__) do {  \
-                        P_SW2 = 0x80;                                                                   \
+                        SFRX_ON();                                                                   \
                         PWMB_ENO = PWMB_ENO & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
-                        P_SW2 = 0x00;                                                                   \
+                        SFRX_OFF();                                                                   \
                     } while(0)
 
 // Enable/Disable PWMB_BKR Control on Pins
 #define PWMB_SetPinBrakeControl(__PINS__, __STATE__) do {  \
-                        P_SW2 = 0x80;                                                                   \
+                        SFRX_ON();                                                                   \
                         PWMB_IOAUX = PWMB_IOAUX & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);  \
-                        P_SW2 = 0x00;                                                                   \
+                        SFRX_OFF();                                                                   \
                     } while(0)
 
 /**
@@ -356,7 +356,7 @@ typedef enum
  * Turn off counter (call PWMB_SetCounterState()) before changing to different alignment
 */
 #define PWMB_SetEdgeAlignment(__ALIGN__)        do{   \
-                        P_SW2 = 0x80;(PWMB_CR1 = PWMB_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));P_SW2 = 0x00;  \
+                        SFRX_ON();(PWMB_CR1 = PWMB_CR1 & ~(0x03 << 5) | ((__ALIGN__) << 5));SFRX_OFF();  \
                     }while(0)
 
 /**
@@ -411,16 +411,16 @@ typedef enum
 } PWMB_PortDirection_t;
 
 #define PWMB_PWM1_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR1 = PWMB_CCMR1 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR1 = PWMB_CCMR1 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM2_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR2 = PWMB_CCMR2 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR2 = PWMB_CCMR2 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM3_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR3 = PWMB_CCMR3 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR3 = PWMB_CCMR3 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM4_SetPortDirection(__PORT_DIR__)    do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR4 = PWMB_CCMR4 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR4 = PWMB_CCMR4 & ~(0x03 << 0) | ((__PORT_DIR__) << 0)); SFRX_OFF(); \
                     }while(0)
 
 /**
@@ -437,44 +437,44 @@ typedef enum
  * Configurate PWMB.1(PWM5) - PWMB.4(PWM8) output mode 
 */
 #define PWMB_PWM1_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR1 = PWMB_CCMR1 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR1 = PWMB_CCMR1 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM2_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR2 = PWMB_CCMR2 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR2 = PWMB_CCMR2 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM3_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR3 = PWMB_CCMR3 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR3 = PWMB_CCMR3 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM4_ConfigOutputMode(__MODE__) do{   \
-                        P_SW2 = 0x80;(PWMB_CCMR4 = PWMB_CCMR4 & ~(0x07 << 4) | ((__MODE__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_CCMR4 = PWMB_CCMR4 & ~(0x07 << 4) | ((__MODE__) << 4)); SFRX_OFF(); \
                     }while(0)
 
 /**
  * Configurate PWMB.1(PWM5) - PWMB.4(PWM8) capture/comparison value, this will affect duty cycle
 */
 #define PWMB_PWM1_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMB_CCR1H = ((__16BIT_VAL__) >> 8)); \
                         (PWMB_CCR1L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM2_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMB_CCR2H = ((__16BIT_VAL__) >> 8)); \
                         (PWMB_CCR2L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM3_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMB_CCR3H = ((__16BIT_VAL__) >> 8)); \
                         (PWMB_CCR3L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM4_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
-                        P_SW2 = 0x80; \
+                        SFRX_ON(); \
                         (PWMB_CCR4H = ((__16BIT_VAL__) >> 8)); \
                         (PWMB_CCR4L = ((__16BIT_VAL__) & 0xFF)); \
-                        P_SW2 = 0x00; \
+                        SFRX_OFF(); \
                     }while(0)
 
 typedef enum
@@ -511,16 +511,16 @@ typedef enum
 
 // Alternative port selection
 #define PWMB_PWM1_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMB_PS = PWMB_PS & ~(0x03 << 0) | ((__ALTER_PORT__) << 0)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_PS = PWMB_PS & ~(0x03 << 0) | ((__ALTER_PORT__) << 0)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM2_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMB_PS = PWMB_PS & ~(0x03 << 2) | ((__ALTER_PORT__) << 2)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_PS = PWMB_PS & ~(0x03 << 2) | ((__ALTER_PORT__) << 2)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM3_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMB_PS = PWMB_PS & ~(0x03 << 4) | ((__ALTER_PORT__) << 4)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_PS = PWMB_PS & ~(0x03 << 4) | ((__ALTER_PORT__) << 4)); SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM4_SetPort(__ALTER_PORT__)    do{   \
-                        P_SW2 = 0x80;(PWMB_PS = PWMB_PS & ~(0x03 << 6) | ((__ALTER_PORT__) << 6)); P_SW2 = 0x00; \
+                        SFRX_ON();(PWMB_PS = PWMB_PS & ~(0x03 << 6) | ((__ALTER_PORT__) << 6)); SFRX_OFF(); \
                     }while(0)
 
 

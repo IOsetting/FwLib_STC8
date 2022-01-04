@@ -81,7 +81,7 @@ void TIM_Timer1_Config(HAL_State_t freq1t, TIM_TimerMode_t mode, uint16_t freque
 #define TIM_Timer2_SetOutput(__STATE__)     SFR_ASSIGN(INTCLKO, 2, __STATE__)
 #define TIM_Timer2_SetInitValue(__TH__, __TL__)  do{ T2H = (__TH__); T2L = (__TL__); }while(0)
 // Timer2 Prescaler: [0, 255]
-#define TIM_Timer2_SetPreScaler(__PRE__)  do{P_SW2 = 0x80; TM2PS = (__PRE__); P_SW2 = 0x00;}while(0)
+#define TIM_Timer2_SetPreScaler(__PRE__)  do{SFRX_ON(); TM2PS = (__PRE__); SFRX_OFF();}while(0)
 
 void TIM_Timer2_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency);
 
@@ -98,7 +98,7 @@ void TIM_Timer2_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency
 #define TIM_Timer3_SetOutput(__STATE__)     SFR_ASSIGN(T4T3M, 0, __STATE__)
 #define TIM_Timer3_SetInitValue(__TH__, __TL__)  do{ T3H = (__TH__); T3L = (__TL__); }while(0)
 // Timer3 Prescaler: [0, 255]
-#define TIM_Timer3_SetPreScaler(__PRE__)  do{P_SW2 = 0x80; TM3PS = (__PRE__); P_SW2 = 0x00;}while(0)
+#define TIM_Timer3_SetPreScaler(__PRE__)  do{SFRX_ON(); TM3PS = (__PRE__); SFRX_OFF();}while(0)
 
 void TIM_Timer3_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency, HAL_State_t intState);
 
@@ -115,7 +115,7 @@ void TIM_Timer3_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency
 #define TIM_Timer4_SetOutput(__STATE__)     SFR_ASSIGN(T4T3M, 4, __STATE__)
 #define TIM_Timer4_SetInitValue(__TH__, __TL__)  do{ T4H = (__TH__); T4L = (__TL__); }while(0)
 // Timer4 Prescaler: [0, 255]
-#define TIM_Timer4_SetPreScaler(__PRE__)  do{P_SW2 = 0x80; TM4PS = (__PRE__); P_SW2 = 0x00;}while(0)
+#define TIM_Timer4_SetPreScaler(__PRE__)  do{SFRX_ON(); TM4PS = (__PRE__); SFRX_OFF();}while(0)
 
 void TIM_Timer4_Config(HAL_State_t freq1t, uint8_t prescaler, uint16_t frequency, HAL_State_t intState);
 

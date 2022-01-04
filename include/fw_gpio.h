@@ -23,7 +23,7 @@ typedef enum
     GPIO_Mode_InOut_QBD  = 0x00, /* quasi-bidirectional(be compatible with classical 8051 MCUs) */
     GPIO_Mode_Output_PP  = 0x01, /* push-pull output */
     GPIO_Mode_Input_HIP  = 0x02, /* high-impedance input */
-    GPIO_Mode_Output_OD  = 0x03, /* open drain output */
+    GPIO_Mode_InOut_OD   = 0x03, /* open drain output */
 } GPIO_Mode_t;
 
 typedef enum
@@ -114,38 +114,38 @@ typedef enum
 #endif
 
 #define GPIO_SetPullUp(__PORT__, __PINS__, __STATE__) do { \
-                            P_SW2 = 0x80;                                                           \
+                            SFRX_ON();                                                           \
                             SFRX(PxPU + (__PORT__)) = SFRX(PxPU + (__PORT__))                       \
                                 & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);          \
-                            P_SW2 = 0x00;                                                           \
+                            SFRX_OFF();                                                           \
                         } while(0)
 
 #define GPIO_SetSchmittTrigger(__PORT__, __PINS__, __STATE__) do { \
-                            P_SW2 = 0x80;                                                           \
+                            SFRX_ON();                                                           \
                             SFRX(PxNCS + (__PORT__)) = SFRX(PxNCS + (__PORT__))                     \
                                 & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);          \
-                            P_SW2 = 0x00;                                                           \
+                            SFRX_OFF();                                                           \
                         } while(0)
 
 #define GPIO_SetSwitchSpeed(__PORT__, __PINS__, __STATE__) do { \
-                            P_SW2 = 0x80;                                                           \
+                            SFRX_ON();                                                           \
                             SFRX(PxSR + (__PORT__)) = SFRX(PxSR + (__PORT__))                       \
                                 & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);          \
-                            P_SW2 = 0x00;                                                           \
+                            SFRX_OFF();                                                           \
                         } while(0)
 
 #define GPIO_SetDriveCapability(__PORT__, __PINS__, __STATE__) do { \
-                            P_SW2 = 0x80;                                                           \
+                            SFRX_ON();                                                           \
                             SFRX(PxDR + (__PORT__)) = SFRX(PxDR + (__PORT__))                       \
                                 & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);          \
-                            P_SW2 = 0x00;                                                           \
+                            SFRX_OFF();                                                           \
                         } while(0)
 
 #define GPIO_SetDigitalInput(__PORT__, __PINS__, __STATE__) do { \
-                            P_SW2 = 0x80;                                                           \
+                            SFRX_ON();                                                           \
                             SFRX(PxIE + (__PORT__)) = SFRX(PxIE + (__PORT__))                       \
                                 & ~(__PINS__) | (((__STATE__) & 0x01)? (__PINS__) : 0x00);          \
-                            P_SW2 = 0x00;                                                           \
+                            SFRX_OFF();                                                           \
                         } while(0)
 
 

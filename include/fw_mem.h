@@ -19,7 +19,7 @@
 #include "fw_types.h"
 
 #define MEM_ReadCODE(__ADDR__)      (*(unsigned char volatile __CODE *)(__ADDR__))
-// Set P_SW2 = 0x80 before using this macro
+// Set SFRX_ON() before using this macro
 #define MEM_ReadXDATA(__ADDR__)     (*(unsigned char volatile __XDATA *)(__ADDR__))
 
 typedef enum

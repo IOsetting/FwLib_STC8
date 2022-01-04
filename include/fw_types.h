@@ -105,21 +105,27 @@ typedef enum
 } while(0)
 
 /**
+ * xdata sfr address switch
+*/
+#define SFRX_ON()             (P_SW2 |= 0x80)
+#define SFRX_OFF()            (P_SW2 &= ~0x80)
+
+/**
  * xdata sfr operations
  */
-#define SFRX_SET(__SFR__, __POS__)     do {P_SW2 = 0x80; (__SFR__) |=  (0x01 << (__POS__)); P_SW2 = 0x00;} while(0)
-#define SFRX_RESET(__SFR__, __POS__)   do {P_SW2 = 0x80; (__SFR__) &= ~(0x01 << (__POS__)); P_SW2 = 0x00;} while(0)
+#define SFRX_SET(__SFR__, __POS__)     do {SFRX_ON(); (__SFR__) |=  (0x01 << (__POS__)); SFRX_OFF();} while(0)
+#define SFRX_RESET(__SFR__, __POS__)   do {SFRX_ON(); (__SFR__) &= ~(0x01 << (__POS__)); SFRX_OFF();} while(0)
 #define SFRX_ASSIGN(__SFR__, __POS__, __VAL__)  do {                                                    \
-    P_SW2 = 0x80;                                                                                       \
+    SFRX_ON();                                                                                       \
     (__SFR__) =  (__SFR__) & ~(0x01 << (__POS__)) | ((__VAL__) << (__POS__));                           \
-    P_SW2 = 0x00;                                                                                       \
+    SFRX_OFF();                                                                                       \
 } while(0)
 // For dual xdata sfr bit (one for each) operation
 #define SFRX_DUAL_SET(__SFR0__, __SFR1__, __POS__, __VAL__)  do {                                       \
-    P_SW2 = 0x80;                                                                                       \
+    SFRX_ON();                                                                                       \
     (__SFR0__) = (__SFR0__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x01)? (0x01 << (__POS__)) : 0x00);  \
     (__SFR1__) = (__SFR1__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x02)? (0x01 << (__POS__)) : 0x00);  \
-    P_SW2 = 0x00;                                                                                       \
+    SFRX_OFF();                                                                                       \
 } while(0)
 
 #endif
