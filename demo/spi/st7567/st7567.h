@@ -17,6 +17,15 @@
 
 #include "fw_hal.h"
 
+/**
+ * ST7565, ST7567
+ * 
+ * Display Data RAM has a matrix of 65 by 132 bits. The address ranges are: 
+ * X=0~131(83H) (column address), Y=0~8 (page address)
+ * 
+*/
+
+#define ST7567_MODEL        ST7567_MODEL_ST7567
 
 #define ST7567_CS           P35
 #define ST7567_MOSI         P34
@@ -29,39 +38,37 @@
 #define ST7567_WIDTH  128
 // Y height
 #define ST7567_HEIGHT 64
-// Additional bytes in each row
-#define ST7567_SEG_EXPAND 4
+// Display RAM Columns
+#define ST7567_COLUMN_EXPAND  4
+// Display RAM Pages (8x8bit + 1bit)
+#define ST7567_PAGES 8
 // X orientation
 #define ST7567_X_ORIENT ST7567_SEG_DIRECTION_NORMAL
 // Y orientation
-#define ST7567_Y_ORIENT ST7567_COM_DIRECTION_REVERSE
+#define ST7567_Y_ORIENT ST7567_COM_DIRECTION_NORMAL
 
+#define ST7567_MODEL_ST7565                  0
+#define ST7567_MODEL_ST7567                  1
 
 /* ST7567 commands definitions */
-#define ST7567_DISPLAY_OFF                   0xAE /* 0xae: Display OFF (sleep mode) */
+#define ST7567_DISPLAY_OFF                   0xAE /* 0xae: Display OFF (sleep mode), default */
 #define ST7567_DISPLAY_ON                    0xAF /* 0xaf: Display ON in normal mode */
 
 #define ST7567_SET_START_LINE                0x40 /* 0x40-7f: Set display start line */
 #define  ST7567_SET_START_LINE_MASK          0x3f
 
-#define ST7567_SET_PAGE_ADDRESS              0xB0 /* 0xb0-b7: Set page start address, 0 - 7 */
+#define ST7567_SET_PAGE_ADDRESS              0xB0 /* 0xb0-b7: Set page start address, 0 - 8 */
 #define  ST7567_SET_PAGE_ADDRESS_MASK        0x07
 
-#define ST7567_SET_COLUMN_ADDRESS_MSB        0x10 /* 0x10-0x1f: Set 8bit column address - high 4 bits */
-#define ST7567_SET_COLUMN_ADDRESS_MSB_MASK   0x0f
+#define ST7567_SET_COLUMN_ADDRESS_MSB        0x10 /* 0x10-0x1f: Set 8bit column address - high 4 bits of 0 - 131 */
+#define  ST7567_SET_COLUMN_ADDRESS_MSB_MASK  0x0F
 
-#define ST7567_SET_COLUMN_ADDRESS_LSB        0x00 /* 0x00-0x0f: Set 8bit column address - low 4 bits */
+#define ST7567_SET_COLUMN_ADDRESS_LSB        0x00 /* 0x00-0x0f: Set 8bit column address - low 4 bits of 0 - 131 */
 #define  ST7567_SET_COLUMN_ADDRESS_LSB_MASK  0x0F
 
-/**
- * SEG: 0 - 131
-*/
-#define ST7567_SEG_DIRECTION_NORMAL          0xA0 /* 0xa0: Column address 0 is mapped to SEG0 */
-#define ST7567_SEG_DIRECTION_REVERSE         0xA1 /* 0xa1: Column address 128 is mapped to SEG0 */
+#define ST7567_SEG_DIRECTION_NORMAL          0xA0 /* 0xa0: Column address 0 is mapped to SEG0, default*/
+#define ST7567_SEG_DIRECTION_REVERSE         0xA1 /* 0xa1: Column address 83H(131) is mapped to SEG0 */
 
-/**
- * COM: 0 - 63
-*/
 #define ST7567_COM_DIRECTION_NORMAL          0xC0 /* 0xc0: Set COM output direction, normal mode */
 #define ST7567_COM_DIRECTION_REVERSE         0xC8 /* 0xc8: Set COM output direction, reverse mode */
 
@@ -71,11 +78,13 @@
 #define ST7567_ALL_PIXEL_ON                  0xA5 /* 0xa5: Entire display ON */
 #define ST7567_ALL_PIXEL_NORMAL              0xA4 /* 0xa4: Resume to RAM content display */
 
+                                                  /* LCD bias set */
 #define ST7567_BIAS_1_9                      0xA2 /* 0xa2: Select BIAS setting 1/9 */
 #define ST7567_BIAS_1_7                      0xA3 /* 0xa3: Select BIAS setting 1/7 */
 
 #define ST7567_READ_MODIFY_WRITE_START       0xE0 /* 0xe0: Enter the Read Modify Write mode */
 #define ST7567_READ_MODIFY_WRITE_END         0xEE /* 0xee: Leave the Read Modify Write mode */
+
 #define ST7567_RESET                         0xE2 /* 0xe2: Software RESET */
 
 /**
@@ -112,28 +121,29 @@
 #define ST7567_SET_EV                        0x81
 #define ST7567_SET_EV_MASK                   0x3F
 
+#if (ST7567_MODEL == ST7567_MODEL_ST7565)
+    #define ST7567_MODE_SLEEP                0xAC
+    #define ST7567_MODE_NORMAL               0xAD
+#endif
+
 #define ST7567_SET_BOOSTER                   0xF8 /* Set booster level */
 #define ST7567_SET_BOOSTER_4X                0x00
 #define ST7567_SET_BOOSTER_5X                0x01
+#define ST7567_SET_BOOSTER_6X                0x11
 
 #define ST7567_NOP                           0xE3
 #define ST7567_TEST                          0xFE
+
 
 #ifndef ST7567_TIMEOUT
 #define ST7567_TIMEOUT					20000
 #endif
 
-#if ST7567_X_ORIENT == ST7567_SEG_DIRECTION_REVERSE
-    #define ST7567_X_OFFSET  ST7567_SEG_EXPAND
-#else
-    #define ST7567_X_OFFSET  0
-#endif
-
-
-/** Background color */
-#define ST7567_COLOR_BACK 0x00
 /** Front color */
-#define ST7567_COLOR_FRONT 0x01
+#define ST7567_COLOR_FRONT 1U
+/** Background color */
+#define ST7567_COLOR_BACK  0U
+
 
 typedef struct {
     uint8_t width;
@@ -146,13 +156,20 @@ typedef struct {
 extern __CODE FontDef_t Font_3x5;
 extern __CODE FontDef_t Font_5x7;
 
-
 /**
- * @brief  Initializes ST7567 LCD
- * @param  None
+ * @brief  Writes single byte data to ST7567
+ * @param  dat: data to be written
  * @retval None
  */
-void ST7567_Init(void);
+void ST7567_WriteData(uint8_t dat);
+void ST7567_WriteSameData(uint8_t dat, uint32_t size);
+
+/**
+ * @brief  Writes single byte command to ST7567
+ * @param  command: command to be written
+ * @retval None
+ */
+void ST7567_WriteCommand(uint8_t command);
 
 /**
  * @brief  Hardware reset ST7567 LCD
@@ -162,18 +179,26 @@ void ST7567_Init(void);
 void ST7567_Reset(void);
 
 /**
- * @brief  Turn ST7567 LCD backlight on
+ * @brief  Initializes ST7567 LCD
  * @param  None
  * @retval None
  */
-void ST7567_BackLight_On(void);
+void ST7567_Init(void);
 
 /**
- * @brief  Turn ST7567 LCD backlight off
- * @param  None
+ * @brief  Powersave mode control
+ * @param  state HAL_State_ON:powersave mode, HAL_State_OFF:work mode
  * @retval None
  */
-void ST7567_BackLight_Off(void);
+void ST7567_SetPowerSaveMode(HAL_State_t state);
+
+
+/**
+ * @brief  Turn ST7567 LCD backlight on or off
+ * @param  state HAL_State_ON:on, HAL_State_OFF:off
+ * @retval None
+ */
+void ST7567_SetBackLightState(HAL_State_t state);
 
 /**
  * @brief  Turn ST7567 LCD backlight off
@@ -201,7 +226,7 @@ void ST7567_ToggleInvert(void);
 /** 
  * @brief  Fills entire LCD with desired color
  * @note   @ref ST7567_UpdateScreen() must be called after that in order to see updated LCD screen
- * @param  Color: Color to be used for screen fill. This parameter can be a value of @ref ST7567_COLOR_t enumeration
+ * @param  Color: Color to be used for screen fill, ST7567_COLOR_FRONT or ST7567_COLOR_BACK
  * @retval None
  */
 void ST7567_Fill(uint8_t Color);
@@ -214,7 +239,7 @@ void ST7567_Fill(uint8_t Color);
  * @param  color: Color to be used for screen fill. This parameter can be a value of @ref ST7567_COLOR_t enumeration
  * @retval None
  */
-void ST7567_DrawPixel(uint16_t x, uint16_t y, uint8_t color);
+void ST7567_DrawPixel(uint8_t x, uint8_t y, uint8_t color);
 
 /**
  * @brief  Sets cursor pointer to desired location for strings
@@ -255,20 +280,5 @@ char ST7567_Puts(char* str, FontDef_t* Font, uint8_t color);
  * @retval None
  */
 void ST7567_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t c);
-
-/**
- * @brief  Writes single byte command to slave
- * @param  command: command to be written
- * @retval None
- */
-void ST7567_WriteCommand(uint8_t command);
-
-/**
- * @brief  Writes single byte data to slave
- * @param  data: data to be written
- * @retval None
- */
-void ST7567_WriteData(uint8_t data);
-
 
 #endif // __ST7567_H_

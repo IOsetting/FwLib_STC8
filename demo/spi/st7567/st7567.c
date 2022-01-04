@@ -19,53 +19,56 @@
 #define ABS(x)   ((x) > 0 ? (x) : -(x))
 
 /* ST7567 data buffer */
-static __XDATA uint8_t ST7567_Buffer_all[(ST7567_WIDTH + ST7567_SEG_EXPAND) * ST7567_HEIGHT / 8];
+__BIT ST7567_colorInverted = RESET;
+uint8_t ST7567_currentX = 0;
+uint8_t ST7567_currentY = 0;
+static __XDATA uint8_t ST7567_Buffer_all[ST7567_WIDTH * ST7567_PAGES];
 
-/* Private ST7567 structure */
-typedef struct {
-    uint16_t CurrentX;
-    uint16_t CurrentY;
-    uint8_t Inverted;
-    uint8_t Initialized;
-} ST7567_t;
-
-/* Private variable */
-static __XDATA ST7567_t ST7567;
-
-
-static void ST7567_TransmitByte(uint8_t dat)
+void ST7567_WriteData(uint8_t dat)
 {
     ST7567_CS = 0;
     SPI_TxRx(dat);
     ST7567_CS = 1;
 }
 
-static void ST7567_Transmit(const uint8_t *pData, uint32_t Size)
+void ST7567_WriteSameData(uint8_t dat, uint32_t size)
 {
     ST7567_CS = 0;
-    while (Size--)
+    do
     {
-        SPI_TxRx(*pData++);
-    }
+        SPI_TxRx(dat);
+    } while (--size);
     ST7567_CS = 1;
 }
 
 void ST7567_WriteCommand(uint8_t command)
 {
     ST7567_DC = 0;
-    ST7567_TransmitByte(command);
+    ST7567_WriteData(command);
     ST7567_DC = 1;
 }
 
-void ST7567_WriteData(uint8_t dat)
+static void ST7567_Transmit(const uint8_t *pDat, uint32_t size)
 {
-    ST7567_TransmitByte(dat);
+    ST7567_CS = 0;
+    do
+    {
+        SPI_TxRx(*pDat++);
+    } while (--size);
+    ST7567_CS = 1;
+}
+
+void ST7567_Reset(void)
+{
+    ST7567_RES = 0;
+    SYS_Delay(5);
+    ST7567_RES = 1;
 }
 
 void ST7567_Init(void)
 {
     ST7567_Reset();
-    ST7567_BackLight_On();
+    ST7567_SetBackLightState(HAL_State_ON);
 
     ST7567_WriteCommand(ST7567_RESET);
     // adjust contrast 
@@ -94,21 +97,30 @@ void ST7567_Init(void)
     ST7567_WriteCommand(ST7567_ALL_PIXEL_NORMAL);
 }
 
-void ST7567_Reset(void)
+void ST7567_SetPowerSaveMode(HAL_State_t state)
 {
-    ST7567_RES = 0;
-    SYS_Delay(5);
-    ST7567_RES = 1;
+#if (ST7567_MODEL == ST7567_MODEL_ST7565)
+    if (state == HAL_State_ON)
+        ST7567_WriteCommand(ST7567_MODE_SLEEP);
+    else
+        ST7567_WriteCommand(ST7567_MODE_NORMAL);
+#else
+    if (state == HAL_State_ON)
+    {
+        ST7567_WriteCommand(ST7567_DISPLAY_OFF);
+        ST7567_WriteCommand(ST7567_ALL_PIXEL_ON);
+    }
+    else
+    {
+        ST7567_WriteCommand(ST7567_ALL_PIXEL_NORMAL);
+        ST7567_WriteCommand(ST7567_DISPLAY_ON);
+    }
+#endif
 }
 
-void ST7567_BackLight_On(void)
+void ST7567_SetBackLightState(HAL_State_t state)
 {
-    ST7567_BL = 1;
-}
-
-void ST7567_BackLight_Off(void)
-{
-    ST7567_BL = 0;
+    ST7567_BL = (state == HAL_State_ON)? SET : RESET;
 }
 
 void ST7567_SetContrast(uint8_t val)
@@ -117,19 +129,23 @@ void ST7567_SetContrast(uint8_t val)
     ST7567_WriteCommand(ST7567_SET_EV_MASK & val);
 }
 
-void ST7567_UpdateScreen(void) 
+void ST7567_UpdateScreen(void)
 {
-    ST7567_WriteCommand(ST7567_SET_PAGE_ADDRESS | (0x00 & ST7567_SET_PAGE_ADDRESS_MASK));
-    ST7567_WriteCommand(ST7567_SET_COLUMN_ADDRESS_MSB);
-    ST7567_WriteCommand(ST7567_SET_COLUMN_ADDRESS_LSB);
-    ST7567_Transmit(ST7567_Buffer_all, sizeof(ST7567_Buffer_all));
+    uint8_t i = 0, *pt = ST7567_Buffer_all;
+    for (i = 0; i < ST7567_PAGES; i++)
+    {
+        ST7567_WriteCommand(ST7567_SET_PAGE_ADDRESS|(i & ST7567_SET_PAGE_ADDRESS_MASK));
+        ST7567_WriteCommand(ST7567_SET_COLUMN_ADDRESS_MSB|(0 >> 4));
+        ST7567_WriteCommand(ST7567_SET_COLUMN_ADDRESS_LSB|(0 & 0x0F));
+        ST7567_Transmit(pt + (ST7567_WIDTH * i), ST7567_WIDTH);
+    }
 }
 
 void ST7567_ToggleInvert(void) 
 {
     /* Toggle invert */
-    ST7567.Inverted = !ST7567.Inverted;
-    if (ST7567.Inverted)
+    ST7567_colorInverted = !ST7567_colorInverted;
+    if (ST7567_colorInverted)
     {
         ST7567_WriteCommand(ST7567_INVERSE_DISPLAY_ON);
     }
@@ -142,11 +158,12 @@ void ST7567_ToggleInvert(void)
 void ST7567_Fill(uint8_t color)
 {
     /* Set memory */
-    memset(ST7567_Buffer_all, (color == ST7567_COLOR_BACK) ? 0x00 : 0xFF, sizeof(ST7567_Buffer_all));
+    memset((uint8_t *)ST7567_Buffer_all, (color == ST7567_COLOR_BACK) ? 0x00 : 0xFF, sizeof(ST7567_Buffer_all));
 }
 
-void ST7567_DrawPixel(uint16_t x, uint16_t y, uint8_t color)
+void ST7567_DrawPixel(uint8_t x, uint8_t y, uint8_t color)
 {
+    uint8_t page, column;
     if (x >= ST7567_WIDTH || y >= ST7567_HEIGHT)
     {
         /* Error */
@@ -155,19 +172,19 @@ void ST7567_DrawPixel(uint16_t x, uint16_t y, uint8_t color)
 
     if (color == ST7567_COLOR_FRONT)
     {
-        ST7567_Buffer_all[ST7567_X_OFFSET + x + (y / 8) * (ST7567_WIDTH + ST7567_SEG_EXPAND)] |= 1 << (y % 8);
+        ST7567_Buffer_all[x + (y / 8) * ST7567_WIDTH] |= 1 << (y % 8);
     }
     else
     {
-        ST7567_Buffer_all[ST7567_X_OFFSET + x + (y / 8) * (ST7567_WIDTH + ST7567_SEG_EXPAND)] &= ~(1 << (y % 8));
+        ST7567_Buffer_all[x + (y / 8) * ST7567_WIDTH] &= ~(1 << (y % 8));
     }
 }
 
 void ST7567_GotoXY(uint16_t x, uint16_t y)
 {
     /* Set write pointers */
-    ST7567.CurrentX = x;
-    ST7567.CurrentY = y;
+    ST7567_currentX = x;
+    ST7567_currentY = y;
 }
 
 char ST7567_Putc(char ch, FontDef_t* font, uint8_t color)
@@ -185,11 +202,11 @@ char ST7567_Putc(char ch, FontDef_t* font, uint8_t color)
                 {
                     if ((b << k) & 0x80)
                     {
-                        ST7567_DrawPixel(ST7567.CurrentX + (j * 8) + k, (ST7567.CurrentY + i), (uint8_t) color);
+                        ST7567_DrawPixel(ST7567_currentX + (j * 8) + k, (ST7567_currentY + i), (uint8_t) color);
                     }
                     else
                     {
-                        ST7567_DrawPixel(ST7567.CurrentX + (j * 8) + k, (ST7567.CurrentY + i), (uint8_t) !color);
+                        ST7567_DrawPixel(ST7567_currentX + (j * 8) + k, (ST7567_currentY + i), (uint8_t) !color);
                     }
                 }
             }
@@ -199,11 +216,11 @@ char ST7567_Putc(char ch, FontDef_t* font, uint8_t color)
                 {
                     if (b & (0x0001 << k))
                     {
-                        ST7567_DrawPixel(ST7567.CurrentX + (j * 8) + k, (ST7567.CurrentY + i), (uint8_t) color);
+                        ST7567_DrawPixel(ST7567_currentX + (j * 8) + k, (ST7567_currentY + i), (uint8_t) color);
                     }
                     else
                     {
-                        ST7567_DrawPixel(ST7567.CurrentX + (j * 8) + k, (ST7567.CurrentY + i), (uint8_t) !color);
+                        ST7567_DrawPixel(ST7567_currentX + (j * 8) + k, (ST7567_currentY + i), (uint8_t) !color);
                     }
                 }
             }
@@ -211,7 +228,7 @@ char ST7567_Putc(char ch, FontDef_t* font, uint8_t color)
     }
 
     /* Increase pointer */
-    ST7567.CurrentX += font->width + 1;
+    ST7567_currentX += font->width + 1;
 
     /* Return character written */
     return ch;
