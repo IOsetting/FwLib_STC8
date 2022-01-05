@@ -16,7 +16,7 @@
 #include "fw_tim.h"
 #include "fw_sys.h"
 
-__CODE static char hexTable[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+__CODE char hexTable[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 __IDATA char wptr, rptr, UART1_RxBuffer[UART_RX_BUFF_SIZE];
 __BIT busy;
 

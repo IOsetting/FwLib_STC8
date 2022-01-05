@@ -27,7 +27,6 @@ uint8_t I2C_MasterRecv(void)
 
 uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size)
 {
-    uint16_t i;
     I2C_MasterStart();
     I2C_MasterSendData(devAddr & 0xFE);
     I2C_MasterRxAck();
