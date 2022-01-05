@@ -92,6 +92,14 @@
 */
 #define ADC_SetSampleTime(__CLKS_1TO32__)       (ADCTIM = ADCTIM & ~(0x1F << 0) | ((__CLKS_1TO32__) << 0))
 
+/**
+ * Start ADC conversion, and return 8-bit result
+*/
+uint8_t ADC_Convert(void);
 
+/**
+ * Start ADC conversion, and return 16-bit high precision result
+*/
+uint16_t ADC_ConvertHP(void);
 
 #endif
