@@ -71,7 +71,7 @@ void INT_Init()
 
 INTERRUPT(Int2_Routine, EXTI_VectInt2)
 {
-    NRF24L01_HandelIrqFlag(xbuf);
+    NRF24L01_HandelIrqFlag();
 }
 
 void main(void)

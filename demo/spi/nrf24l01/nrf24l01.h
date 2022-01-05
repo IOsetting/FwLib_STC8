@@ -16,6 +16,7 @@
 #define __FW_RNF24L01_H__
 
 #include "fw_hal.h"
+#include "string.h"
 
 #define NRF_CSN  P35
 #define NRF_MOSI P34
@@ -118,11 +119,11 @@ void NRF24L01_WriteReg(uint8_t reg, uint8_t value);
 
 uint8_t NRF24L01_ReadReg(uint8_t reg);
 
-void NRF24L01_ReadToBuf(uint8_t reg, uint8_t *pBuf, uint8_t len);
+void NRF24L01_ReadToBuf(uint8_t reg, uint8_t len);
 
 void NRF24L01_WriteFromBuf(uint8_t reg, const uint8_t *pBuf, uint8_t len);
 
-void NRF24L01_PrintBuf(uint8_t *buf);
+void NRF24L01_PrintBuf(void);
 
 /**
 * Flush the RX FIFO
@@ -137,10 +138,10 @@ void NRF24L01_FlushTX(void);
 void NRF24L01_CheckFlag(uint8_t *tx_ds, uint8_t *max_rt, uint8_t *rx_dr);
 uint8_t NRF24L01_RxAvailable(uint8_t* pipe_num);
 
-void NRF24L01_HandelIrqFlag(uint8_t *buf);
-void NRF24L01_Tx(uint8_t *txbuf);
-void NRF24L01_StartFastWrite(const void* txbuf);
-uint8_t NRF24L01_WriteFast(const void* txbuf);
+void NRF24L01_HandelIrqFlag(void);
+void NRF24L01_Tx(uint8_t *pBuf);
+void NRF24L01_StartFastWrite(const void* pBuf);
+uint8_t NRF24L01_WriteFast(const void* pBuf);
 void NRF24L01_ResetTX(void);
 uint8_t NRF24L01_Check(void);
 void NRF24L01_Init(NRF24_MODE mode);
