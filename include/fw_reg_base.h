@@ -19,6 +19,7 @@
     
     #define __BIT   __bit
     #define __IDATA __idata
+    #define __PDATA __pdata
     #define __XDATA __xdata
     #define __CODE  __code
     #define SBIT(name, addr, bit)  __sbit  __at(addr+bit)                    name
@@ -33,6 +34,7 @@
 #elif defined __CX51__
     #define __BIT   bit
 	#define __IDATA idata
+    #define __PDATA pdata
     #define __XDATA xdata
     #define __CODE  code
     #define SBIT(name, addr, bit)  sbit  name = addr^bit
@@ -51,6 +53,7 @@
     # warning unrecognized compiler
     #define __BIT   bool
     #define __IDATA
+    #define __PDATA 
     #define __XDATA 
     #define __CODE 
     #define SBIT(name, addr, bit)    volatile bool           name

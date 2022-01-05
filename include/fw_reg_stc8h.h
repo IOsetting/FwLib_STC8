@@ -32,8 +32,9 @@ SFR(USBADR,             0xFC);
 SFR(RSTCFG,             0xFF);
 
 
-//如下特殊功能寄存器位于扩展RAM区域
-//访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+/**
+ * Set B7 of P_SW2 before read/write the following registers
+*/
 
 /////////////////////////////////////////////////
 //FF00H-FFFFH
