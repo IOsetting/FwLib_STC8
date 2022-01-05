@@ -24,3 +24,11 @@ uint8_t SPI_TxRx(uint8_t dat)
     SPI_ClearInterrupts();
 	return SPDAT;
 }
+
+void SPI_TxRxBytes(uint8_t *pBuf, uint8_t len)
+{
+    while(len--)
+    {
+        *pBuf++ = SPI_TxRx(*pBuf);
+    }
+}

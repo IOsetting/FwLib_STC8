@@ -92,5 +92,6 @@ typedef enum
 #define SPI_SetPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 2) | ((__ALTER_PORT__) << 2))
 
 uint8_t SPI_TxRx(uint8_t dat);
+void SPI_TxRxBytes(uint8_t *pBuf, uint8_t len);
 
 #endif
