@@ -59,14 +59,20 @@
 #define ADC_SetResultAlignmentRight()       SFR_SET(ADCCFG, 5)
 
 /**
- * ADC conversion speed calculation:
- *   10-bit ADC Frequency ＝ SYSCLK / 2 / (SPEED + 1) / [(Switch + 1) + (Hold + 1) + (Sample + 1) + 10]
- *   12-bit ADC Frequency ＝ SYSCLK / 2 / (SPEED + 1) / [(Switch + 1) + (Hold + 1) + (Sample + 1) + 12]
+ * Time of one complete ADC conversion:
+ *   10-bit ADC: (Switch + 1) + (Hold + 1) + (Sample + 1) + 10
+ *   12-bit ADC: (Switch + 1) + (Hold + 1) + (Sample + 1) + 12
+ * 
+ * ADC conversion frequency:
+ *   10-bit ADC Frequency ＝ SYSCLK / 2 / (__PRESCALER__ + 1) / [(Switch + 1) + (Hold + 1) + (Sample + 1) + 10]
+ *   12-bit ADC Frequency ＝ SYSCLK / 2 / (__PRESCALER__ + 1) / [(Switch + 1) + (Hold + 1) + (Sample + 1) + 12]
+ * 
 */
+
 /**
- * ADC clock = SYSclk/2/(SPEED+1)
+ * ADC clock = SYSclk/2/(__PRESCALER__+1)
 */
-#define ADC_SetSpeed(__SPEED__)         (ADCCFG = ADCCFG & ~0x0F | ((__SPEED__) << 0))
+#define ADC_SetClockPrescaler(__PRESCALER__)    (ADCCFG = ADCCFG & ~0x0F | ((__PRESCALER__) << 0))
 
 /**
  * Channel switch time, 

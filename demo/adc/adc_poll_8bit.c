@@ -40,7 +40,7 @@ void main(void)
     // Channel: ADC1
     ADC_SetChannel(0x01);
     // ADC Clock = SYSCLK / 2 / (1+1) = SYSCLK / 4
-    ADC_SetSpeed(0x01);
+    ADC_SetClockPrescaler(0x01);
     // Left alignment, high 8-bit in ADC_RES
     ADC_SetResultAlignmentLeft();
     // Turn on ADC power

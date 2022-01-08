@@ -50,7 +50,7 @@ void main(void)
     // Channel: ADC1
     ADC_SetChannel(0x01);
     // ADC Clock = SYSCLK / 2 / (1+15) = SYSCLK / 32
-    ADC_SetSpeed(0x0F);
+    ADC_SetClockPrescaler(0x0F);
     // Right alignment, high 2-bit in ADC_RES, low 8-bit in ADC_RESL
     ADC_SetResultAlignmentRight();
     // Enable interrupts
