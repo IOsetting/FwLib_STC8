@@ -26,6 +26,7 @@
 #include "fw_adc.h"
 #include "fw_i2c.h"
 #include "fw_spi.h"
+#include "fw_iap.h"
 #include "fw_util.h"
 
 #if (__CONF_MCU_TYPE == 2  )
