@@ -78,6 +78,7 @@ void main(void)
     ADC_SetPowerState(HAL_State_ON);
     // Set ADC1(P1.1), ADC2(P1.2) HIP
     GPIO_P1_SetMode(GPIO_Pin_1|GPIO_Pin_2, GPIO_Mode_Input_HIP);
+    // Start ADC
     ADC_Start();
 
     while(1)

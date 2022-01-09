@@ -58,10 +58,11 @@ void main(void)
     EXTI_ADC_SetIntState(HAL_State_ON);
     // Turn on ADC power
     ADC_SetPowerState(HAL_State_ON);
+    // Start ADC
+    ADC_Start();
 
     while(1)
     {
-        ADC_Start();
         UART1_TxString("Result: ");
         UART1_TxHex(res >> 8);
         UART1_TxHex(res & 0xFF);
