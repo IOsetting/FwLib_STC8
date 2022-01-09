@@ -33,6 +33,7 @@
 #endif
 #if (__CONF_MCU_TYPE == 3  )
 #include "fw_pwm.h"
+#include "fw_rtc.h"
 #endif
 
 #endif
