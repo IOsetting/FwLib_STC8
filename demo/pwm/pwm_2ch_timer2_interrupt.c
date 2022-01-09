@@ -46,7 +46,7 @@ void main(void)
 {
     SYS_SetClock();
     // UART1, baud 115200, baud source Timer1, 1T mode
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
+    UART1_Config8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
 
     // Set GPIO pins output mode
     GPIO_P1_SetMode(GPIO_Pin_0|GPIO_Pin_1, GPIO_Mode_Output_PP);

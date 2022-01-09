@@ -64,7 +64,7 @@ void main(void)
 {
     SYS_SetClock();
     // For debug print
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
     // Channel: ADC1
     ADC_SetChannel(0x01);
     // ADC Clock = SYSCLK / 2 / (1+15) = SYSCLK / 32

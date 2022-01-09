@@ -73,11 +73,11 @@ typedef enum
 /**
  * Mode1: 8-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
 */
-void UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
+void UART1_Config8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
 /**
  * Mode3: 9-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
 */
-void UART1_ConfigMode3Dyn9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
+void UART1_Config9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
 
 void UART1_InterruptHandler(void);
 

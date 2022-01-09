@@ -18,6 +18,18 @@
 #include "fw_conf.h"
 #include "fw_types.h"
 
+typedef enum
+{
+    SYS_ExternalOSC_Clock       = 0x00,
+    SYS_ExternalOSC_Crystal     = 0x01,
+} SYS_ExternalOSC_t;
+
+typedef enum
+{
+    SYS_SysClkOutputPort_P54    = 0x00,
+    SYS_SysClkOutputPort_P16    = 0x01,
+} SYS_SysClkOutputPort_t;
+
 /**
  * STC8H Clock: 
  *  MCKSEL                     ||===> MCLKODIV ==> MCLKO_S => P1.6/P5.4
@@ -33,6 +45,103 @@
                                      IRTRIM = (__IRTRIM__);                      \
                                      LIRTRIM = ((__LIRTRIM__) & 0x03);           \
                                  } while(0)
+
+/**
+ * Enable high speed internal oscillator
+*/
+#define SYS_EnableOscillatorHSI()   do {                                            \
+                                        SFRX_ON();                                  \
+                                        (HIRCCR) =  (HIRCCR) | (0x01 << 7);         \
+                                        while (!(HIRCCR & 0x01));                   \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Disable high speed internal oscillator
+*/
+#define SYS_DisableOscillatorHSI()  do {                                            \
+                                        SFRX_ON();                                  \
+                                        (HIRCCR) =  (HIRCCR) & ~(0x01 << 7);        \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+
+/**
+ * Enable low speed internal oscillator
+*/
+#define SYS_EnableOscillatorLSI()   do {                                            \
+                                        SFRX_ON();                                  \
+                                        (IRC32KCR) =  (IRC32KCR) | (0x01 << 7);     \
+                                        while (!(IRC32KCR & 0x01));                 \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Disable low speed internal oscillator
+*/
+#define SYS_DisableOscillatorLSI()  do {                                            \
+                                        SFRX_ON();                                  \
+                                        (IRC32KCR) =  (IRC32KCR) & ~(0x01 << 7);    \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+
+/**
+ * Enable high speed external oscillator
+*/
+#define SYS_EnableOscillatorHSE()   do {                                            \
+                                        SFRX_ON();                                  \
+                                        (XOSCCR) =  (XOSCCR) | (0x01 << 7);         \
+                                        while (!(HIRCCR & 0x01));                   \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Disable high speed external oscillator
+*/
+#define SYS_DisableOscillatorHSE()  do {                                            \
+                                        SFRX_ON();                                  \
+                                        (XOSCCR) =  (XOSCCR) & ~(0x01 << 7);        \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Set high speed external oscillator type
+*/
+#define SYS_SetExternalOscType(__TYPE__)        SFRX_ASSIGN(XOSCCR, 6, (__TYPE__))
+
+/**
+ * Enable low speed external oscillator
+*/
+#define SYS_EnableOscillatorLSE()   do {                                            \
+                                        SFRX_ON();                                  \
+                                        (X32KCR) =  (X32KCR) | (0x01 << 7);         \
+                                        while (!(X32KCR & 0x01));                   \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Disable low speed external oscillator
+*/
+#define SYS_DisableOscillatorLSE()  do {                                            \
+                                        SFRX_ON();                                  \
+                                        (X32KCR) =  (X32KCR) & ~(0x01 << 7);        \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Set low speed external oscillator gain
+*/
+#define SYS_SetExternal32kHighGain(__STATE__)   SFRX_ASSIGN(X32KCR, 6, (__STATE__))
+
+/**
+ * System clock output
+ * 0:No output, Foutput = SYSCLK / __DIV__
+*/
+#define SYS_SetSysClockOutputDivider(__DIV__)   do {                                    \
+                                        SFRX_ON();                                      \
+                                        (MCLKOCR) =  (MCLKOCR) & ~(0x7F) | (__DIV__);   \
+                                        SFRX_OFF();                                     \
+                                    } while(0)
+
+/**
+ * System clock output pin
+ * 0:P5.4, 1:P1.6
+*/
+#define SYS_SetClockOutputPin(__PORT__)    SFRX_ASSIGN(MCLKOCR, 7, (__STATE__))
+
 
 void SYS_SetClock(void);
 void SYS_Delay(uint16_t t);

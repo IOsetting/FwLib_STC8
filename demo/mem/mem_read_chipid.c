@@ -27,7 +27,7 @@ void main(void)
 {
     SYS_SetClock();
     // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
     
     MEM_ReadChipID(buff);
     for (i = 0; i < 32; i++)

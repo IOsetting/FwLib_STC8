@@ -56,7 +56,7 @@ void _UART1_ConfigDynUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, in
         TIM_Timer2_SetRunState(HAL_State_ON);
     }
 }
-void UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate)
+void UART1_Config8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
     uint32_t sysclk;
@@ -66,7 +66,7 @@ void UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1T
     _UART1_ConfigDynUart(baudSource, _1TMode, init);
 }
 
-void UART1_ConfigMode3Dyn9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate)
+void UART1_Config9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
     uint32_t sysclk;

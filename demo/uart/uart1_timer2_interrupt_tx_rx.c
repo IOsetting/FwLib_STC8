@@ -25,7 +25,7 @@ void main(void)
 {
     SYS_SetClock();
     // UART1, baud 115200, baud source Timer2, 1T mode, interrupt on
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
     UART1_SetRxState(HAL_State_ON);
     // Enable UART1 interrupt
     EXTI_Global_SetIntState(HAL_State_ON);

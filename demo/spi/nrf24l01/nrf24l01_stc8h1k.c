@@ -87,7 +87,7 @@ void main(void)
 
     GPIO_Init();
     // UART1, baud 115200, baud source Timer1, 1T mode, no interrupt
-    UART1_ConfigMode1Dyn8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
+    UART1_Config8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
     UART1_TxString("UART Initialized\r\n");
 
     SPI_Init();
