@@ -28,49 +28,46 @@ typedef enum
 
 typedef enum
 {
-    RCC_IRCBand_20MHz   = 0x00, /* 20MHz RC osc band */
-    RCC_IRCBand_35MHz   = 0x01, /* 35MHz RC osc band */
-} RCC_IRCBand_t;
-
-typedef enum
-{
-    RCC_LIRTrim_None    = 0x00, /* none */
-    RCC_LIRTrim_001     = 0x01, /* +0.01% */
-    RCC_LIRTrim_004     = 0x02, /* +0.04% */
-    RCC_LIRTrim_010     = 0x03, /* +0.10% */
-} RCC_LIRTrim_t;
-
-typedef enum
-{
-    RCC_SoftwareReset_Code  = 0x00, /* restart from user code */
-    RCC_SoftwareReset_ISP   = 0x01, /* restart from ISP */
-} RCC_SoftwareReset_t;
-
-typedef enum
-{
     RCC_LowVoltResetPinAF_IO      = 0x00, /* P5.4 as GPIO */
     RCC_LowVoltResetPinAF_Reset   = 0x01, /* P5.4 as RESET */
 } RCC_LowVoltResetPinAF_t;
 
+/**
+ * Low voltage threshold 
+ * 
+ * |    | STC8H8K64U | Other      |
+ * | -- | ---------- | ---------- |
+ * | 00 | 1.9V       | 2.0V       |
+ * | 01 | 2.3V       | 2.4V       |
+ * | 10 | 2.8V       | 2.7V       |
+ * | 11 | 3.7V       | 3.0V       |
+*/
 typedef enum
 {
-    RCC_LowVoltDetectVolt_2V0   = 0x00, /* Detect at 2.0V */
-    RCC_LowVoltDetectVolt_2V4   = 0x01, /* Detect at 2.4V */
-    RCC_LowVoltDetectVolt_2V7   = 0x02, /* Detect at 2.7V */
-    RCC_LowVoltDetectVolt_3V0   = 0x03, /* Detect at 3.0V */
-} RCC_LowVoltDetectVolt_t;
+    RCC_LowVoltThreshold_Lowest     = 0x00,
+    RCC_LowVoltThreshold_Low        = 0x01,
+    RCC_LowVoltThreshold_High       = 0x02,
+    RCC_LowVoltThreshold_Highest    = 0x03,
+} RCC_LowVoltThreshold_t;
 
-void RCC_SetSYSCLKSource(RCC_SYSCLKSource_t SYSCLKSource);
-void RCC_SetCLKDivider(uint8_t divider);
-void RCC_SetIRC(RCC_IRCBand_t IRCBand, uint8_t IRTrim, RCC_LIRTrim_t LIRTrim);
-void RCC_SoftwareReset(RCC_SoftwareReset_t SoftwareReset);
-void RCC_ConfigLowVoltReset(
-    HAL_State_t HAL_State, 
-    RCC_LowVoltResetPinAF_t LowVoltResetPinAF,
-    RCC_LowVoltDetectVolt_t LowVoltDetectVolt);
+#define RCC_SetSYSCLKSource(__SOURCE__)     do {  \
+            SFRX_ON();                              \
+            (CKSEL) =  (CKSEL) & ~(0x03) | (__SOURCE__); \
+            SFRX_OFF();                              \
+        } while(0)
 
-void RCC_SetPowerDownWakeupTimer(HAL_State_t HAL_State, uint16_t countdown);
-void RCC_SetPowerDownMode(HAL_State_t HAL_State);
-void RCC_SetIdleMode(HAL_State_t HAL_State);
+#define RCC_SetCLKDivider(__DIV__)          do {SFRX_ON(); CLKDIV = (__DIV__ & 0xFF); SFRX_OFF();} while(0)
+#define RCC_SetPowerDownMode(__STATE__)     SFR_ASSIGN(PCON, 1)
+#define RCC_SetIdleMode(__STATE__)          SFR_ASSIGN(PCON, 0)
+#define RCC_SetPowerDownWakeupTimerState(__STATE__)     SFR_ASSIGN(WKTCH, 7)
+#define RCC_SetPowerDownWakeupTimerCountdown(__16BIT_COUNT__) do { \
+                            WKTCH = WKTCH & ~(0x7F) | (__16BIT_COUNT__ << 8); \
+                            WKTCL = (__16BIT_COUNT__ & 0xFF); \
+                        }while(0)
+
+#define RCC_SetLowVoltResetState(__STATE__) SFR_ASSIGN(RSTCFG, 6)
+#define RCC_SetLowVoltResetPinAF(__PIN_AF__) SFR_ASSIGN(RSTCFG, 4)
+#define RCC_SetLowVoltResetThreshold(__THRESHOLD__) (RSTCFG = RSTCFG & ~(0x03) | (__THRESHOLD__))
+
 
 #endif

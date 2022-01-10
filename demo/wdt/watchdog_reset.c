@@ -12,30 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ___FW_INC_H___
-#define ___FW_INC_H___
+/***
+ * Demo: Watchdog Reset
+ */
 
-#include "fw_conf.h"
-#include "fw_sys.h"
-#include "fw_rcc.h"
-#include "fw_mem.h"
-#include "fw_exti.h"
-#include "fw_gpio.h"
-#include "fw_tim.h"
-#include "fw_uart.h"
-#include "fw_adc.h"
-#include "fw_i2c.h"
-#include "fw_spi.h"
-#include "fw_iap.h"
-#include "fw_util.h"
-#include "fw_wdt.h"
+#include "fw_hal.h"
 
-#if (__CONF_MCU_TYPE == 2  )
-#include "fw_pca.h"
-#endif
-#if (__CONF_MCU_TYPE == 3  )
-#include "fw_pwm.h"
-#include "fw_rtc.h"
-#endif
-
-#endif
+int main(void)
+{
+    uint8_t count = 9;
+    SYS_SetClock();
+    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+    UART1_TxString("Watchdog test restarted\r\n");
+    /**
+     * Set countdown time to around 3 seconds(FOSC = 36.864MHz)
+    */
+    WDT_SetCounterPrescaler(0x07);
+    WDT_StartWatchDog();
+    while(1)
+    {
+        UART1_TxString("Countdown: ");
+        UART1_TxHex(count--);
+        UART1_TxString("\r\n");
+        SYS_Delay(1000);
+    }
+}
