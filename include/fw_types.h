@@ -98,6 +98,8 @@ typedef enum
 #define SFR_SET(__SFR__, __POS__)               ((__SFR__) |=  (0x01 << (__POS__)))
 #define SFR_RESET(__SFR__, __POS__)             ((__SFR__) &= ~(0x01 << (__POS__)))
 #define SFR_ASSIGN(__SFR__, __POS__, __VAL__)   ((__SFR__) = (__SFR__) & ~(0x01 << (__POS__)) | ((__VAL__) << (__POS__)))
+#define SFR_ASSIGN2BIT(__SFR__, __POS__, __VAL__)   ((__SFR__) = (__SFR__) & ~(0x03 << (__POS__)) | ((__VAL__ & 0x03) << (__POS__)))
+#define SFR_ASSIGN3BIT(__SFR__, __POS__, __VAL__)   ((__SFR__) = (__SFR__) & ~(0x07 << (__POS__)) | ((__VAL__ & 0x07) << (__POS__)))
 // For dual sfr bit (one for each) operation
 #define SFR_DUAL_SET(__SFR0__, __SFR1__, __POS__, __VAL__)  do {                                        \
     (__SFR0__) = (__SFR0__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x01)? (0x01 << (__POS__)) : 0x00);  \
@@ -116,16 +118,26 @@ typedef enum
 #define SFRX_SET(__SFR__, __POS__)     do {SFRX_ON(); (__SFR__) |=  (0x01 << (__POS__)); SFRX_OFF();} while(0)
 #define SFRX_RESET(__SFR__, __POS__)   do {SFRX_ON(); (__SFR__) &= ~(0x01 << (__POS__)); SFRX_OFF();} while(0)
 #define SFRX_ASSIGN(__SFR__, __POS__, __VAL__)  do {                                                    \
-    SFRX_ON();                                                                                       \
-    (__SFR__) =  (__SFR__) & ~(0x01 << (__POS__)) | ((__VAL__) << (__POS__));                           \
-    SFRX_OFF();                                                                                       \
-} while(0)
+                            SFRX_ON();                                                                  \
+                            (__SFR__) =  (__SFR__) & ~(0x01 << (__POS__)) | ((__VAL__) << (__POS__));   \
+                            SFRX_OFF();                                                                 \
+                        } while(0)
+#define SFRX_ASSIGN2BIT(__SFR__, __POS__, __VAL__)  do {                                                    \
+                            SFRX_ON();                                                                      \
+                            (__SFR__) =  (__SFR__) & ~(0x03 << (__POS__)) | ((__VAL__ & 0x03) << (__POS__));\
+                            SFRX_OFF();                                                                     \
+                        } while(0)
+#define SFRX_ASSIGN3BIT(__SFR__, __POS__, __VAL__)  do {                                                    \
+                            SFRX_ON();                                                                      \
+                            (__SFR__) =  (__SFR__) & ~(0x07 << (__POS__)) | ((__VAL__ & 0x07) << (__POS__));\
+                            SFRX_OFF();                                                                     \
+                        } while(0)
 // For dual xdata sfr bit (one for each) operation
-#define SFRX_DUAL_SET(__SFR0__, __SFR1__, __POS__, __VAL__)  do {                                       \
-    SFRX_ON();                                                                                       \
-    (__SFR0__) = (__SFR0__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x01)? (0x01 << (__POS__)) : 0x00);  \
-    (__SFR1__) = (__SFR1__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x02)? (0x01 << (__POS__)) : 0x00);  \
-    SFRX_OFF();                                                                                       \
-} while(0)
+#define SFRX_DUAL_SET(__SFR0__, __SFR1__, __POS__, __VAL__)  do {                                           \
+        SFRX_ON();                                                                                          \
+        (__SFR0__) = (__SFR0__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x01)? (0x01 << (__POS__)) : 0x00);  \
+        (__SFR1__) = (__SFR1__) & ~(0x01 << (__POS__)) | (((__VAL__) & 0x02)? (0x01 << (__POS__)) : 0x00);  \
+        SFRX_OFF();                                                                                         \
+    } while(0)
 
 #endif

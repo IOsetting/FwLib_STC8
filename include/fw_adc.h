@@ -49,7 +49,7 @@
  *  1110 N/A               P3.6/ADC14       P0.6/ADC14      P0.6/ADC14       P0.6/ADC14      N/A         P3.6/ADC14    P0.6/ADC14               
  *  1111 Internal 1.19V voltage reference 
 */
-#define ADC_SetChannel(__CHANNEL__)         (ADC_CONTR = ADC_CONTR & ~0x0F | ((__CHANNEL__) << 0))
+#define ADC_SetChannel(__CHANNEL__)         (ADC_CONTR = ADC_CONTR & ~0x0F | ((__CHANNEL__ & 0x0F) << 0))
 
 /**
  * 10-bit in [ADC_RES,ADC_RESL]: STC8H1K28,STC8H1K08
