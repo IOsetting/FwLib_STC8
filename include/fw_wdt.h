@@ -19,7 +19,7 @@
 #include "fw_types.h"
 
 /********************************************************
- * STC8 watchdog reset behavior is different from STC15
+ * STC8 watchdog behavior is different from STC15
  * 
  * STC8 watchdog will ALWAYS reset chip from ISP code region inspite of the 
  * setting of SWBS in IAP_CONTR

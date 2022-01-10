@@ -126,10 +126,8 @@ typedef enum
 #define EXTI_Int3_SetIntState(__STATE__)    SFR_ASSIGN(INTCLKO, 5, __STATE__)
 #define EXTI_Int2_SetIntState(__STATE__)    SFR_ASSIGN(INTCLKO, 4, __STATE__)
 
-#define EXTI_INT_CompRise_ON        SFR_SET(CMPCR1, 5)
-#define EXTI_INT_CompRise_OFF       SFR_RESET(CMPCR1, 5)
-#define EXTI_INT_CompFall_ON        SFR_SET(CMPCR1, 4)
-#define EXTI_INT_CompFall_OFF       SFR_RESET(CMPCR1, 4)
+#define EXTI_CMP_SetRiseIntState(__STATE__) SFR_ASSIGN(CMPCR1, 5, __STATE__)
+#define EXTI_CMP_SetFallIntState(__STATE__) SFR_ASSIGN(CMPCR1, 4, __STATE__)
 
 #define EXTI_I2C_SetMstIntState(__STATE__)      SFRX_ASSIGN(I2CMSCR, 7, __STATE__)
 #define EXTI_I2C_SetSlvStartIntState(__STATE__) SFRX_ASSIGN(I2CSLCR, 6, __STATE__)

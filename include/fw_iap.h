@@ -21,20 +21,31 @@
 /**
  * EEPROM size and IAP address of different series
  * 
- * | LINE        | SIZE | ADDR START | ADDR END | 
- * | ---------   | --- | -----  | -----  | 
- * | STC8H1K08   | 4K  | 0x0000 | 0x0FFF |
- * | STC8H1K24   | 4K  | 0x0000 | 0x0FFF |
- * | STC8H3K60S2 | 4K  | 0x0000 | 0x0FFF |
- * | STC8H3K60S4 | 4K  | 0x0000 | 0x0FFF |
- * | STC8H8K60U  | 4K  | 0x0000 | 0x0FFF |
- * | STC8H1K16   | 12K | 0x0000 | 0x2FFF |
- * | STC8H3K48S2 | 16K | 0x0000 | 0x3FFF |
- * | STC8H3K48S4 | 16K | 0x0000 | 0x3FFF |
- * | STC8H8K48U  | 16K | 0x0000 | 0x3FFF |
- * | STC8H3K32S2 | 32K | 0x0000 | 0x7FFF |
- * | STC8H3K32S4 | 32K | 0x0000 | 0x7FFF |
- * | STC8H8K32U  | 32K | 0x0000 | 0x7FFF |
+ * | LINE             | SIZE | ADDR START | ADDR END | 
+ * | ---------        | --- | -----  | -----  | 
+ * | STC8G1K08        | 4K  | 0x0000 | 0x0FFF |
+ * | STC8G1K08-8Pin   | 4K  | 0x0000 | 0x0FFF |
+ * | STC8G1K08A       | 4K  | 0x0000 | 0x0FFF |
+ * | STC8G1K08T       | 4K  | 0x0000 | 0x0FFF |
+ * | STC8G2K60S4      | 4K  | 0x0000 | 0x0FFF |
+ * | STC8G2K60S2      | 4K  | 0x0000 | 0x0FFF |
+ * | STC8H1K08        | 4K  | 0x0000 | 0x0FFF |
+ * | STC8H1K24        | 4K  | 0x0000 | 0x0FFF |
+ * | STC8H3K60S2      | 4K  | 0x0000 | 0x0FFF |
+ * | STC8H3K60S4      | 4K  | 0x0000 | 0x0FFF |
+ * | STC8H8K60U       | 4K  | 0x0000 | 0x0FFF |
+ * | STC8G1K04        | 8K  | 0x0000 | 0x1FFF |
+ * | STC8H1K16        | 12K | 0x0000 | 0x2FFF |
+ * | STC8H3K48S2      | 16K | 0x0000 | 0x3FFF |
+ * | STC8H3K48S4      | 16K | 0x0000 | 0x3FFF |
+ * | STC8H8K48U       | 16K | 0x0000 | 0x3FFF |
+ * | STC8G2K48S4      | 16K | 0x0000 | 0x3FFF |
+ * | STC8G2K48S2      | 16K | 0x0000 | 0x3FFF |
+ * | STC8H3K32S2      | 32K | 0x0000 | 0x7FFF |
+ * | STC8H3K32S4      | 32K | 0x0000 | 0x7FFF |
+ * | STC8H8K32U       | 32K | 0x0000 | 0x7FFF |
+ * | STC8G2K32S4      | 32K | 0x0000 | 0x7FFF |
+ * | STC8G2K32S2      | 32K | 0x0000 | 0x7FFF |
  * 
 */
 
