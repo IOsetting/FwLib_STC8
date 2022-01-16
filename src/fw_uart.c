@@ -127,6 +127,13 @@ void UART1_TxString(uint8_t *str)
     while (*str) UART1_TxChar(*str++);
 }
 
+int putchar(int dat) {
+    UART1_WriteBuffer(dat);
+    while(!TI);
+    UART1_ClearTxInterrupt();
+    return dat;
+}
+
 
 /**************************************************************************** /
  * UART2
