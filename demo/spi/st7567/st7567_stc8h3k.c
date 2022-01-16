@@ -34,7 +34,7 @@ void SPI_Init(void)
 {
     // ST7567 doesn't work if SPI frequency is too high
     SPI_SetClockPrescaler(SPI_ClockPreScaler_16);
-    // Clock idles low
+    // Clock is low when idle
     SPI_SetClockPolarity(HAL_State_OFF);
     // Data transfer is driven by lower SS pin
     SPI_SetClockPhase(SPI_ClockPhase_LeadingEdge);

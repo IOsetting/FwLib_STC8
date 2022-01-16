@@ -99,29 +99,3 @@ void UTIL_Uart1_36M864_115200_Init(void)
 	ET1 = 0;
 	TR1 = 1;
 }
-
-/*
-void UTIL_ItrimScan(uint8_t ircband, uint8_t vrtrim, uint8_t irtrim_limit, uint8_t *str)
-{
-	uint8_t i = irtrim_limit, j;
-	do
-	{
-		j = 3;
-		do
-		{
-			SYS_SetFOSC(ircband, vrtrim, i, j);
-            SYS_Delay(1);
-			UART1_TxHex(IRCBAND);
-			UART1_TxChar(' ');
-			UART1_TxHex(VRTRIM);
-			UART1_TxChar(' ');
-			UART1_TxHex(IRTRIM);
-			UART1_TxChar(0x20);
-			UART1_TxHex(LIRTRIM);
-			UART1_TxChar(0x20);
-			UART1_TxString(str);
-			SYS_Delay(10);
-		} while (j--);
-	} while (i--);
-}
-*/

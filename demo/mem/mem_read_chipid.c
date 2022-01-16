@@ -23,13 +23,8 @@
 
 uint8_t __XDATA i, buff[32] = {0};
 
-void main(void)
+void PrintBuff(void)
 {
-    SYS_SetClock();
-    // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
-    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
-    
-    MEM_ReadChipID(buff);
     for (i = 0; i < 32; i++)
     {
         UART1_TxHex(*(buff + i));
@@ -87,6 +82,37 @@ void main(void)
     UART1_TxString(", LIRTRIM:");
     UART1_TxHex(LIRTRIM);
     UART1_TxString("\r\n\r\n");
+}
 
-    while(1);
+void ItrimScan(uint8_t ircband, uint8_t vrtrim_limit, uint8_t irtrim_limit)
+{
+	uint8_t i = 0, j = 0;
+    while (i++ < vrtrim_limit)
+    {
+        j = 0;
+        while (j++ < irtrim_limit)
+        {
+            SYS_SetFOSC(ircband, i, j, 0);
+            SYS_Delay(10);
+            PrintBuff();
+        }
+    }
+}
+
+void main(void)
+{
+    SYS_SetClock();
+    // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
+    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+    MEM_ReadChipID(buff);
+    PrintBuff();
+
+    while(1)
+    {
+        /**
+         * Uncomment this line if vrtrim and irtrim are unknown,
+         * this will scan all possible vrtrim and irtrim values between [0, 0xE0]
+        */
+        //ItrimScan(__CONF_IRCBAND, 0xE0, 0xE0);
+    }
 }
