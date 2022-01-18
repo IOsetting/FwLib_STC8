@@ -30,7 +30,8 @@
 #include "adxl345.h"
 #include <stdio.h>
 
-uint8_t buf[6], count_int2 = 0, count_int3 = 0, count_double_tap = 0;
+volatile uint8_t count_int2 = 0, count_int3 = 0, count_double_tap = 0;
+volatile int16_t x, y, z;
 
 void SPI_Init(void)
 {
@@ -77,17 +78,19 @@ INTERRUPT(Int2_Routine, EXTI_VectInt2)
     {
         count_double_tap++;
     }
+    
 }
 
 INTERRUPT(Int3_Routine, EXTI_VectInt3)
 {
     count_int3++;
+    x = ADXL345_ReadInt(ADXL345_REG_DATAX0);
+    y = ADXL345_ReadInt(ADXL345_REG_DATAY0);
+    z = ADXL345_ReadInt(ADXL345_REG_DATAZ0);
 }
 
 int main(void)
 {
-    uint8_t intsrc;
-    int16_t x, y, z;
     SYS_SetClock();
     GPIO_Init();
     UART1_Config8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
@@ -101,29 +104,30 @@ int main(void)
         ADXL345_DATA_ALIGNMENT_RIGHT,
         ADXL345_G_RANGE_8G
     );
-    ADXL345_WriteByte(ADXL345_REG_THRESH_TAP, 0x2F);
-    ADXL345_WriteByte(ADXL345_REG_DUR, 0x1F);
-    ADXL345_WriteByte(ADXL345_REG_LATENT, 0x1F);
-    ADXL345_WriteByte(ADXL345_REG_WINDOW, 0x7F);
+    // Tap threshold: 62.5mg / LSB, value = 2.5g / 0.0625g = 0x28
+    ADXL345_WriteByte(ADXL345_REG_THRESH_TAP, 0x28);
+    // Tap duration: 625us / LSB, value = 0.02s / 0.000625s = 0x20
+    ADXL345_WriteByte(ADXL345_REG_DUR, 0x20);
+    // Tap latency: 1.25ms / LSB, value = 0.1s / 0.00125s = 0x50
+    ADXL345_WriteByte(ADXL345_REG_LATENT, 0x50);
+    // Tap window: 1.25ms / LSB, value = 0.3s / 0.00125s = 0xF0
+    ADXL345_WriteByte(ADXL345_REG_WINDOW, 0xF0);
     ADXL345_EnableTapDetectOnAxes(
         ADXL345_TAP_DETECT_AXIS_X|ADXL345_TAP_DETECT_AXIS_Y|ADXL345_TAP_DETECT_AXIS_Z);
     ADXL345_SetInterrupts(
         ADXL345_INT_DATA_READY|ADXL345_INT_SINGLE_TAP|ADXL345_INT_DOUBLE_TAP);
     ADXL345_RemapInterrupts(ADXL345_INT_DATA_READY);
 
+    // read to clear interrupts, or the counter will never receive interrupts
+    x = ADXL345_ReadInt(ADXL345_REG_DATAX0);
+    y = ADXL345_ReadInt(ADXL345_REG_DATAY0);
+    z = ADXL345_ReadInt(ADXL345_REG_DATAZ0);
+    x = ADXL345_ReadByte(ADXL345_REG_INT_SOURCE);
+
     while(1)
     {
-        buf[0] = ADXL345_ReadByte(ADXL345_REG_DATAX0);
-        buf[1] = ADXL345_ReadByte(ADXL345_REG_DATAX1);
-        buf[2] = ADXL345_ReadByte(ADXL345_REG_DATAY0);
-        buf[3] = ADXL345_ReadByte(ADXL345_REG_DATAY1);
-        buf[4] = ADXL345_ReadByte(ADXL345_REG_DATAZ0);
-        buf[5] = ADXL345_ReadByte(ADXL345_REG_DATAZ1);
-        x = *((int16_t *)&buf[0]);
-        y = *((int16_t *)&buf[2]);
-        z = *((int16_t *)&buf[4]);
         printf("X:%6d, Y:%6d, Z:%6d, DAT:%3d, TAP:%3d, 2-TAP:%3d\r\n", 
-            x, y, z, count_int2, count_int3, count_double_tap);
-        SYS_Delay(100);
+            x, y, z, count_int3, count_int2, count_double_tap);
+        SYS_Delay(50);
     }
 }

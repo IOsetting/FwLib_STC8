@@ -15,7 +15,7 @@
 
 #include "adxl345.h"
 
-uint8_t xbuf[2];
+uint8_t xbuf[3];
 
 uint8_t ADXL345_ReadByte(uint8_t addr)
 {
@@ -25,6 +25,17 @@ uint8_t ADXL345_ReadByte(uint8_t addr)
     SPI_TxRxBytes(xbuf, 2);
     ADXL345_CS = 1;
     return xbuf[1];
+}
+
+uint16_t ADXL345_ReadInt(uint8_t addr)
+{
+    ADXL345_CS = 0;
+    xbuf[0] = addr | 0xC0;
+    xbuf[1] = 0xFF;
+    xbuf[2] = 0xFF;
+    SPI_TxRxBytes(xbuf, 3);
+    ADXL345_CS = 1;
+    return *((uint16_t *)&xbuf[1]);
 }
 
 void ADXL345_WriteByte(uint8_t addr, uint8_t dat)

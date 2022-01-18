@@ -150,6 +150,7 @@ typedef enum {
 } ADXL345_G_Range_t;
 
 uint8_t ADXL345_ReadByte(uint8_t addr);
+uint16_t ADXL345_ReadInt(uint8_t addr);
 
 void ADXL345_WriteByte(uint8_t addr, uint8_t dat);
 
