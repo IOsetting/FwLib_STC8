@@ -67,12 +67,12 @@ typedef enum
                 I2CMSST &= ~0x40;                                       \
             }
 
-#define I2C_MasterStart()               do{SFRX_ON();I2C_SendMasterCmd(I2C_MasterCmd_Start);SFRX_OFF();}while(0)
-#define I2C_MasterSendData(__DATA__)    do{SFRX_ON();I2CTXD = (__DATA__); I2C_SendMasterCmd(I2C_MasterCmd_Send);SFRX_OFF();}while(0)
-#define I2C_MasterRxAck()               do{SFRX_ON();I2C_SendMasterCmd(I2C_MasterCmd_RxAck);SFRX_OFF();}while(0)
-#define I2C_MasterAck()                 do{SFRX_ON();I2CMSST &= ~(0x01); I2C_SendMasterCmd(I2C_MasterCmd_TxAck);SFRX_OFF();}while(0)
-#define I2C_MasterNAck()                do{SFRX_ON();I2CMSST |= 0x01; I2C_SendMasterCmd(I2C_MasterCmd_TxAck);SFRX_OFF();}while(0)
-#define I2C_MasterStop()                do{SFRX_ON();I2C_SendMasterCmd(I2C_MasterCmd_Stop);SFRX_OFF();}while(0)
+#define I2C_MasterStart()               I2C_SendMasterCmd(I2C_MasterCmd_Start)
+#define I2C_MasterSendData(__DATA__)    do{I2CTXD = (__DATA__); I2C_SendMasterCmd(I2C_MasterCmd_Send);}while(0)
+#define I2C_MasterRxAck()               I2C_SendMasterCmd(I2C_MasterCmd_RxAck)
+#define I2C_MasterAck()                 do{I2CMSST &= ~(0x01); I2C_SendMasterCmd(I2C_MasterCmd_TxAck);}while(0)
+#define I2C_MasterNAck()                do{I2CMSST |= 0x01; I2C_SendMasterCmd(I2C_MasterCmd_TxAck);}while(0)
+#define I2C_MasterStop()                I2C_SendMasterCmd(I2C_MasterCmd_Stop)
 
 /**
  * If enabled, `Send Data`+`RxAck` will be executed automatically after write operation on I2CTXD
@@ -101,7 +101,7 @@ typedef enum
 #define I2C_SetPort(__ALTER_PORT__)    (P_SW2 = P_SW2 & ~(0x03 << 4) | ((__ALTER_PORT__) << 4))
 
 
-uint8_t I2C_MasterRecv(void);
 uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size);
+uint8_t I2C_Read(uint8_t devAddr, uint8_t memAddr, uint8_t *buf, uint16_t size);
 
 #endif

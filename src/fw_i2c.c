@@ -13,20 +13,11 @@
 // limitations under the License.
 
 #include "fw_i2c.h"
-#include "fw_tim.h"
-#include "fw_sys.h"
 
-
-uint8_t I2C_MasterRecv(void)
-{
-    P_SW2 = 0x80;
-    I2C_SendMasterCmd(I2C_MasterCmd_Recv);
-    P_SW2 = 0x00;
-    return I2CRXD;
-}
 
 uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size)
 {
+    SFRX_ON();
     I2C_MasterStart();
     I2C_MasterSendData(devAddr & 0xFE);
     I2C_MasterRxAck();
@@ -38,5 +29,35 @@ uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size)
         I2C_MasterRxAck();
     }
     I2C_MasterStop();
-    return 0;
+    SFRX_OFF();
+    return HAL_OK;
+}
+
+uint8_t I2C_Read(uint8_t devAddr, uint8_t memAddr, uint8_t *buf, uint16_t size)
+{
+    SFRX_ON();
+    I2C_MasterStart();
+    I2C_MasterSendData(devAddr & 0xFE);
+    I2C_MasterRxAck();
+    I2C_MasterSendData(memAddr);
+    I2C_MasterRxAck();
+    I2C_MasterStart();
+    I2C_MasterSendData(devAddr | 0x01);
+    I2C_MasterRxAck();
+    while(size--)
+    {
+        I2C_SendMasterCmd(I2C_MasterCmd_Recv);
+        *buf++ = I2CRXD;
+        if (size == 0)
+        {
+            I2C_MasterNAck();
+        }
+        else
+        {
+            I2C_MasterAck();
+        }
+    }
+    I2C_MasterStop();
+    SFRX_OFF();
+    return HAL_OK;
 }
