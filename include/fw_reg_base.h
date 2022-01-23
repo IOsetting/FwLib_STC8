@@ -22,6 +22,7 @@
     #define __PDATA __pdata
     #define __XDATA __xdata
     #define __CODE  __code
+    #define __REENTRANT  __reentrant
     #define SBIT(name, addr, bit)  __sbit  __at(addr+bit)                    name
     #define SFR(name, addr)        __sfr   __at(addr)                        name
     #define SFRX(addr)              (*(unsigned char volatile __xdata *)(addr))
@@ -37,6 +38,7 @@
     #define __PDATA pdata
     #define __XDATA xdata
     #define __CODE  code
+    #define __REENTRANT  reentrant
     #define SBIT(name, addr, bit)  sbit  name = addr^bit
     #define SFR(name, addr)        sfr   name = addr
     #define SFRX(addr)              (*(unsigned char volatile xdata *)(addr))
@@ -56,6 +58,7 @@
     #define __PDATA 
     #define __XDATA 
     #define __CODE 
+    #define __REENTRANT  
     #define SBIT(name, addr, bit)    volatile bool           name
     #define SFR(name, addr)          volatile unsigned char  name
     #define SFRX(addr)               (*(unsigned char volatile *)(addr))
@@ -146,8 +149,8 @@ SBIT(P24,               _P2, 4);
 SBIT(P25,               _P2, 5);
 SBIT(P26,               _P2, 6);
 SBIT(P27,               _P2, 7);
+SFR(BUS_SPEED,          0xA1);
 SFR(P_SW1,              0xA2);
-SFR(VRTRIM,             0xA6);
 
 #define  _IE            0xA8
 SFR(IE,                 _IE);
@@ -255,5 +258,30 @@ SFR(T3L,                0xD5);
 SFR(T2H,                0xD6);
 SFR(T2L,                0xD7);
 
+SFR(ACC,                0xE0);
+
+#define  _P6            0xE8
+SFR(P6,                 _P6);
+SBIT(P60,               _P6, 0);
+SBIT(P61,               _P6, 1);
+SBIT(P62,               _P6, 2);
+SBIT(P63,               _P6, 3);
+SBIT(P64,               _P6, 4);
+SBIT(P65,               _P6, 5);
+SBIT(P66,               _P6, 6);
+SBIT(P67,               _P6, 7);
+
+SFR(B,                  0xF0);
+
+#define  _P7            0xF8
+SFR(P7,                 _P7);
+SBIT(P70,               _P7, 0);
+SBIT(P71,               _P7, 1);
+SBIT(P72,               _P7, 2);
+SBIT(P73,               _P7, 3);
+SBIT(P74,               _P7, 4);
+SBIT(P75,               _P7, 5);
+SBIT(P76,               _P7, 6);
+SBIT(P77,               _P7, 7);
 
 #endif

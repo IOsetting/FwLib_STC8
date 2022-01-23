@@ -3,10 +3,13 @@
 
 #include "fw_reg_base.h"
 
+SFR(VRTRIM,             0xA6);
+
 #define  _CCON          0xD8
 SFR(CCON,               _CCON);
 SBIT(CF,                _CCON, 7);
 SBIT(CR,                _CCON, 6);
+SBIT(CCF3,              _CCON, 3);
 SBIT(CCF2,              _CCON, 2);
 SBIT(CCF1,              _CCON, 1);
 SBIT(CCF0,              _CCON, 0);
@@ -16,7 +19,7 @@ SFR(CCAPM1,             0xDB);
 SFR(CCAPM2,             0xDC);
 SFR(ADCCFG,             0xDE);
 SFR(IP3,                0xDF);
-SFR(ACC,                0xE0);
+
 SFR(P7M1,               0xE1);
 SFR(P7M0,               0xE2);
 SFR(DPS,                0xE3);
@@ -24,7 +27,7 @@ SFR(DPL1,               0xE4);
 SFR(DPH1,               0xE5);
 SFR(CMPCR1,             0xE6);
 SFR(CMPCR2,             0xE7);
-SFR(P6,                 0xE8);
+
 SFR(CL,                 0xE9);
 SFR(CCAP0L,             0xEA);
 SFR(CCAP1L,             0xEB);
@@ -32,7 +35,6 @@ SFR(CCAP2L,             0xEC);
 SFR(IP3H,               0xEE);
 SFR(AUXINTIF,           0xEF);
 
-SFR(B,                  0xF0);
 SFR(PWMSET,             0xF1);
 SFR(PCA_PWM0,           0xF2);
 SFR(PCA_PWM1,           0xF3);
@@ -40,7 +42,7 @@ SFR(PCA_PWM2,           0xF4);
 SFR(IAP_TPS,            0xF5);
 SFR(PWMCFG01,           0xF6);
 SFR(PWMCFG23,           0xF7);
-SFR(P7,                 0xF8);
+
 SFR(CH,                 0xF9);
 SFR(CCAP0H,             0xFA);
 SFR(CCAP1H,             0xFB);

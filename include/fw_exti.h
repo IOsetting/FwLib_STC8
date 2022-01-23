@@ -47,56 +47,71 @@ typedef enum
 #define EXTI_VectInt2       10
 #define EXTI_VectInt3       11
 #define EXTI_VectTimer2     12
+
+#if (__CONF_MCU_TYPE == 1  )
+#define EXTI_VectUser       13
+#endif
+
 #define EXTI_VectInt4       16
 #define EXTI_VectUART3      17
 #define EXTI_VectUART4      18
 #define EXTI_VectTimer3     19
 #define EXTI_VectTimer4     20
 #define EXTI_VectCMP        21
+
+#if (__CONF_MCU_TYPE == 1  ) || (__CONF_MCU_TYPE == 2  )
+#define EXTI_VectPWM0       22
+#define EXTI_VectPWM0FD     23
+#endif
+
 #define EXTI_VectI2C        24
-#define EXTI_VectTKSU       35
+
+#if (__CONF_MCU_TYPE == 3  )
+#define EXTI_VectUSB        25
+#define EXTI_VectPWMA       26
+#define EXTI_VectPWMB       27
+#endif
 
 #if (__CONF_MCU_TYPE == 2  )
-    #define EXTI_VectPWM0       22
-    #define EXTI_VectPWM0FD     23
-    #define EXTI_VectPWM1       28
-    #define EXTI_VectPWM2       29
-    #define EXTI_VectPWM3       30
-    #define EXTI_VectPWM4       31
-    #define EXTI_VectPWM5       32
-    #define EXTI_VectPWM2FD     33
-    #define EXTI_VectPWM4FD     34
+#define EXTI_VectPWM1       28
+#define EXTI_VectPWM2       29
+#define EXTI_VectPWM3       30
+#define EXTI_VectPWM4       31
+#define EXTI_VectPWM5       32
+#define EXTI_VectPWM2FD     33
+#define EXTI_VectPWM4FD     34
+#endif
 
-#elif (__CONF_MCU_TYPE == 3  )
-    #define EXTI_VectUSB        25
-    #define EXTI_VectPWMA       26
-    #define EXTI_VectPWMB       27
+#if (__CONF_MCU_TYPE == 2  ) || (__CONF_MCU_TYPE == 3  )
+#define EXTI_VectTKSU       35
+#endif
 
-    #define EXTI_VectRTC        36
+#if (__CONF_MCU_TYPE == 3  )
+#define EXTI_VectRTC        36
+#endif
 
-    #define EXTI_VectP0         37
-    #define EXTI_VectP1         38
-    #define EXTI_VectP2         39
-    #define EXTI_VectP3         40
-    #define EXTI_VectP4         41
-    #define EXTI_VectP5         42
-    #define EXTI_VectP6         43
-    #define EXTI_VectP7         44
-
-    #define EXTI_VectDMA_M2M    47
-    #define EXTI_VectDMA_ADC    48
-    #define EXTI_VectDMA_SPI    49
-    #define EXTI_VectDMA_UR1T   50
-    #define EXTI_VectDMA_UR1R   51
-    #define EXTI_VectDMA_UR2T   52
-    #define EXTI_VectDMA_UR2R   53
-    #define EXTI_VectDMA_UR3T   54
-    #define EXTI_VectDMA_UR3R   55
-    #define EXTI_VectDMA_UR4T   56
-    #define EXTI_VectDMA_UR4R   57
-    #define EXTI_VectDMA_LCM    58
-    #define EXTI_VectLCM        59
-
+#if (__CONF_MCU_TYPE == 1  ) || (__CONF_MCU_TYPE == 3  )
+#define EXTI_VectP0         37
+#define EXTI_VectP1         38
+#define EXTI_VectP2         39
+#define EXTI_VectP3         40
+#define EXTI_VectP4         41
+#define EXTI_VectP5         42
+#define EXTI_VectP6         43
+#define EXTI_VectP7         44
+#define EXTI_VectDMA_M2M    47
+#define EXTI_VectDMA_ADC    48
+#define EXTI_VectDMA_SPI    49
+#define EXTI_VectDMA_UR1T   50
+#define EXTI_VectDMA_UR1R   51
+#define EXTI_VectDMA_UR2T   52
+#define EXTI_VectDMA_UR2R   53
+#define EXTI_VectDMA_UR3T   54
+#define EXTI_VectDMA_UR3R   55
+#define EXTI_VectDMA_UR4T   56
+#define EXTI_VectDMA_UR4R   57
+#define EXTI_VectDMA_LCM    58
+#define EXTI_VectLCM        59
 #endif
 
 #define EXTI_Global_SetIntState(__STATE__)  SBIT_ASSIGN(EA, __STATE__)

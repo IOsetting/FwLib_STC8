@@ -3,12 +3,13 @@
 
 #include "fw_reg_base.h"
 
+SFR(VRTRIM,             0xA6);
+
 SFR(USBCLK,             0xDC);
 
 SFR(ADCCFG,             0xDE);
 SFR(IP3,                0xDF);
 
-SFR(ACC,                0xE0);
 SFR(P7M1,               0xE1);
 SFR(P7M0,               0xE2);
 SFR(DPS,                0xE3);
@@ -16,17 +17,15 @@ SFR(DPL1,               0xE4);
 SFR(DPH1,               0xE5);
 SFR(CMPCR1,             0xE6);
 SFR(CMPCR2,             0xE7);
-SFR(P6,                 0xE8);
+
 SFR(USBDAT,             0xEC);
 SFR(IP3H,               0xEE);
 SFR(AUXINTIF,           0xEF);
-SFR(B,                  0xF0);
 
 SFR(USBCON,             0xF4);
 
 SFR(IAP_TPS,            0xF5);
 
-SFR(P7,                 0xF8);
 SFR(USBADR,             0xFC);
 
 SFR(RSTCFG,             0xFF);

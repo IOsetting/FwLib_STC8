@@ -150,7 +150,7 @@
 #endif
 
 #if (__CONF_MCU_TYPE == 1  )
-    #include "fw_reg_stc8a.h"
+    #include "fw_reg_stc8a8k64d4.h"
 #elif (__CONF_MCU_TYPE == 2 )
     #include "fw_reg_stc8g.h"
     #include "fw_cid_stc8g.h"
