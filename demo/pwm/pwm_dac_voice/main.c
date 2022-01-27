@@ -16,8 +16,9 @@
  * Demo: DAC voice output simulation
  * Board: STC8H3K32 (types with flash size >= 32KB)
  * 
- * P1.0  -> Speaker +
- * GND   -> Speaker -
+ *  P1.0  -> Speaker +  // if speaker impedance is less than 8 ohms, 
+ *                         wire a 5 ohm resistance between P1.0 and speaker
+ *  GND   -> Speaker -
 */
 #include "fw_hal.h"
 #include "voice.h"
@@ -42,6 +43,7 @@ void PWM_Init()
     PWMA_PWM1_SetPortState(HAL_State_ON);
 
     // Set PWM frequency to 16kHz, Fpwm = SYSCLK / (PWMx_PSCR + 1) / (PWMx_ARR + 1)
+    // You will hear obvious noise if PWM frequency is less than 12kHz
     PWMA_SetPrescaler(8);
     // PWM width = Period + 1 (side alignment), or AutoReloadPeriod * 2 (center alignment)
     PWMA_SetPeriod(0xFF);
