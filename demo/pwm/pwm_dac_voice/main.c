@@ -16,9 +16,8 @@
  * Demo: DAC voice output simulation
  * Board: STC8H3K32 (types with flash size >= 32KB)
  * 
- *  P1.0  -> Speaker +  // if speaker impedance is less than 8 ohms, 
- *                         wire a 5 ohm resistance between P1.0 and speaker
- *  GND   -> Speaker -
+ *  P1.0  -> 200R -> Speaker +
+ *  GND           -> Speaker -
 */
 #include "fw_hal.h"
 #include "voice.h"
