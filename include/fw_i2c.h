@@ -28,11 +28,14 @@ typedef enum
 {
     I2C_MasterCmd_Wait          = 0x00, // Wait, idle
     I2C_MasterCmd_Start         = 0x01, // START
-    I2C_MasterCmd_Send          = 0x02, // Send data
-    I2C_MasterCmd_RxAck         = 0x03, // Recive Ack
+    I2C_MasterCmd_Send          = 0x02, /* Send data. This command will generate 8 clocks on SCL, and 
+                                           send I2CTXD to SDA bit by bit from MSB */
+    I2C_MasterCmd_RxAck         = 0x03, /* Recive Ack. This command will generate 1 clock on SCL, and
+                                           save the received bit to MSACKI（I2CMSST.1) */
     I2C_MasterCmd_Recv          = 0x04, // Recive data
-    I2C_MasterCmd_TxAck         = 0x05, // Send Ack
-    I2C_MasterCmd_Stop          = 0x06, // STOP
+    I2C_MasterCmd_TxAck         = 0x05, /* Send Ack. This command will generate 1 clock on SCL, and 
+                                           write the value of MSACKO（I2CMSST.0） to SDA */
+    I2C_MasterCmd_Stop          = 0x06, // STOP. This command will send STOP signal, and reset MSBUSY flag
     I2C_MasterCmd_StartSendRxAck = 0x09, // START + Send data + RxAck
     I2C_MasterCmd_SendRxAck     = 0x0A, // Send data + RxAck
     I2C_MasterCmd_RecvTxAck0    = 0x0B, // Receive data + TxAck(0)
