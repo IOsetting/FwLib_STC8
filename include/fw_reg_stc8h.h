@@ -52,7 +52,9 @@ SFR(RSTCFG,             0xFF);
 #define IRC32KCR          (*(unsigned char volatile __XDATA *)0xfe04)
 #define MCLKOCR           (*(unsigned char volatile __XDATA *)0xfe05)
 #define IRCDB             (*(unsigned char volatile __XDATA *)0xfe06)
+#define IRC48MCR          (*(unsigned char volatile __XDATA *)0xfe07)
 #define X32KCR            (*(unsigned char volatile __XDATA *)0xfe08)
+#define RSTFLAG           (*(unsigned char volatile __XDATA *)0xfe09)
 #define PxPU                                                  0xfe10
 #define P0PU                                           SFRX(PxPU + 0)
 #define P1PU                                           SFRX(PxPU + 1)

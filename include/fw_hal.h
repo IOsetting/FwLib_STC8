@@ -37,6 +37,7 @@
 #include "fw_pwm.h"
 #include "fw_rtc.h"
 #include "fw_dma.h"
+#include "fw_usb.h"
 #endif
 
 #endif

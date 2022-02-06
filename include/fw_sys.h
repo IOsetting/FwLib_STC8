@@ -142,6 +142,24 @@ typedef enum
 */
 #define SYS_SetClockOutputPin(__PORT__)    SFRX_ASSIGN(MCLKOCR, 7, (__STATE__))
 
+/**
+ * Enable 48MHz USB OSC
+*/
+#define SYS_EnableOscillator48M()   do {                                            \
+                                        SFRX_ON();                                  \
+                                        RSTFLAG = 0x07;                             \
+                                        (IRC48MCR) =  (IRC48MCR) | (0x01 << 7);     \
+                                        while (!(IRC48MCR & 0x01));                 \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
+/**
+ * Disable 48MHz USB OSC
+*/
+#define SYS_DisableOscillator48M()  do {                                            \
+                                        SFRX_ON();                                  \
+                                        (IRC48MCR) =  (IRC48MCR) & ~(0x01 << 7);    \
+                                        SFRX_OFF();                                 \
+                                    } while(0)
 
 void SYS_SetClock(void);
 void SYS_Delay(uint16_t t);
