@@ -23,7 +23,7 @@ __CODE uint8_t  PRODUCTDESC[30];
 __XDATA uint8_t HidFreature[64];
 __XDATA uint8_t HidInput[64];
 __XDATA uint8_t HidOutput[64];
-SETUP Setup;
+usb_request_t usb_request;
 EP0STAGE Ep0Stage;
 
 void USB_Init();
@@ -52,10 +52,11 @@ void main()
 void USB_Init()
 {
     SYS_EnableOscillator48M();
-    USBCLK = 0x00;
-    USBCON = 0x90;
-    IP2H |= 0x80; // highest priority
-    IP2 |= 0x80;
+    USB_SetClockSource(USB_ClockSource_6M);
+    USB_SetEnabled(HAL_State_ON);
+    USB_SetDpDmPullUp(HAL_State_ON);
+    EXTI_USB_SetIntPriority(EXTI_IntPriority_Highest);
+
     USB_WriteReg(FADDR, 0x00);
     USB_WriteReg(POWER, 0x08);
     USB_WriteReg(INTRIN1E, 0x3f);
@@ -104,16 +105,16 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
             if (csr & OPRDY)
             {
                 Ep0Stage.bStage = EPSTATUS;
-                USB_ReadFIFO(FIFO0, (uint8_t *)&Setup);
-                ((uint8_t *)&Ep0Stage.wResidue)[0] = Setup.wLengthH;
-                ((uint8_t *)&Ep0Stage.wResidue)[1]= Setup.wLengthL;
-                switch (Setup.bmRequestType & REQUEST_MASK)
+                USB_ReadFIFO(FIFO0, (uint8_t *)&usb_request);
+                ((uint8_t *)&Ep0Stage.wResidue)[0] = usb_request.wLength.bb.bh;
+                ((uint8_t *)&Ep0Stage.wResidue)[1] = usb_request.wLength.bb.bl;
+                switch (usb_request.bmRequestType & REQUEST_MASK)
                 {
                     case STANDARD_REQUEST:
-                    switch (Setup.bRequest)
+                    switch (usb_request.bRequest)
                     {
                         case SET_ADDRESS:
-                            USB_WriteReg(FADDR, Setup.wValueL);
+                            USB_WriteReg(FADDR, usb_request.wValue.bb.bl);
                         break;
                         
                         case SET_CONFIG:
@@ -128,7 +129,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                         
                         case GET_DESCRIPTOR:
                             Ep0Stage.bStage = EPDATAIN;
-                            switch (Setup.wValueH)
+                            switch (usb_request.wValue.bb.bh)
                             {
                                 case DESC_DEVICE:
                                     Ep0Stage.pData = DEVICEDESC;
@@ -141,7 +142,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                                 break;
                                 
                                 case DESC_STRING:
-                                switch (Setup.wValueL)
+                                switch (usb_request.wValue.bb.bl)
                                 {
                                     case 0:
                                         Ep0Stage.pData = LANGIDDESC;
@@ -186,7 +187,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                     break;
                     
                     case CLASS_REQUEST:
-                        switch (Setup.bRequest)
+                        switch (usb_request.bRequest)
                         {
                             case GET_REPORT:
                                 Ep0Stage.pData = HidFreature;

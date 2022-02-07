@@ -2,6 +2,13 @@
 
 FwLib_STC8 是面向 STC8G/STC8H 系列 MCU 的C语言封装库
 
+## 芯片用户手册
+
+* STC8A/8F: [中文](http://www.stcmcudata.com/STC8F-DATASHEET/STC8A-STC8F.pdf), [英文](http://www.stcmcudata.com/STC8F-DATASHEET/STC8-english-20180320.pdf)
+* STC8G: [中文](http://www.stcmcudata.com/STC8F-DATASHEET/STC8G.pdf), [英文](https://www.stcmcudata.com/STC8F-DATASHEET/STC8G-EN.pdf)
+* STC8H: [中文](http://www.stcmcudata.com/STC8F-DATASHEET/STC8H.pdf), [英文](https://www.stcmcudata.com/STC8F-DATASHEET/STC8H-EN.pdf)
+
+
 # 特性
 
 * 与 SDCC 和 Keil C51 兼容
@@ -15,7 +22,7 @@ FwLib_STC8 是面向 STC8G/STC8H 系列 MCU 的C语言封装库
 ```bash
 # GitHub
 git clone https://github.com/IOsetting/FwLib_STC8.git FwLib_STC8
-# or Giteee (for Chinese users)
+# or Giteee (内网用户)
 git clone https://gitee.com/iosetting/fw-lib_-stc8.git FwLib_STC8
 ```
 2. 复制(或移动)到 PlatformIO 项目的lib目录下

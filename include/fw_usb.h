@@ -147,17 +147,79 @@
 #define VENDOR_REQUEST  0x40
 #define REQUEST_MASK    0x60
 
-typedef struct
+typedef enum
+{
+    USB_ClockSource_6M      = 0x00,
+    USB_ClockSource_12M     = 0x01, // default value
+    USB_ClockSource_24M     = 0x02,
+    USB_ClockSource_IRCDiv2 = 0x03,
+} USB_ClockSource_t;
+
+typedef enum
+{
+    USB_PHYTest_Method_Normal      = 0x00,
+    USB_PHYTest_Method_Force1      = 0x01,
+    USB_PHYTest_Method_Force0      = 0x02,
+    USB_PHYTest_Method_ForceOneEnd0 = 0x03,
+} USB_PHYTest_Method_t;
+
+#define USB_SetClockPPL(__STATE__)          SFR_ASSIGN(USBCLK, 7, __STATE__)
+#define USB_SetClockSource(__SOURCE__)      SFR_ASSIGN2BIT(USBCLK, 5, __SOURCE__)
+#define USB_SetClockCRE(__STATE__)          SFR_ASSIGN(USBCLK, 4, __STATE__)
+#define USB_SetUSBTestMode(__STATE__)       SFR_ASSIGN(USBCLK, 3, __STATE__)
+#define USB_SetPHYTestMode(__STATE__)       SFR_ASSIGN(USBCLK, 2, __STATE__)
+#define USB_SetPHYTestMethod(__TEST_METHOD__) SFR_ASSIGN2BIT(USBCLK, 0, __TEST_METHOD__)
+
+#define USB_SetEnabled(__STATE__)           SFR_ASSIGN(USBCON, 7, __STATE__)
+#define USB_TurnOnReset()                   SFR_SET(USBCON, 6)
+#define USB_TurnOffReset()                  SFR_RESET(USBCON, 6)
+#define USB_SetPS2Mode(__STATE__)           SFR_ASSIGN(USBCON, 5, __STATE__)
+/**
+ * Enable/Disable 1.5KR pull up resistance on D+ and D-
+*/
+#define USB_SetDpDmPullUp(__STATE__)        SFR_ASSIGN(USBCON, 4, __STATE__)
+/**
+ * Enable/Disable 500KR pull down resistance on D+ and D-
+*/
+#define USB_SetDpDmPullDown(__STATE__)      SFR_ASSIGN(USBCON, 3, __STATE__)
+#define USB_GetDiffRecvMode()               (USBCON & 0x04)
+/**
+ * Read D+ level
+*/
+#define USB_GetDp()                         (USBCON & 0x02)
+/**
+ * Write D+ level, writable when PS2 mode is 1
+*/
+#define USB_SetDp(__STATE__)                SFR_ASSIGN(USBCON, 1, __STATE__)
+/**
+ * Read D- level
+*/
+#define USB_GetDm()                         (USBCON & 0x01)
+/**
+ * Write D- level, writable when PS2 mode is 1
+*/
+#define USB_SetDm(__STATE__)                SFR_ASSIGN(USBCON, 0, __STATE__)
+
+
+
+typedef union
+{
+  uint16_t w;
+  struct _bb
+  {
+    uint8_t bl;
+    uint8_t bh;
+  } bb;
+} uint16_2uint8_t;
+
+typedef struct _usb_request_t
 {
     uint8_t bmRequestType;
     uint8_t bRequest;
-    uint8_t wValueL;
-    uint8_t wValueH;
-    uint8_t wIndexL;
-    uint8_t wIndexH;
-    uint8_t wLengthL;
-    uint8_t wLengthH;
-} SETUP;
+    uint16_2uint8_t wValue;
+    uint16_2uint8_t wIndex;
+    uint16_2uint8_t wLength;
+} usb_request_t;
 
 typedef struct
 {
