@@ -3,25 +3,23 @@
 
 uint8_t USB_ReadReg(uint8_t addr)
 {
-  uint8_t dat;
-  while (USBADR & 0x80);
-  USBADR = addr | 0x80;
-  while (USBADR & 0x80);
-  dat = USBDAT;
-  return dat;
+  while (USB_IsBusy());
+  USB_SetAddrForRead(addr);
+
+  while (USB_IsBusy());
+  return USBDAT;
 }
 
 void USB_WriteReg(uint8_t addr, uint8_t dat)
 {
-  while (USBADR & 0x80);
-  USBADR = addr & 0x7f;
+  while (USB_IsBusy());
+  USB_SetAddrForWrite(addr);
   USBDAT = dat;
 }
 
 uint8_t USB_ReadFIFO(uint8_t fifo, uint8_t *pdat)
 {
-  uint8_t cnt;
-  uint8_t ret;
+  uint8_t cnt, ret;
   ret = cnt = USB_ReadReg(COUNT0);
   while (cnt--)
   {

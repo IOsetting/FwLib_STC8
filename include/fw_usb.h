@@ -200,6 +200,11 @@ typedef enum
 */
 #define USB_SetDm(__STATE__)                SFR_ASSIGN(USBCON, 0, __STATE__)
 
+#define USB_IsBusy()                        (USBADR & 0x80)
+#define USB_SetAddrForRead(__ADDR__)        (USBADR = (__ADDR__) | 0x80)
+#define USB_SetAddrForWrite(__ADDR__)       (USBADR = (__ADDR__) & 0x7F)
+
+#define USB_SelectEndPoint(__INDEX__)       USB_WriteReg(INDEX, __INDEX__)
 
 
 typedef union

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "fw_hal.h"
+#include <string.h>
 
 __CODE uint8_t  DEVICEDESC[18];
 __CODE uint8_t  CONFIGDESC[41];
@@ -31,19 +32,18 @@ uint8_t CalCheckSum(uint8_t *buf, uint8_t len);
 
 void main()
 {
-    uint8_t i;
     GPIO_P3_SetMode(GPIO_Pin_0|GPIO_Pin_1, GPIO_Mode_Input_HIP);
-
     USB_Init();
-    EA = 1;
-    HidOutput[0]=0xaa;
-    HidOutput[1]=0x55;
-    HidOutput[2]=0x02;
-    for(i=3;i<64;i++) HidOutput[i] = 0;
-    HidOutput[3] = (uint8_t)(0x01);
-    HidOutput[4] = (uint8_t)(0x02);
-    HidOutput[5] = (uint8_t)(0x01);
-    HidOutput[6] = (uint8_t)(0x02);
+    EXTI_Global_SetIntState(HAL_State_ON);
+
+    memset(HidOutput, 0x00, sizeof(HidOutput));
+    HidOutput[0] = 0xaa;
+    HidOutput[1] = 0x55;
+    HidOutput[2] = 0x02;
+    HidOutput[3] = 0x01;
+    HidOutput[4] = 0x02;
+    HidOutput[5] = 0x01;
+    HidOutput[6] = 0x02;
     HidOutput[7] = CalCheckSum(HidOutput,7);
 
     while (1);
@@ -64,7 +64,8 @@ void USB_Init()
     USB_WriteReg(INTRUSBE, 0x00);
     USB_WriteReg(POWER, 0x01);
     Ep0Stage.bStage = EPIDLE;
-    IE2 |= 0x80;
+
+    EXTI_USB_SetIntState(HAL_State_ON);
 }
 
 INTERRUPT(USB_Routine, EXTI_VectUSB)
@@ -80,15 +81,15 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
     introut = USB_ReadReg(INTROUT1);
     if (intrusb & RSTIF)
     {
-        USB_WriteReg(INDEX, 1);
+        USB_SelectEndPoint(1);
         USB_WriteReg(INCSR1, INCLRDT);
-        USB_WriteReg(INDEX, 1);
+        USB_SelectEndPoint(1);
         USB_WriteReg(OUTCSR1, OUTCLRDT);
         Ep0Stage.bStage = EPIDLE;
     }
     if (intrin & EP0IF)
     {
-        USB_WriteReg(INDEX, 0);
+        USB_SelectEndPoint(0);
         csr = USB_ReadReg(CSR0);
         if (csr & STSTL)
         {
@@ -118,13 +119,13 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                         break;
                         
                         case SET_CONFIG:
-                            USB_WriteReg(INDEX, 1);
+                            USB_SelectEndPoint(1);
                             USB_WriteReg(INCSR2, INMODEIN);
                             USB_WriteReg(INMAXP, 8);
-                            USB_WriteReg(INDEX, 1);
+                            USB_SelectEndPoint(1);
                             USB_WriteReg(INCSR2, INMODEOUT);
                             USB_WriteReg(OUTMAXP, 8);
-                            USB_WriteReg(INDEX, 0);
+                            USB_SelectEndPoint(0);
                         break;
                         
                         case GET_DESCRIPTOR:
@@ -282,7 +283,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
     
     if (intrin & EP1INIF)
     {
-        USB_WriteReg(INDEX, 1);
+        USB_SelectEndPoint(1);
         csr = USB_ReadReg(INCSR1);
         if (csr & INSTSTL)
         {
@@ -296,7 +297,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
     
     if (introut & EP1OUTIF)
     {
-        USB_WriteReg(INDEX, 1);
+        USB_SelectEndPoint(1);
         csr = USB_ReadReg(OUTCSR1);
         if (csr & OUTSTSTL)
         {
@@ -309,7 +310,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
             
             if((HidInput[0]==0xaa) && (HidInput[1]==0x55) && (HidInput[2]==0x01))
             {
-                USB_WriteReg(INDEX, 1);
+                USB_SelectEndPoint(1);
                 USB_WriteFIFO(FIFO1, HidOutput, 64);
                 USB_WriteReg(INCSR1, INIPRDY);
             }
