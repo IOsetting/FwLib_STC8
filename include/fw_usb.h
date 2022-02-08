@@ -19,7 +19,7 @@
 #include "fw_types.h"
 
 /**
- * STC8H8K64U(LQFP48)   (LQFP64)
+ * STC8H8K64U USB SFR
 */
 
 #define FADDR           0x00
@@ -115,37 +115,60 @@
 #define UTRKCTL         0x30
 #define UTRKSTS         0x31
 
-#define EPIDLE          0
-#define EPSTATUS        1
-#define EPDATAIN        2
-#define EPDATAOUT       3
-#define EPSTALL         -1
+typedef enum _CONTROL_STATE
+{
+    USB_CtrlState_Idle      = 0x00,
+    USB_CtrlState_SettingUp = 0x01,
+    USB_CtrlState_DataIn    = 0x02,
+    USB_CtrlState_DataOut   = 0x03,
+    USB_CtrlState_Stalled   = 0x04,
+} USB_CtrlState_t;  /* The state machine states of a control pipe */
 
-#define GET_STATUS      0x00
-#define CLEAR_FEATURE   0x01
-#define SET_FEATURE     0x03
-#define SET_ADDRESS     0x05
-#define GET_DESCRIPTOR  0x06
-#define SET_DESCRIPTOR  0x07
-#define GET_CONFIG      0x08
-#define SET_CONFIG      0x09
-#define GET_INTERFACE   0x0A
-#define SET_INTERFACE   0x0B
-#define SYNCH_FRAME     0x0C
-#define GET_REPORT      0x01
-#define GET_IDLE        0x02
-#define GET_PROTOCOL    0x03
-#define SET_REPORT      0x09
-#define SET_IDLE        0x0A
-#define SET_PROTOCOL    0x0B
-#define DESC_DEVICE     0x01
-#define DESC_CONFIG     0x02
-#define DESC_STRING     0x03
-#define DESC_HIDREPORT  0x22
-#define STANDARD_REQUEST 0x00
-#define CLASS_REQUEST   0x20
-#define VENDOR_REQUEST  0x40
-#define REQUEST_MASK    0x60
+typedef enum
+{
+    USB_StdReq_GetStatus        = 0x00,
+    USB_StdReq_ClearFeature     = 0x01,
+    USB_StdReq_SetFeature       = 0x03,
+    USB_StdReq_SetAddress       = 0x05,
+    USB_StdReq_GetDescriptor    = 0x06,
+    USB_StdReq_SetDescriptor    = 0x07,
+    USB_StdReq_GetConfiguration = 0x08,
+    USB_StdReq_SetConfiguration = 0x09,
+    USB_StdReq_GetInterface     = 0x0A,
+    USB_StdReq_SetInterface     = 0x0B,
+    USB_StdReq_SynchFrame       = 0x0C,
+} USB_StdReq_t;
+
+typedef enum
+{
+    USB_HidReq_GetReport        = 0x01,
+    USB_HidReq_GetIdle          = 0x02,
+    USB_HidReq_GetProtocol      = 0x03,
+    USB_HidReq_SetReport        = 0x09,
+    USB_HidReq_SetIdle          = 0x0A,
+    USB_HidReq_SetProtocol      = 0x0B,
+} USB_HidReq_t;
+
+typedef enum
+{
+    USB_DescriptorType_Device           = 0x01,
+    USB_DescriptorType_Configuration    = 0x02,
+    USB_DescriptorType_String           = 0x03,
+    USB_DescriptorType_Interface        = 0x04,
+    USB_DescriptorType_Endpoint         = 0x05,
+    USB_DescriptorType_HID              = 0x21,
+    USB_DescriptorType_Report           = 0x22,
+    USB_DescriptorType_Physical         = 0x23,
+} USB_DescriptorType_t;
+
+#define REQUEST_TYPE_MASK   0x60
+
+typedef enum
+{
+    USB_RequestType_Standard    = 0x00,
+    USB_RequestType_Class       = 0x20,
+    USB_RequestType_Vendor      = 0x40,
+} USB_RequestType_t;
 
 typedef enum
 {

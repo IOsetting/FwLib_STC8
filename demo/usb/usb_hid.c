@@ -63,7 +63,7 @@ void USB_Init()
     USB_WriteReg(INTROUT1E, 0x3f);
     USB_WriteReg(INTRUSBE, 0x00);
     USB_WriteReg(POWER, 0x01);
-    Ep0Stage.bStage = EPIDLE;
+    Ep0Stage.bStage = USB_CtrlState_Idle;
 
     EXTI_USB_SetIntState(HAL_State_ON);
 }
@@ -85,7 +85,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         USB_WriteReg(INCSR1, INCLRDT);
         USB_SelectEndPoint(1);
         USB_WriteReg(OUTCSR1, OUTCLRDT);
-        Ep0Stage.bStage = EPIDLE;
+        Ep0Stage.bStage = USB_CtrlState_Idle;
     }
     if (intrin & EP0IF)
     {
@@ -94,7 +94,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         if (csr & STSTL)
         {
             USB_WriteReg(CSR0, csr & ~STSTL);
-            Ep0Stage.bStage = EPIDLE;
+            Ep0Stage.bStage = USB_CtrlState_Idle;
         }
         if (csr & SUEND)
         {
@@ -102,146 +102,146 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         }
         switch (Ep0Stage.bStage)
         {
-            case EPIDLE:
-            if (csr & OPRDY)
-            {
-                Ep0Stage.bStage = EPSTATUS;
-                USB_ReadFIFO(FIFO0, (uint8_t *)&usb_request);
-                ((uint8_t *)&Ep0Stage.wResidue)[0] = usb_request.wLength.bb.bh;
-                ((uint8_t *)&Ep0Stage.wResidue)[1] = usb_request.wLength.bb.bl;
-                switch (usb_request.bmRequestType & REQUEST_MASK)
+            case USB_CtrlState_Idle:
+                if (csr & OPRDY)
                 {
-                    case STANDARD_REQUEST:
-                    switch (usb_request.bRequest)
+                    Ep0Stage.bStage = USB_CtrlState_SettingUp;
+                    USB_ReadFIFO(FIFO0, (uint8_t *)&usb_request);
+                    ((uint8_t *)&Ep0Stage.wResidue)[0] = usb_request.wLength.bb.bh;
+                    ((uint8_t *)&Ep0Stage.wResidue)[1] = usb_request.wLength.bb.bl;
+                    switch (usb_request.bmRequestType & REQUEST_TYPE_MASK)
                     {
-                        case SET_ADDRESS:
-                            USB_WriteReg(FADDR, usb_request.wValue.bb.bl);
-                        break;
-                        
-                        case SET_CONFIG:
-                            USB_SelectEndPoint(1);
-                            USB_WriteReg(INCSR2, INMODEIN);
-                            USB_WriteReg(INMAXP, 8);
-                            USB_SelectEndPoint(1);
-                            USB_WriteReg(INCSR2, INMODEOUT);
-                            USB_WriteReg(OUTMAXP, 8);
-                            USB_SelectEndPoint(0);
-                        break;
-                        
-                        case GET_DESCRIPTOR:
-                            Ep0Stage.bStage = EPDATAIN;
-                            switch (usb_request.wValue.bb.bh)
+                        case USB_RequestType_Standard:
+                            switch (usb_request.bRequest)
                             {
-                                case DESC_DEVICE:
-                                    Ep0Stage.pData = DEVICEDESC;
-                                    len = sizeof(DEVICEDESC);
-                                break;
-                                
-                                case DESC_CONFIG:
-                                    Ep0Stage.pData = CONFIGDESC;
-                                    len = sizeof(CONFIGDESC);
-                                break;
-                                
-                                case DESC_STRING:
-                                switch (usb_request.wValue.bb.bl)
-                                {
-                                    case 0:
-                                        Ep0Stage.pData = LANGIDDESC;
-                                        len = sizeof(LANGIDDESC);
+                                case USB_StdReq_SetAddress:
+                                    USB_WriteReg(FADDR, usb_request.wValue.bb.bl);
                                     break;
-                                    
-                                    case 1:
-                                        Ep0Stage.pData = MANUFACTDESC;
-                                        len = sizeof(MANUFACTDESC);
-                                    break;
-                                    
-                                    case 2:
-                                        Ep0Stage.pData = PRODUCTDESC;
-                                        len = sizeof(PRODUCTDESC);
-                                    break;
-                                    
-                                    default:
-                                        Ep0Stage.bStage = EPSTALL;
-                                    break;
-                                }
-                                break;
                                 
-                                case DESC_HIDREPORT:
-                                    Ep0Stage.pData = HIDREPORTDESC;
-                                    len = sizeof(HIDREPORTDESC);
-                                break;
+                                case USB_StdReq_SetConfiguration:
+                                    USB_SelectEndPoint(1);
+                                    USB_WriteReg(INCSR2, INMODEIN);
+                                    USB_WriteReg(INMAXP, 8);
+                                    USB_SelectEndPoint(1);
+                                    USB_WriteReg(INCSR2, INMODEOUT);
+                                    USB_WriteReg(OUTMAXP, 8);
+                                    USB_SelectEndPoint(0);
+                                    break;
                                 
+                                case USB_StdReq_GetDescriptor:
+                                    Ep0Stage.bStage = USB_CtrlState_DataIn;
+                                    switch (usb_request.wValue.bb.bh)
+                                    {
+                                        case USB_DescriptorType_Device:
+                                            Ep0Stage.pData = DEVICEDESC;
+                                            len = sizeof(DEVICEDESC);
+                                            break;
+
+                                        case USB_DescriptorType_Configuration:
+                                            Ep0Stage.pData = CONFIGDESC;
+                                            len = sizeof(CONFIGDESC);
+                                            break;
+
+                                        case USB_DescriptorType_String:
+                                            switch (usb_request.wValue.bb.bl)
+                                            {
+                                                case 0:
+                                                    Ep0Stage.pData = LANGIDDESC;
+                                                    len = sizeof(LANGIDDESC);
+                                                    break;
+
+                                                case 1:
+                                                    Ep0Stage.pData = MANUFACTDESC;
+                                                    len = sizeof(MANUFACTDESC);
+                                                    break;
+
+                                                case 2:
+                                                    Ep0Stage.pData = PRODUCTDESC;
+                                                    len = sizeof(PRODUCTDESC);
+                                                    break;
+
+                                                default:
+                                                    Ep0Stage.bStage = USB_CtrlState_Stalled;
+                                                    break;
+                                            }
+                                            break;
+
+                                        case USB_DescriptorType_Report:
+                                            Ep0Stage.pData = HIDREPORTDESC;
+                                            len = sizeof(HIDREPORTDESC);
+                                            break;
+
+                                        default:
+                                            Ep0Stage.bStage = USB_CtrlState_Stalled;
+                                            break;
+                                    }
+                                    if (len < Ep0Stage.wResidue)
+                                    {
+                                        Ep0Stage.wResidue = len;
+                                    }
+                                    break;
+
                                 default:
-                                    Ep0Stage.bStage = EPSTALL;
-                                break;
+                                    Ep0Stage.bStage = USB_CtrlState_Stalled;
+                                    break;
                             }
-                            if (len < Ep0Stage.wResidue)
+                            break;
+
+                        case USB_RequestType_Class:
+                            switch (usb_request.bRequest)
                             {
-                                Ep0Stage.wResidue = len;
+                                case USB_HidReq_GetReport:
+                                    Ep0Stage.pData = HidFreature;
+                                    Ep0Stage.bStage = USB_CtrlState_DataIn;
+                                    break;
+
+                                case USB_HidReq_SetReport:
+                                    Ep0Stage.pData = HidFreature;
+                                    Ep0Stage.bStage = USB_CtrlState_DataOut;
+                                    break;
+
+                                case USB_HidReq_SetIdle:
+                                    break;
+
+                                case USB_HidReq_GetIdle:
+                                case USB_HidReq_GetProtocol:
+                                case USB_HidReq_SetProtocol:
+                                default:
+                                    Ep0Stage.bStage = USB_CtrlState_Stalled;
+                                    break;
                             }
-                        break;
+                            break;
                             
                         default:
-                            Ep0Stage.bStage = EPSTALL;
-                        break;
+                            Ep0Stage.bStage = USB_CtrlState_Stalled;
+                            break;
                     }
-                    break;
-                    
-                    case CLASS_REQUEST:
-                        switch (usb_request.bRequest)
-                        {
-                            case GET_REPORT:
-                                Ep0Stage.pData = HidFreature;
-                                Ep0Stage.bStage = EPDATAIN;
+
+                    switch (Ep0Stage.bStage)
+                    {
+                        case USB_CtrlState_DataIn:
+                            USB_WriteReg(CSR0, SOPRDY);
+                            goto L_Ep0SendData;
                             break;
-                            
-                            case SET_REPORT:
-                                Ep0Stage.pData = HidFreature;
-                                Ep0Stage.bStage = EPDATAOUT;
+
+                        case USB_CtrlState_DataOut:
+                            USB_WriteReg(CSR0, SOPRDY);
                             break;
-                            
-                            case SET_IDLE:
+
+                        case USB_CtrlState_SettingUp:
+                            USB_WriteReg(CSR0, SOPRDY | DATEND);
+                            Ep0Stage.bStage = USB_CtrlState_Idle;
                             break;
-                            
-                            case GET_IDLE:
-                            case GET_PROTOCOL:
-                            case SET_PROTOCOL:
-                            default:
-                                Ep0Stage.bStage = EPSTALL;
+
+                        case USB_CtrlState_Stalled:
+                            USB_WriteReg(CSR0, SOPRDY | SDSTL);
+                            Ep0Stage.bStage = USB_CtrlState_Idle;
                             break;
-                        }
-                    break;
-                        
-                    default:
-                        Ep0Stage.bStage = EPSTALL;
-                    break;
+                    }
                 }
-                
-                switch (Ep0Stage.bStage)
-                {
-                    case EPDATAIN:
-                        USB_WriteReg(CSR0, SOPRDY);
-                        goto L_Ep0SendData;
-                    break;
-                    
-                    case EPDATAOUT:
-                        USB_WriteReg(CSR0, SOPRDY);
-                    break;
-                    
-                    case EPSTATUS:
-                        USB_WriteReg(CSR0, SOPRDY | DATEND);
-                        Ep0Stage.bStage = EPIDLE;
-                    break;
-                    
-                    case EPSTALL:
-                        USB_WriteReg(CSR0, SOPRDY | SDSTL);
-                        Ep0Stage.bStage = EPIDLE;
-                    break;
-                }
-            }
-            break;
-            
-            case EPDATAIN:
+                break;
+
+            case USB_CtrlState_DataIn:
                 if (!(csr & IPRDY))
                 {
                     L_Ep0SendData:
@@ -252,32 +252,32 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                     if (Ep0Stage.wResidue == 0)
                     {
                         USB_WriteReg(CSR0, IPRDY | DATEND);
-                        Ep0Stage.bStage = EPIDLE;
+                        Ep0Stage.bStage = USB_CtrlState_Idle;
                     }
                     else
                     {
                         USB_WriteReg(CSR0, IPRDY);
                     }
                 }
-            break;
-            
-            case EPDATAOUT:
-            if (csr & OPRDY)
-            {
-                cnt = USB_ReadFIFO(FIFO0, Ep0Stage.pData);
-                Ep0Stage.wResidue -= cnt;
-                Ep0Stage.pData += cnt;
-                if (Ep0Stage.wResidue == 0)
+                break;
+
+            case USB_CtrlState_DataOut:
+                if (csr & OPRDY)
                 {
-                    USB_WriteReg(CSR0, SOPRDY | DATEND);
-                    Ep0Stage.bStage = EPIDLE;
+                    cnt = USB_ReadFIFO(FIFO0, Ep0Stage.pData);
+                    Ep0Stage.wResidue -= cnt;
+                    Ep0Stage.pData += cnt;
+                    if (Ep0Stage.wResidue == 0)
+                    {
+                        USB_WriteReg(CSR0, SOPRDY | DATEND);
+                        Ep0Stage.bStage = USB_CtrlState_Idle;
+                    }
+                    else
+                    {
+                        USB_WriteReg(CSR0, SOPRDY);
+                    }
                 }
-                else
-                {
-                    USB_WriteReg(CSR0, SOPRDY);
-                }
-            }
-            break;
+                break;
         }
     }
     
