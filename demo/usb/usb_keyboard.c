@@ -23,8 +23,6 @@
 #include "fw_hal.h"
 #include <string.h>
 
-#define MAIN_Fosc       24000000L
-#define Timer0_Reload   (65536UL -(MAIN_Fosc / 1000)) //Timer 0 frequency 1000Hz
 #define KeyIO P0
 
 __BIT B_1ms;         // 1ms flag
@@ -53,13 +51,12 @@ void USB_Init(void);
 void KeyScan(void);
 void SendKeyStatus(void);
 
-
 void main()
 {
     uint8_t i;
 
     GPIO_P1_SetMode(GPIO_Pin_All, GPIO_Mode_InOut_QBD);
-    GPIO_P3_SetMode(GPIO_Pin_0|GPIO_Pin_1, GPIO_Mode_Input_HIP);
+    GPIO_P3_SetMode(GPIO_Pin_0 | GPIO_Pin_1, GPIO_Mode_Input_HIP);
     GPIO_P6_SetMode(GPIO_Pin_All, GPIO_Mode_Output_PP);
 
     USB_Init();
@@ -70,22 +67,22 @@ void main()
     TIM_Timer0_SetRunState(HAL_State_ON);
     EXTI_Global_SetIntState(HAL_State_ON);
 
-    for(i = 0; i < 8; i++)
+    for (i = 0; i < 8; i++)
     {
-        HidInput[i]=0;
+        HidInput[i] = 0;
     }
 
     while (1)
     {
-        if(B_1ms) // every 1 ms
+        if (B_1ms) // every 1 ms
         {
             B_1ms = 0;
-            if(++cnt50ms >= 50)     // scan every 50 ms
+            if (++cnt50ms >= 50) // scan every 50 ms
             {
                 cnt50ms = 0;
                 KeyScan();
             }
-            if(KeyChangeFlag)   // if key status changed
+            if (KeyChangeFlag) // if key status changed
             {
                 KeyChangeFlag = 0;
                 SendKeyStatus();
@@ -157,81 +154,81 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                 switch (usb_request.bmRequestType & REQUEST_TYPE_MASK)
                 {
                     case USB_RequestType_Standard:
-                    switch (usb_request.bRequest)
-                    {
-                        case USB_StdReq_SetAddress:
-                            USB_WriteReg(FADDR, usb_request.wValue.bb.bl);
-                            break;
-                        
-                        case USB_StdReq_SetConfiguration:
-                            USB_SelectEndPoint(1);
-                            USB_WriteReg(INCSR2, INMODEIN);
-                            USB_WriteReg(INMAXP, 8);
-                            USB_SelectEndPoint(1);
-                            USB_WriteReg(INCSR2, INMODEOUT);
-                            USB_WriteReg(OUTMAXP, 8);
-                            USB_SelectEndPoint(0);
-                            break;
+                        switch (usb_request.bRequest)
+                        {
+                            case USB_StdReq_SetAddress:
+                                USB_WriteReg(FADDR, usb_request.wValue.bb.bl);
+                                break;
 
-                        case USB_StdReq_GetDescriptor:
-                            USB_EP0_Stage.bStage = USB_CtrlState_DataIn;
-                            switch (usb_request.wValue.bb.bh)
-                            {
-                                case USB_DescriptorType_Device:
-                                    USB_EP0_Stage.pData = (uint8_t *)DEVICEDESC;
-                                    len = sizeof(DEVICEDESC);
-                                    break;
-                                
-                                case USB_DescriptorType_Configuration:
-                                    USB_EP0_Stage.pData = (uint8_t *)CONFIGDESC;
-                                    len = sizeof(CONFIGDESC);
-                                    break;
-                                
-                                case USB_DescriptorType_String:
-                                    switch (usb_request.wValue.bb.bl)
-                                    {
-                                        case 0:
-                                            USB_EP0_Stage.pData = (uint8_t *)LANGIDDESC;
-                                            len = sizeof(LANGIDDESC);
-                                            break;
-                                        
-                                        case 1:
-                                            USB_EP0_Stage.pData = (uint8_t *)MANUFACTDESC;
-                                            len = sizeof(MANUFACTDESC);
-                                            break;
-                                        
-                                        case 2:
-                                            USB_EP0_Stage.pData = (uint8_t *)PRODUCTDESC;
-                                            len = sizeof(PRODUCTDESC);
-                                            break;
-                                        
-                                        default:
-                                            USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
-                                            break;
-                                    }
-                                    break;
-                                
-                                case USB_DescriptorType_Report:
-                                    USB_EP0_Stage.pData = (uint8_t *)HIDREPORTDESC;
-                                    len = sizeof(HIDREPORTDESC);
-                                    break;
-                                
-                                default:
-                                    USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
-                                    break;
-                            }
-                            if (len < USB_EP0_Stage.wResidue)
-                            {
-                                USB_EP0_Stage.wResidue = len;
-                            }
+                            case USB_StdReq_SetConfiguration:
+                                USB_SelectEndPoint(1);
+                                USB_WriteReg(INCSR2, INMODEIN);
+                                USB_WriteReg(INMAXP, 8);
+                                USB_SelectEndPoint(1);
+                                USB_WriteReg(INCSR2, INMODEOUT);
+                                USB_WriteReg(OUTMAXP, 8);
+                                USB_SelectEndPoint(0);
+                                break;
+
+                            case USB_StdReq_GetDescriptor:
+                                USB_EP0_Stage.bStage = USB_CtrlState_DataIn;
+                                switch (usb_request.wValue.bb.bh)
+                                {
+                                    case USB_DescriptorType_Device:
+                                        USB_EP0_Stage.pData = (uint8_t *)DEVICEDESC;
+                                        len = sizeof(DEVICEDESC);
+                                        break;
+
+                                    case USB_DescriptorType_Configuration:
+                                        USB_EP0_Stage.pData = (uint8_t *)CONFIGDESC;
+                                        len = sizeof(CONFIGDESC);
+                                        break;
+
+                                    case USB_DescriptorType_String:
+                                        switch (usb_request.wValue.bb.bl)
+                                        {
+                                            case 0:
+                                                USB_EP0_Stage.pData = (uint8_t *)LANGIDDESC;
+                                                len = sizeof(LANGIDDESC);
+                                                break;
+
+                                            case 1:
+                                                USB_EP0_Stage.pData = (uint8_t *)MANUFACTDESC;
+                                                len = sizeof(MANUFACTDESC);
+                                                break;
+
+                                            case 2:
+                                                USB_EP0_Stage.pData = (uint8_t *)PRODUCTDESC;
+                                                len = sizeof(PRODUCTDESC);
+                                                break;
+
+                                            default:
+                                                USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                                break;
+                                        }
+                                        break;
+
+                                    case USB_DescriptorType_Report:
+                                        USB_EP0_Stage.pData = (uint8_t *)HIDREPORTDESC;
+                                        len = sizeof(HIDREPORTDESC);
+                                        break;
+
+                                    default:
+                                        USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                        break;
+                                }
+                                if (len < USB_EP0_Stage.wResidue)
+                                {
+                                    USB_EP0_Stage.wResidue = len;
+                                }
+                                break;
+
+                            default:
+                                USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                break;
+                        }
                         break;
-                            
-                        default:
-                            USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
-                        break;
-                    }
-                    break;
-                    
+
                     case USB_RequestType_Class:
                         switch (usb_request.bRequest)
                         {
@@ -239,15 +236,15 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                                 USB_EP0_Stage.pData = HidFreature;
                                 USB_EP0_Stage.bStage = USB_CtrlState_DataIn;
                                 break;
-                            
+
                             case USB_HidReq_SetReport:
                                 USB_EP0_Stage.pData = HidFreature;
                                 USB_EP0_Stage.bStage = USB_CtrlState_DataOut;
                                 break;
-                            
+
                             case USB_HidReq_SetIdle:
                                 break;
-                            
+
                             // case USB_HidReq_GetIdle:
                             // case USB_HidReq_GetProtocol:
                             // case USB_HidReq_SetProtocol:
@@ -255,33 +252,33 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                                 USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
                                 break;
                         }
-                    break;
-                        
+                        break;
+
                     default:
                         USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
-                    break;
+                        break;
                 }
-                
+
                 switch (USB_EP0_Stage.bStage)
                 {
                     case USB_CtrlState_DataIn:
                         USB_WriteReg(CSR0, SOPRDY);
                         goto L_Ep0SendData;
-                    break;
-                    
+                        break;
+
                     case USB_CtrlState_DataOut:
                         USB_WriteReg(CSR0, SOPRDY);
-                    break;
-                    
+                        break;
+
                     case USB_CtrlState_SettingUp:
                         USB_WriteReg(CSR0, SOPRDY | DATEND);
                         USB_EP0_Stage.bStage = USB_CtrlState_Idle;
-                    break;
-                    
+                        break;
+
                     case USB_CtrlState_Stalled:
                         USB_WriteReg(CSR0, SOPRDY | SDSTL);
                         USB_EP0_Stage.bStage = USB_CtrlState_Idle;
-                    break;
+                        break;
                 }
             }
             break;
@@ -304,25 +301,25 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                         USB_WriteReg(CSR0, IPRDY);
                     }
                 }
-            break;
-            
+                break;
+
             case USB_CtrlState_DataOut:
-            if (csr & OPRDY)
-            {
-                cnt = USB_ReadFIFO(FIFO0, USB_EP0_Stage.pData);
-                USB_EP0_Stage.wResidue -= cnt;
-                USB_EP0_Stage.pData += cnt;
-                if (USB_EP0_Stage.wResidue == 0)
+                if (csr & OPRDY)
                 {
-                    USB_WriteReg(CSR0, SOPRDY | DATEND);
-                    USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+                    cnt = USB_ReadFIFO(FIFO0, USB_EP0_Stage.pData);
+                    USB_EP0_Stage.wResidue -= cnt;
+                    USB_EP0_Stage.pData += cnt;
+                    if (USB_EP0_Stage.wResidue == 0)
+                    {
+                        USB_WriteReg(CSR0, SOPRDY | DATEND);
+                        USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+                    }
+                    else
+                    {
+                        USB_WriteReg(CSR0, SOPRDY);
+                    }
                 }
-                else
-                {
-                    USB_WriteReg(CSR0, SOPRDY);
-                }
-            }
-            break;
+                break;
         }
     }
 
@@ -363,9 +360,9 @@ uint8_t KeyCount(uint16_t dat)
     uint8_t i;
 
     i = 0;
-    while(dat)
+    while (dat)
     {
-        if(dat & 0x8000) i++;
+        if (dat & 0x8000) i++;
         dat <<= 1;
     }
     return i;
@@ -378,7 +375,7 @@ void SendKeyStatus(void)
     
     if(KeyCode) // if key pressed
     {
-        // 4*4 key matrix，max 3 keys pressed simultaneously
+        // allow 3 keys pressed simultaneously
         if(KeyCount(KeyCode) > 3) 
         {
             return;  // too many keys
@@ -386,11 +383,11 @@ void SendKeyStatus(void)
         else
         {
             n = 2;
-            for(i=0;i<16;i++)
+            for (i = 0; i < 16; i++)
             {
-                if(i == 1)
+                if (i == 1)
                 {
-                    if(KeyCode & (1<<i)) // left Ctrl
+                    if (KeyCode & (1 << i)) // left Ctrl
                     {
                         HidInput[0] |= 1;
                     }
@@ -399,26 +396,26 @@ void SendKeyStatus(void)
                         HidInput[0] &= ~1;
                     }
                 }
-                else if(i == 2)
+                else if (i == 2)
                 {
-                    if(KeyCode & (1<<i)) // left alt
+                    if (KeyCode & (1 << i)) // left alt
                     {
-                        HidInput[0] |= 1<<2;
+                        HidInput[0] |= 1 << 2;
                     }
                     else
                     {
-                        HidInput[0] &= ~(1<<2);
+                        HidInput[0] &= ~(1 << 2);
                     }
                 }
                 else
                 {
-                    if(KeyCode & (1<<i))
+                    if (KeyCode & (1 << i))
                     {
                         HidInput[n++] = KeyMap[i];
                     }
                 }
             }
-            
+
             for(; n<8; n++)
             {
                 HidInput[n]=0;  // fill 0 to the rest
@@ -427,15 +424,15 @@ void SendKeyStatus(void)
     }
     else // if no key pressed, return 0
     {
-        for( i = 0; i < 8; i++)
+        for (i = 0; i < 8; i++)
         {
-            HidInput[i]=0;
+            HidInput[i] = 0;
         }
     }
 
     // return 8 bytes data
     USB_WriteReg(INDEX, 1);
-    for(i = 0; i < 8; i++)
+    for (i = 0; i < 8; i++)
     {
         USB_WriteReg(FIFO1, HidInput[i]);
     }
@@ -462,55 +459,48 @@ P02 ---- K08 ---- K09 ---- K10 ---- K11 ----
 P03 ---- K12 ---- K13 ---- K14 ---- K15 ----
           |        |        |        |
 ******************************************************/
-void IO_KeyDelay(void)
-{
-    uint8_t i;
-    i = 5;
-    while(--i);
-}
 
 void KeyScan(void)
 {
     uint8_t temp;
-    
+
     KeyIO = 0x0F;
-    IO_KeyDelay();
-    if((KeyIO & 0x0F) == 0x0F) // no key pressed
+    SYS_DelayUs(1);
+    if ((KeyIO & 0x0F) == 0x0F) // no key pressed
     {
         NewKeyCode = 0;
     }
-    else  // start scan
+    else // start scan
     {
         // scan first line
         KeyIO = (uint8_t)~0x10;
-        IO_KeyDelay();
+        SYS_DelayUs(1);
         // save 4 keys status
         temp = KeyIO & 0x0F;
 
         // second line
         KeyIO = (uint8_t)~0x20;
-        IO_KeyDelay();
-        // save 4 keys status
+        SYS_DelayUs(1);
         temp |= KeyIO << 4;
 
         // save current key status
         NewKeyCode = (~temp) & 0xFF;
 
-        // scan third line
+        // third line
         KeyIO = (uint8_t)~0x40;
-        IO_KeyDelay();
+        SYS_DelayUs(1);
         temp = KeyIO & 0x0F;
 
-        // scan 4th line
+        // 4th line
         KeyIO = (uint8_t)~0x80;
-        IO_KeyDelay();
-        temp |= KeyIO << 4; 
-         
+        SYS_DelayUs(1);
+        temp |= KeyIO << 4;
+
         // save all 16 keys' status in 2 bytes, 1 indicates key pressed
-        NewKeyCode |= (((uint16_t)~temp)<<8);
+        NewKeyCode |= (((uint16_t)~temp) << 8);
     }
 
-    if(NewKeyCode != OldKeyCode)
+    if (NewKeyCode != OldKeyCode)
     {
         KeyHoldTime = 0;
         OldKeyCode = NewKeyCode;
@@ -519,14 +509,14 @@ void KeyScan(void)
     else
     {
         KeyHoldTime++;
-        if(KeyHoldTime >= 1)
+        if (KeyHoldTime >= 1)
         {
             KeyHoldTime = 1;
             KeyCode = OldKeyCode;
-            if(KeyChangeTemp)
+            if (KeyChangeTemp)
             {
                 KeyChangeTemp = 0;
-                KeyChangeFlag = 1;   // Set send flag
+                KeyChangeFlag = 1; // Set send flag
             }
         }
     }
