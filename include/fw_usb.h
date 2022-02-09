@@ -254,7 +254,7 @@ typedef struct
     uint8_t bStage;
     uint16_t wResidue;
     uint8_t *pData;
-} EP0STAGE;
+} USB_EP0_Stage_t;
 
 
 uint8_t USB_ReadReg(uint8_t addr);
