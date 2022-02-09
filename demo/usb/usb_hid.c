@@ -24,8 +24,8 @@ __CODE uint8_t  PRODUCTDESC[30];
 __XDATA uint8_t HidFreature[64];
 __XDATA uint8_t HidInput[64];
 __XDATA uint8_t HidOutput[64];
-usb_request_t usb_request;
-USB_EP0_Stage_t USB_EP0_Stage;
+USB_Request_t usb_request;
+USB_EP0_Stage_t usb_ep0_stag;
 
 void USB_Init();
 uint8_t CalCheckSum(uint8_t *buf, uint8_t len);
@@ -63,7 +63,7 @@ void USB_Init()
     USB_WriteReg(INTROUT1E, 0x3f);
     USB_WriteReg(INTRUSBE, 0x00);
     USB_WriteReg(POWER, 0x01);
-    USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+    usb_ep0_stag.bStage = USB_CtrlState_Idle;
 
     EXTI_USB_SetIntState(HAL_State_ON);
 }
@@ -89,7 +89,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         USB_WriteReg(INCSR1, INCLRDT);
         USB_SelectEndPoint(1);
         USB_WriteReg(OUTCSR1, OUTCLRDT);
-        USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+        usb_ep0_stag.bStage = USB_CtrlState_Idle;
     }
 
     /**
@@ -102,7 +102,7 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         if (csr & STSTL) // Sent Stall
         {
             USB_WriteReg(CSR0, csr & ~STSTL);
-            USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+            usb_ep0_stag.bStage = USB_CtrlState_Idle;
         }
 
         if (csr & SUEND) // Setup End
@@ -110,15 +110,15 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
             USB_WriteReg(CSR0, csr | SSUEND);
         }
 
-        switch (USB_EP0_Stage.bStage)
+        switch (usb_ep0_stag.bStage)
         {
             case USB_CtrlState_Idle:
                 if (csr & OPRDY) // Out Packet Ready
                 {
-                    USB_EP0_Stage.bStage = USB_CtrlState_SettingUp;
+                    usb_ep0_stag.bStage = USB_CtrlState_SettingUp;
                     USB_ReadFIFO(FIFO0, (uint8_t *)&usb_request);
-                    ((uint8_t *)&USB_EP0_Stage.wResidue)[0] = usb_request.wLength.bb.bh;
-                    ((uint8_t *)&USB_EP0_Stage.wResidue)[1] = usb_request.wLength.bb.bl;
+                    ((uint8_t *)&usb_ep0_stag.wResidue)[0] = usb_request.wLength.bb.bh;
+                    ((uint8_t *)&usb_ep0_stag.wResidue)[1] = usb_request.wLength.bb.bl;
                     switch (usb_request.bmRequestType & REQUEST_TYPE_MASK)
                     {
                         case USB_RequestType_Standard:
@@ -139,16 +139,16 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                                     break;
                                 
                                 case USB_StdReq_GetDescriptor:
-                                    USB_EP0_Stage.bStage = USB_CtrlState_DataIn;
+                                    usb_ep0_stag.bStage = USB_CtrlState_DataIn;
                                     switch (usb_request.wValue.bb.bh)
                                     {
                                         case USB_DescriptorType_Device:
-                                            USB_EP0_Stage.pData = (uint8_t *)DEVICEDESC;
+                                            usb_ep0_stag.pData = (uint8_t *)DEVICEDESC;
                                             len = sizeof(DEVICEDESC);
                                             break;
 
                                         case USB_DescriptorType_Configuration:
-                                            USB_EP0_Stage.pData = (uint8_t *)CONFIGDESC;
+                                            usb_ep0_stag.pData = (uint8_t *)CONFIGDESC;
                                             len = sizeof(CONFIGDESC);
                                             break;
 
@@ -156,43 +156,43 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                                             switch (usb_request.wValue.bb.bl)
                                             {
                                                 case 0:
-                                                    USB_EP0_Stage.pData = (uint8_t *)LANGIDDESC;
+                                                    usb_ep0_stag.pData = (uint8_t *)LANGIDDESC;
                                                     len = sizeof(LANGIDDESC);
                                                     break;
 
                                                 case 1:
-                                                    USB_EP0_Stage.pData = (uint8_t *)MANUFACTDESC;
+                                                    usb_ep0_stag.pData = (uint8_t *)MANUFACTDESC;
                                                     len = sizeof(MANUFACTDESC);
                                                     break;
 
                                                 case 2:
-                                                    USB_EP0_Stage.pData = (uint8_t *)PRODUCTDESC;
+                                                    usb_ep0_stag.pData = (uint8_t *)PRODUCTDESC;
                                                     len = sizeof(PRODUCTDESC);
                                                     break;
 
                                                 default:
-                                                    USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                                    usb_ep0_stag.bStage = USB_CtrlState_Stalled;
                                                     break;
                                             }
                                             break;
 
                                         case USB_DescriptorType_Report:
-                                            USB_EP0_Stage.pData = (uint8_t *)HIDREPORTDESC;
+                                            usb_ep0_stag.pData = (uint8_t *)HIDREPORTDESC;
                                             len = sizeof(HIDREPORTDESC);
                                             break;
 
                                         default:
-                                            USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                            usb_ep0_stag.bStage = USB_CtrlState_Stalled;
                                             break;
                                     }
-                                    if (len < USB_EP0_Stage.wResidue)
+                                    if (len < usb_ep0_stag.wResidue)
                                     {
-                                        USB_EP0_Stage.wResidue = len;
+                                        usb_ep0_stag.wResidue = len;
                                     }
                                     break;
 
                                 default:
-                                    USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                    usb_ep0_stag.bStage = USB_CtrlState_Stalled;
                                     break;
                             }
                             break;
@@ -201,13 +201,13 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                             switch (usb_request.bRequest)
                             {
                                 case USB_HidReq_GetReport:
-                                    USB_EP0_Stage.pData = HidFreature;
-                                    USB_EP0_Stage.bStage = USB_CtrlState_DataIn;
+                                    usb_ep0_stag.pData = HidFreature;
+                                    usb_ep0_stag.bStage = USB_CtrlState_DataIn;
                                     break;
 
                                 case USB_HidReq_SetReport:
-                                    USB_EP0_Stage.pData = HidFreature;
-                                    USB_EP0_Stage.bStage = USB_CtrlState_DataOut;
+                                    usb_ep0_stag.pData = HidFreature;
+                                    usb_ep0_stag.bStage = USB_CtrlState_DataOut;
                                     break;
 
                                 case USB_HidReq_SetIdle:
@@ -217,17 +217,17 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                                 // case USB_HidReq_GetProtocol:
                                 // case USB_HidReq_SetProtocol:
                                 default:
-                                    USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                                    usb_ep0_stag.bStage = USB_CtrlState_Stalled;
                                     break;
                             }
                             break;
                             
                         default:
-                            USB_EP0_Stage.bStage = USB_CtrlState_Stalled;
+                            usb_ep0_stag.bStage = USB_CtrlState_Stalled;
                             break;
                     }
 
-                    switch (USB_EP0_Stage.bStage)
+                    switch (usb_ep0_stag.bStage)
                     {
                         case USB_CtrlState_DataIn:
                             USB_WriteReg(CSR0, SOPRDY);
@@ -240,12 +240,12 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
 
                         case USB_CtrlState_SettingUp:
                             USB_WriteReg(CSR0, SOPRDY | DATEND);
-                            USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+                            usb_ep0_stag.bStage = USB_CtrlState_Idle;
                             break;
 
                         case USB_CtrlState_Stalled:
                             USB_WriteReg(CSR0, SOPRDY | SDSTL);
-                            USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+                            usb_ep0_stag.bStage = USB_CtrlState_Idle;
                             break;
                     }
                 }
@@ -255,14 +255,14 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                 if (!(csr & IPRDY))
                 {
                     L_Ep0SendData:
-                    cnt = USB_EP0_Stage.wResidue > 64 ? 64 : USB_EP0_Stage.wResidue;
-                    USB_WriteFIFO(FIFO0, USB_EP0_Stage.pData, cnt);
-                    USB_EP0_Stage.wResidue -= cnt;
-                    USB_EP0_Stage.pData += cnt;
-                    if (USB_EP0_Stage.wResidue == 0)
+                    cnt = usb_ep0_stag.wResidue > 64 ? 64 : usb_ep0_stag.wResidue;
+                    USB_WriteFIFO(FIFO0, usb_ep0_stag.pData, cnt);
+                    usb_ep0_stag.wResidue -= cnt;
+                    usb_ep0_stag.pData += cnt;
+                    if (usb_ep0_stag.wResidue == 0)
                     {
                         USB_WriteReg(CSR0, IPRDY | DATEND);
-                        USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+                        usb_ep0_stag.bStage = USB_CtrlState_Idle;
                     }
                     else
                     {
@@ -274,13 +274,13 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
             case USB_CtrlState_DataOut:
                 if (csr & OPRDY)
                 {
-                    cnt = USB_ReadFIFO(FIFO0, USB_EP0_Stage.pData);
-                    USB_EP0_Stage.wResidue -= cnt;
-                    USB_EP0_Stage.pData += cnt;
-                    if (USB_EP0_Stage.wResidue == 0)
+                    cnt = USB_ReadFIFO(FIFO0, usb_ep0_stag.pData);
+                    usb_ep0_stag.wResidue -= cnt;
+                    usb_ep0_stag.pData += cnt;
+                    if (usb_ep0_stag.wResidue == 0)
                     {
                         USB_WriteReg(CSR0, SOPRDY | DATEND);
-                        USB_EP0_Stage.bStage = USB_CtrlState_Idle;
+                        usb_ep0_stag.bStage = USB_CtrlState_Idle;
                     }
                     else
                     {

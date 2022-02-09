@@ -240,14 +240,14 @@ typedef union
   } bb;
 } uint16_2uint8_t;
 
-typedef struct _usb_request_t
+typedef struct
 {
     uint8_t bmRequestType;
     uint8_t bRequest;
     uint16_2uint8_t wValue;
     uint16_2uint8_t wIndex;
     uint16_2uint8_t wLength;
-} usb_request_t;
+} USB_Request_t;
 
 typedef struct
 {
