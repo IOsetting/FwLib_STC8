@@ -65,14 +65,14 @@
 #define INDEX           0x0E
 #define INMAXP          0x10
 #define CSR0            0x11
-#define  SSUEND          0x80
-#define  SOPRDY          0x40
-#define  SDSTL           0x20
-#define  SUEND           0x10
-#define  DATEND          0x08
-#define  STSTL           0x04
-#define  IPRDY           0x02
-#define  OPRDY           0x01
+#define  SSUEND          0x80 // Serviced Setup End
+#define  SOPRDY          0x40 // Serviced OPRDY(Out Packet Ready)
+#define  SDSTL           0x20 // Send Stall
+#define  SUEND           0x10 // Setup End
+#define  DATEND          0x08 // Data End
+#define  STSTL           0x04 // Sent Stall
+#define  IPRDY           0x02 // In Packet Ready
+#define  OPRDY           0x01 // Out Packet Ready
 #define INCSR1          0x11
 #define  INCLRDT         0x40
 #define  INSTSTL         0x20

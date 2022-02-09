@@ -79,6 +79,10 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
     intrusb = USB_ReadReg(INTRUSB);
     intrin = USB_ReadReg(INTRIN1);
     introut = USB_ReadReg(INTROUT1);
+
+    /**
+     * Reset Interrupt
+     */
     if (intrusb & RSTIF)
     {
         USB_SelectEndPoint(1);
@@ -87,23 +91,29 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         USB_WriteReg(OUTCSR1, OUTCLRDT);
         Ep0Stage.bStage = USB_CtrlState_Idle;
     }
+
+    /**
+     * Endpoint-0 Interrupt
+     */
     if (intrin & EP0IF)
     {
         USB_SelectEndPoint(0);
         csr = USB_ReadReg(CSR0);
-        if (csr & STSTL)
+        if (csr & STSTL) // Sent Stall
         {
             USB_WriteReg(CSR0, csr & ~STSTL);
             Ep0Stage.bStage = USB_CtrlState_Idle;
         }
-        if (csr & SUEND)
+
+        if (csr & SUEND) // Setup End
         {
             USB_WriteReg(CSR0, csr | SSUEND);
         }
+
         switch (Ep0Stage.bStage)
         {
             case USB_CtrlState_Idle:
-                if (csr & OPRDY)
+                if (csr & OPRDY) // Out Packet Ready
                 {
                     Ep0Stage.bStage = USB_CtrlState_SettingUp;
                     USB_ReadFIFO(FIFO0, (uint8_t *)&usb_request);
@@ -280,7 +290,10 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                 break;
         }
     }
-    
+
+    /**
+     * Endpoint-1 In Interrupt
+     */
     if (intrin & EP1INIF)
     {
         USB_SelectEndPoint(1);
@@ -294,7 +307,10 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
             USB_WriteReg(INCSR1, 0);
         }
     }
-    
+
+    /**
+     * Endpoint-1 Out Interrupt
+     */
     if (introut & EP1OUTIF)
     {
         USB_SelectEndPoint(1);
@@ -307,8 +323,8 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
         {
             USB_ReadFIFO(FIFO1, HidInput);
             USB_WriteReg(OUTCSR1, 0);
-            
-            if((HidInput[0]==0xaa) && (HidInput[1]==0x55) && (HidInput[2]==0x01))
+            /** Write response */
+            if((HidInput[0] == 0xaa) && (HidInput[1] == 0x55) && (HidInput[2] == 0x01))
             {
                 USB_SelectEndPoint(1);
                 USB_WriteFIFO(FIFO1, HidOutput, 64);
