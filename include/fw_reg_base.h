@@ -15,8 +15,25 @@
 #ifndef __FW_REG_BASE_H__
 #define __FW_REG_BASE_H__
 
-#if defined (SDCC) || defined (__SDCC)
-    
+#if defined (__SDCC_SYNTAX_FIX)
+    #include <stdbool.h>
+    #include <lint.h>
+    # warning unrecognized compiler
+    #define __BIT   bool
+    #define __IDATA
+    #define __PDATA 
+    #define __XDATA 
+    #define __CODE 
+    #define __REENTRANT  
+    #define SBIT(name, addr, bit)    volatile bool           name
+    #define SFR(name, addr)          volatile unsigned char  name
+    #define SFRX(addr)               (*(unsigned char volatile *)(addr))
+    #define SFR16X(addr)             (*(unsigned char volatile *)(addr))
+    #define INTERRUPT(name, vector)  void name (void) 
+    #define INTERRUPT_USING(name, vector, regnum) void name (void)
+    #define NOP() 
+
+#elif defined (SDCC) || defined (__SDCC)
     #define __BIT   __bit
     #define __IDATA __idata
     #define __PDATA __pdata
@@ -34,7 +51,7 @@
 
 #elif defined __CX51__
     #define __BIT   bit
-	#define __IDATA idata
+    #define __IDATA idata
     #define __PDATA pdata
     #define __XDATA xdata
     #define __CODE  code
@@ -48,24 +65,6 @@
     #define INTERRUPT_USING(name, vector, regnum) void name (void) interrupt vector using regnum
     extern void _nop_ (void);
     #define NOP() _nop_()
-
-#else
-    #include <stdbool.h>
-    #include <lint.h>
-    # warning unrecognized compiler
-    #define __BIT   bool
-    #define __IDATA
-    #define __PDATA 
-    #define __XDATA 
-    #define __CODE 
-    #define __REENTRANT  
-    #define SBIT(name, addr, bit)    volatile bool           name
-    #define SFR(name, addr)          volatile unsigned char  name
-    #define SFRX(addr)               (*(unsigned char volatile *)(addr))
-    #define SFR16X(addr)             (*(unsigned char volatile *)(addr))
-    #define INTERRUPT(name, vector) void name (void) 
-    #define INTERRUPT_USING(name, vector, regnum) void name (void)
-    #define NOP() 
 
 #endif
 
