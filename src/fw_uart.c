@@ -16,7 +16,6 @@
 #include "fw_tim.h"
 #include "fw_sys.h"
 
-__CODE char hexTable[16] = { '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 __IDATA char wptr, rptr, UART1_RxBuffer[UART_RX_BUFF_SIZE];
 __BIT busy;
 
@@ -100,8 +99,8 @@ void UART1_IntTxChar(char dat)
 
 void UART1_IntTxHex(uint8_t hex)
 {
-    UART1_IntTxChar(hexTable[hex >> 4]);
-    UART1_IntTxChar(hexTable[hex & 0xF]);
+    UART1_IntTxChar(HEX_TABLE[hex >> 4]);
+    UART1_IntTxChar(HEX_TABLE[hex & 0xF]);
 }
 
 void UART1_IntTxString(uint8_t *str)
@@ -118,8 +117,8 @@ void UART1_TxChar(char dat)
 
 void UART1_TxHex(uint8_t hex)
 {
-    UART1_TxChar(hexTable[hex >> 4]);
-    UART1_TxChar(hexTable[hex & 0xF]);
+    UART1_TxChar(HEX_TABLE[hex >> 4]);
+    UART1_TxChar(HEX_TABLE[hex & 0xF]);
 }
 
 void UART1_TxString(uint8_t *str)
@@ -160,8 +159,8 @@ void UART2_TxChar(char dat)
 
 void UART2_TxHex(uint8_t hex)
 {
-    UART2_TxChar(hexTable[hex >> 4]);
-    UART2_TxChar(hexTable[hex & 0xF]);
+    UART2_TxChar(HEX_TABLE[hex >> 4]);
+    UART2_TxChar(HEX_TABLE[hex & 0xF]);
 }
 
 void UART2_TxString(uint8_t *str)

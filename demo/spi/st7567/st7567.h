@@ -157,16 +157,16 @@ extern __CODE FontDef_t Font_3x5;
 extern __CODE FontDef_t Font_5x7;
 
 /**
- * @brief  Writes single byte data to ST7567
- * @param  dat: data to be written
+ * @brief  Write a single byte data to ST7567
+ * @param  dat: data
  * @retval None
  */
 void ST7567_WriteData(uint8_t dat);
 void ST7567_WriteSameData(uint8_t dat, uint32_t size);
 
 /**
- * @brief  Writes single byte command to ST7567
- * @param  command: command to be written
+ * @brief  Write a single byte command to ST7567
+ * @param  command: command
  * @retval None
  */
 void ST7567_WriteCommand(uint8_t command);
@@ -208,8 +208,8 @@ void ST7567_SetBackLightState(HAL_State_t state);
 void ST7567_SetContrast(uint8_t val);
 
 /** 
- * @brief  Updates buffer from internal RAM to LCD
- * @note   This function must be called each time you do some changes to LCD, to update buffer from RAM to LCD
+ * @brief  Update LCD display with buffer changes
+ * @note   Call this function each time when display is changed
  * @param  None
  * @retval None
  */
@@ -224,8 +224,8 @@ void ST7567_UpdateScreen(void);
 void ST7567_ToggleInvert(void);
 
 /** 
- * @brief  Fills entire LCD with desired color
- * @note   @ref ST7567_UpdateScreen() must be called after that in order to see updated LCD screen
+ * @brief  Fills entire LCD with specified color
+ * @note   @ref ST7567_UpdateScreen() must be called after that in order to see updates
  * @param  Color: Color to be used for screen fill, ST7567_COLOR_FRONT or ST7567_COLOR_BACK
  * @retval None
  */
@@ -233,7 +233,7 @@ void ST7567_Fill(uint8_t Color);
 
 /**
  * @brief  Draws pixel at desired location
- * @note   @ref ST7567_UpdateScreen() must called after that in order to see updated LCD screen
+ * @note   @ref ST7567_UpdateScreen() must called after that in order to see updates
  * @param  x: X location. This parameter can be a value between 0 and ST7567_WIDTH - 1
  * @param  y: Y location. This parameter can be a value between 0 and ST7567_HEIGHT - 1
  * @param  color: Color to be used for screen fill. This parameter can be a value of @ref ST7567_COLOR_t enumeration
