@@ -79,7 +79,7 @@ int main(void)
         PCD8544_SetDisplayBlank();
         SYS_Delay(200);
         PCD8544_SetDisplayNormal();
-        SYS_Delay(200);
+        SYS_Delay(500);
         PCD8544_Fill(0);
 
         PCD8544_DrawLine(0,   0,  83,  0, 1);
@@ -87,6 +87,7 @@ int main(void)
         PCD8544_DrawLine(83,  0,  83, 47, 1);
         PCD8544_DrawLine(0,  47,  83, 47, 1);
         PCD8544_UpdateScreen();
+        SYS_Delay(500);
 
         PCD8544_GotoXY(3, 3);
         PCD8544_Puts("LCD:PCD8544", &Font_5x7, 1);
@@ -101,8 +102,7 @@ int main(void)
         PCD8544_SetPowerDownMode(HAL_State_ON);
         SYS_Delay(1000);
         PCD8544_SetPowerDownMode(HAL_State_OFF);
-        SYS_Delay(2000);
-
+        SYS_Delay(1000);
         PCD8544_SetDisplayInverted();
         SYS_Delay(1000);
         PCD8544_SetDisplayNormal();
@@ -124,7 +124,7 @@ int main(void)
             }
             SYS_Delay(1000);
         }
-        PCD8544_SetContrast(0x06, 0x3F);
+        PCD8544_SetContrast(0x06, 0x20);
         PCD8544_Fill(0);
 
         y1 = 47, y2 = 0;

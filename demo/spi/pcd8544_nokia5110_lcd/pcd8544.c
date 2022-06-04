@@ -129,7 +129,7 @@ void PCD8544_SetDisplayNormal(void)
 void PCD8544_Init(void)
 {
     PCD8544_Reset();
-    PCD8544_SetContrast(0x06, 0x3F);
+    PCD8544_SetContrast(0x06, 0x20);
     PCD8544_SetDisplayNormal();
 }
 
