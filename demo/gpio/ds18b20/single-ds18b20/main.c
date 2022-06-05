@@ -13,7 +13,8 @@
 // limitations under the License.
 
 /***
- * Demo:  DS18B20
+ * Example code of communication with single DS18B20
+ * 
  * Board: STC8H3K32
  * 
  *              P35   -> DQ
@@ -24,11 +25,18 @@
 #include "fw_hal.h"
 #include "ds18b20.h"
 
-uint16_t temp;
+void PrintArray(uint8_t *arr, uint8_t start, uint8_t end)
+{
+    uint8_t i;
+    for (i = start; i < end; i++)
+    {
+        UART1_TxHex(*(arr + i));
+    }
+}
 
 int main(void)
 {
-    uint16_t temperature;
+    uint8_t buff[9], i;
 
     SYS_SetClock();
     // UART1, baud 115200, baud source Timer1, 1T mode, no interrupt
@@ -41,11 +49,15 @@ int main(void)
         while (!DS18B20_AllDone())
         {
             UART1_TxChar('.');
-            SYS_Delay(1);
+            SYS_Delay(50);
         }
-        temperature = DS18B20_ReadTemperature();
-        UART1_TxHex(temperature >> 8);
-        UART1_TxHex(temperature & 0xFF);
+        DS18B20_ReadScratchpad(buff);
+        PrintArray(buff, 0, 9);
+        UART1_TxChar(' ');
+        i = DS18B20_Crc(buff, 8);
+        UART1_TxString("CRC:");
+        UART1_TxHex(i);
+        UART1_TxChar(' ');
         UART1_TxString("\r\n");
         SYS_Delay(1000);
     }

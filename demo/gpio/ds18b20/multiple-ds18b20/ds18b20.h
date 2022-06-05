@@ -100,7 +100,22 @@ void DS18B20_WriteBit(__BIT b);
 void DS18B20_WriteByte(uint8_t byte);
 
 /**
- * @brief Start all DS18B20
+ * @brief 8-bit CRC calculation
+ * 
+ * @param addr 
+ * @param len 
+ * @return crc result 
+ */
+uint8_t DS18B20_Crc(uint8_t *addr, uint8_t len);
+
+/**
+ * @brief Read SRAM scratchpad
+ * @param buf a 9-byte buffer, Byte 8 contains the CRC code for bytes 0 through 7
+ */
+void DS18B20_ReadScratchpad(uint8_t *buf);
+
+/**
+ * @brief Start conversion on all slaves
  */
 void DS18B20_StartAll(void);
 
@@ -111,10 +126,43 @@ void DS18B20_StartAll(void);
 __BIT DS18B20_AllDone(void);
 
 /**
- * @brief Read 16 bits temperature
- * @return temperature value
+ * @brief Read 64-bit ROM: 8-bit family code "0x28", unique 48-bit serial number, 8-bit CRC
+ * @note  This command can only be used if there is a single DS18B20 on the bus. 
+ *        If multiple slaves are present, a data collision will occur(a wired AND result).
+ * @param buf a 8-byte buffer
  */
-uint16_t DS18B20_ReadTemperature(void);
+void DS18B20_ReadRom(uint8_t *buf);
 
+/**
+ * @brief Select a slave on the bus
+ * @note  Only the slave that exactly matches the 64-bit ROM code sequence will respond to 
+ *        the function command issued by the master; all other slaves on the bus will wait 
+ *        for a reset pulse.
+ * @param addr 64-bit ROM code
+ */
+void DS18B20_Select(const uint8_t* addr);
+
+/**
+ * @brief Start conversion on selected slave
+ * @param addr 64-bit ROM code
+ */
+void DS18B20_Start(const uint8_t *addr);
+
+/**
+ * @brief Read SRAM scratchpad from selected slave
+ * 
+ * @param addr 64-bit ROM code
+ * @param buf a 9-byte buffer, Byte 8 contains the CRC code for bytes 0 through 7
+ */
+void DS18B20_ReadScratchpadFromAddr(const uint8_t *addr, uint8_t *buf);
+
+/**
+ * @brief Perform one ROM search 
+ * @param buff 8-byte array for ROM bytes
+ * @param stack 8-byte array for search stack
+ * @param split_point deepest split point of last search
+ * @return new split point
+ */
+uint8_t DS18B20_Detect(uint8_t *buff, uint8_t *stack, uint8_t split_point);
 
 #endif // __DS18B20_H_
