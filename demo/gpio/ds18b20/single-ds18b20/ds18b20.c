@@ -77,7 +77,10 @@ uint8_t DS18B20_ReadByte(void)
     while (i--) 
     {
         byte >>= 1;
-        byte |= (DS18B20_ReadBit() << 7);
+        if (DS18B20_ReadBit())
+        {
+            byte |= 0x80;
+        }
     }
     return byte;
 }
