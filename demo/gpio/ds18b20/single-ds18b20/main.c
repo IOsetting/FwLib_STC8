@@ -17,9 +17,19 @@
  * 
  * Board: STC8H3K32
  * 
- *              P35   -> DQ
- *              GND   -> GND
- *              3.3V  -> VCC
+ *   Normal Power Mode:
+ *          P35         -> DQ
+ *          GND         -> GND
+ *          5V/3.3V     -> VDD
+ * 
+ *   Parasite Power Mode:
+ *     Parasite power mode requires both DS18B20 GND and Vdd to be 
+ *     connected to ground. The DQ pin is the data/parasite power line, 
+ *     which requires a pull-up resistor (set by PxPU command)
+ *     
+ *          P35   -> DQ
+ *          GND   -> GND -> VDD
+ *          5V
  */
 
 #include "fw_hal.h"
@@ -46,6 +56,10 @@ int main(void)
     while(1)
     {
         DS18B20_StartAll();
+        /*
+         In Parasite Power Mode, replace the while block below with 
+         SYS_Delay(x), x can be [500, 1000]
+         */
         while (!DS18B20_AllDone())
         {
             UART1_TxChar('.');
