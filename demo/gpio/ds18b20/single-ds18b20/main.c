@@ -26,11 +26,25 @@
  *     Parasite power mode requires both DS18B20 GND and Vdd to be 
  *     connected to ground. The DQ pin is the data/parasite power line, 
  *     which requires a pull-up resistor (set by PxPU command)
- *     
  *          P35   -> DQ
  *          GND   -> GND -> VDD
  *          5V
+ * 
+ *   Parasite Power Mode Emulation:
+ *     In case some DS18B20 doesn't work in parasite mode, you can add one
+ *     0.1uF capacitor and one 1N4148 to achieve it. In thise way DS18B20
+ *     actually works in normal power mode
+ *
+ *                +-----1N4148-|>|-----+
+ *                |                    |
+ *                |     |DS18B20|-VCC--+
+ *                |     |       |      |
+ *          P35 --+-DQ--|DS18B20|     0.1uF
+ *                      |       |      |
+ *          GND ----GND-|DS18B20|-GND--+
+ * 
  */
+
 
 #include "fw_hal.h"
 #include "ds18b20.h"
