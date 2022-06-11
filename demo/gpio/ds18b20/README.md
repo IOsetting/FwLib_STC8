@@ -28,12 +28,12 @@ In case some DS18B20 doesn't work in parasite mode, you can add one 0.1uF capaci
 In thise way DS18B20 actually works in normal power mode
 
 ```
-     +-----1N4148-|>|-----+
-     |                    |
-     |     |DS18B20|-VCC--+
-     |     |       |      |
+      +-----1N4148-|>|-----+
+      |                    |
+      |     |DS18B20|-VCC--+
+      |     |       |      |
 P35 --+-DQ--|DS18B20|     0.1uF
-           |       |      |
+            |       |      |
 GND ----GND-|DS18B20|-GND--+
 ```
 
