@@ -16,14 +16,15 @@
 
 void DS18B20_Init(void)
 {
+    /* Pull up 2 seconds for possible capacitor charging */
     DS18B20_DQ_PULLUP();
     DS18B20_DQ_OUTPUT();
     DS18B20_DQ = SET;
-    SYS_DelayUs(1000);
+    SYS_Delay(1000);
     DS18B20_DQ = RESET;
-    SYS_DelayUs(1000);
+    SYS_Delay(1);
     DS18B20_DQ = SET;
-    SYS_DelayUs(2000);
+    SYS_Delay(1000);
 }
 
 __BIT DS18B20_Reset(void)
@@ -238,7 +239,7 @@ void DS18B20_ReadScratchpadFromAddr(const uint8_t *addr, uint8_t *buf)
     }
 }
 
-uint8_t DS18B20_Detect(uint8_t *buff, uint8_t *stack, uint8_t split_point)
+uint8_t DS18B20_Search(uint8_t *buff, uint8_t *stack, uint8_t split_point)
 {
     uint8_t len = 64, pos = 0;
     /* Start from deepest point */

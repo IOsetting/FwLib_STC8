@@ -163,6 +163,6 @@ void DS18B20_ReadScratchpadFromAddr(const uint8_t *addr, uint8_t *buf);
  * @param split_point deepest split point of last search
  * @return new split point
  */
-uint8_t DS18B20_Detect(uint8_t *buff, uint8_t *stack, uint8_t split_point);
+uint8_t DS18B20_Search(uint8_t *buff, uint8_t *stack, uint8_t split_point);
 
 #endif // __DS18B20_H_

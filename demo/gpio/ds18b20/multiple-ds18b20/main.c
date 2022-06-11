@@ -52,7 +52,7 @@ int main(void)
         do
         {
             // ROM search and store ROM bytes to addr
-            sp = DS18B20_Detect(addr, Search_Stack, sp);
+            sp = DS18B20_Search(addr, Search_Stack, sp);
             // Print the new split point and address
             UART1_TxHex(sp);
             UART1_TxChar(' ');
@@ -74,6 +74,7 @@ int main(void)
             UART1_TxString("\r\n");
         } while (sp);
 
+        UART1_TxString("\r\n");
         SYS_Delay(1000);
     }
 }
