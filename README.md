@@ -50,7 +50,19 @@ build_flags =
 ```c
 #include "fw_hal.h"
 ```
-then it's ready to use.
+then it's ready to go.
+
+## VS Code Syntax Problem
+
+VS Code doesn't support some of SDCC syntax for Intel 8051 ([issue 7146](https://github.com/microsoft/vscode-cpptools/issues/7146)), if you want to eliminate syntax errors in code editor, add a separate env for code editing and add `__SDCC_SYNTAX_FIX` in build_flags:
+```
+build_flags =
+    -D__SDCC_SYNTAX_FIX
+    -D__CONF_FOSC=36864000UL
+    -D__CONF_MCU_MODEL=MCU_MODEL_STC8H3K32S2
+    ...
+```
+This special env is for code editing only, building and uploading should use the normal env. 
 
 
 # Keil C51 Quick Start
@@ -78,7 +90,7 @@ The explanation of these arguments
 ```c
 #include "fw_hal.h"
 ```
-then it's ready to use.
+then it's ready to go.
 
 # Macros
 

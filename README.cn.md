@@ -52,6 +52,18 @@ build_flags =
 #include "fw_hal.h"
 ```
 
+## VS Code 代码高亮错误
+
+VS Code 并不完全支持 SDCC 的 Intel 8051 语法 ([issue 7146](https://github.com/microsoft/vscode-cpptools/issues/7146)), 如果您需要在代码编辑中消除错误提示, 需要增加一个env, 并在 build_flags 中添加 `__SDCC_SYNTAX_FIX`:
+```
+build_flags =
+    -D__SDCC_SYNTAX_FIX
+    -D__CONF_FOSC=36864000UL
+    -D__CONF_MCU_MODEL=MCU_MODEL_STC8H3K32S2
+    ...
+```
+这个特殊的env仅用于代码编辑, 编译和上载依然需要使用正常的env.
+
 
 # Keil C51 快速上手
 
