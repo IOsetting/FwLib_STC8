@@ -454,26 +454,26 @@ typedef enum
 */
 #define PWMB_PWM1_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
                         SFRX_ON(); \
-                        (PWMB_CCR1H = ((__16BIT_VAL__) >> 8)); \
-                        (PWMB_CCR1L = ((__16BIT_VAL__) & 0xFF)); \
+                        (PWMB_CCR5H = ((__16BIT_VAL__) >> 8)); \
+                        (PWMB_CCR5L = ((__16BIT_VAL__) & 0xFF)); \
                         SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM2_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
                         SFRX_ON(); \
-                        (PWMB_CCR2H = ((__16BIT_VAL__) >> 8)); \
-                        (PWMB_CCR2L = ((__16BIT_VAL__) & 0xFF)); \
+                        (PWMB_CCR6H = ((__16BIT_VAL__) >> 8)); \
+                        (PWMB_CCR6L = ((__16BIT_VAL__) & 0xFF)); \
                         SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM3_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
                         SFRX_ON(); \
-                        (PWMB_CCR3H = ((__16BIT_VAL__) >> 8)); \
-                        (PWMB_CCR3L = ((__16BIT_VAL__) & 0xFF)); \
+                        (PWMB_CCR7H = ((__16BIT_VAL__) >> 8)); \
+                        (PWMB_CCR7L = ((__16BIT_VAL__) & 0xFF)); \
                         SFRX_OFF(); \
                     }while(0)
 #define PWMB_PWM4_SetCaptureCompareValue(__16BIT_VAL__)        do{   \
                         SFRX_ON(); \
-                        (PWMB_CCR4H = ((__16BIT_VAL__) >> 8)); \
-                        (PWMB_CCR4L = ((__16BIT_VAL__) & 0xFF)); \
+                        (PWMB_CCR8H = ((__16BIT_VAL__) >> 8)); \
+                        (PWMB_CCR8L = ((__16BIT_VAL__) & 0xFF)); \
                         SFRX_OFF(); \
                     }while(0)
 
