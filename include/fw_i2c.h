@@ -34,7 +34,7 @@ typedef enum
                                            save the received bit to MSACKI（I2CMSST.1) */
     I2C_MasterCmd_Recv          = 0x04, // Recive data
     I2C_MasterCmd_TxAck         = 0x05, /* Send Ack. This command will generate 1 clock on SCL, and 
-                                           write the value of MSACKO（I2CMSST.0） to SDA */
+                                           write the bit value of MSACKO（I2CMSST.0） to SDA */
     I2C_MasterCmd_Stop          = 0x06, // STOP. This command will send STOP signal, and reset MSBUSY flag
     I2C_MasterCmd_StartSendRxAck = 0x09, // START + Send data + RxAck
     I2C_MasterCmd_SendRxAck     = 0x0A, // Send data + RxAck
@@ -55,7 +55,7 @@ typedef enum
 #define I2C_SetWorkMode(__MODE__)           SFRX_ASSIGN(I2CCFG, 6, __MODE__)
 
 /**
- * I2C bus clock = SYSCLK / 2 / (__DIV__ * 2 + 4)
+ * I2C bus clock = FOSC / 2 / (__DIV__ * 2 + 4)
  * __DIV__ values range [0, 63]
 */
 #define I2C_SetClockPrescaler(__DIV__) do {                                                     \
@@ -106,5 +106,7 @@ typedef enum
 
 uint8_t I2C_Write(uint8_t devAddr, uint8_t memAddr, uint8_t *dat, uint16_t size);
 uint8_t I2C_Read(uint8_t devAddr, uint8_t memAddr, uint8_t *buf, uint16_t size);
+uint8_t I2C_Write16BitAddr(uint8_t devAddr, uint16_t memAddr, uint8_t *dat, uint16_t size);
+uint8_t I2C_Read16BitAddr(uint8_t devAddr, uint16_t memAddr, uint8_t *buf, uint16_t size);
 
 #endif

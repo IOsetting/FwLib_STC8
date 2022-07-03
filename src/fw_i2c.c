@@ -61,3 +61,54 @@ uint8_t I2C_Read(uint8_t devAddr, uint8_t memAddr, uint8_t *buf, uint16_t size)
     SFRX_OFF();
     return HAL_OK;
 }
+
+uint8_t I2C_Write16BitAddr(uint8_t devAddr, uint16_t memAddr, uint8_t *dat, uint16_t size)
+{
+    SFRX_ON();
+    I2C_MasterStart();
+    I2C_MasterSendData(devAddr & 0xFE);
+    I2C_MasterRxAck();
+    I2C_MasterSendData(memAddr >> 8);
+    I2C_MasterRxAck();
+    I2C_MasterSendData(memAddr & 0xFF);
+    I2C_MasterRxAck();
+    while(size--)
+    {
+        I2C_MasterSendData(*dat++);
+        I2C_MasterRxAck();
+    }
+    I2C_MasterStop();
+    SFRX_OFF();
+    return HAL_OK;
+}
+
+uint8_t I2C_Read16BitAddr(uint8_t devAddr, uint16_t memAddr, uint8_t *buf, uint16_t size)
+{
+    SFRX_ON();
+    I2C_MasterStart();
+    I2C_MasterSendData(devAddr & 0xFE);
+    I2C_MasterRxAck();
+    I2C_MasterSendData(memAddr >> 8);
+    I2C_MasterRxAck();
+    I2C_MasterSendData(memAddr & 0xFF);
+    I2C_MasterRxAck();
+    I2C_MasterStart();
+    I2C_MasterSendData(devAddr | 0x01);
+    I2C_MasterRxAck();
+    while(size--)
+    {
+        I2C_SendMasterCmd(I2C_MasterCmd_Recv);
+        *buf++ = I2CRXD;
+        if (size == 0)
+        {
+            I2C_MasterNAck();
+        }
+        else
+        {
+            I2C_MasterAck();
+        }
+    }
+    I2C_MasterStop();
+    SFRX_OFF();
+    return HAL_OK;
+}
