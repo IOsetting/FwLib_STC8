@@ -13,17 +13,17 @@
 // limitations under the License.
 
 /***
- * Demo: MPU6050, 3-axis gyroscope + 3-axis accelerometer + Digital Motion Processor™ (DMP™)
- * Board: STC8H8K64U
+ * Demo: ZS-042, DS3231 I2C RTC/TCXO/Crystal
+ * Board: STC8H3K32
  * 
  *              P32   -> SCL
  *              P33   -> SDA
  *              GND   -> GND
  *              3.3V  -> VCC
  */
+
 #include "fw_hal.h"
-#include "mpu6050.h"
-#include <stdio.h>
+#include "ds3231.h"
 
 void I2C_Init(void)
 {
@@ -31,11 +31,8 @@ void I2C_Init(void)
     I2C_SetWorkMode(I2C_WorkMode_Master);
     /**
      * I2C clock = FOSC / 2 / (__prescaler__ * 2 + 4)
-     * MPU6050 works with i2c clock up to 400KHz
-     * 
-     * 44.2368 / 2 / (26 * 2 + 4) = 0.39 MHz
     */
-    I2C_SetClockPrescaler(0x1A);
+    I2C_SetClockPrescaler(0x3F);
     // Switch alternative port
     I2C_SetPort(I2C_AlterPort_P32_P33);
     // Start I2C
@@ -52,31 +49,33 @@ void GPIO_Init(void)
 
 int main(void)
 {
-    uint8_t i;
-    uint16_t buf[7];
+    DS3231_Time_t t;
+    uint8_t i, buf[19];
 
     SYS_SetClock();
+    // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
+    UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
+
     GPIO_Init();
-    UART1_Config8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
     I2C_Init();
-    MPU6050_Init();
+    DS3231_Init();
 
     while(1)
     {
-        for (i = 0; i < 100; i++)
-        {
-            if (i == 0)
-            {
-                MPU6050_EnableLowPowerMode(MPU6050_Wakeup_Freq_1p25Hz);
-            }
-            else if (i == 50)
-            {
-                MPU6050_DisableLowPowerMode();
-            }
-            MPU6050_ReadAll(buf);
-            printf("ax:%6d, ay:%6d, az:%6d, tp:%6d, gx:%6d, gy:%6d, gz:%6d\r\n", 
-                buf[0], buf[1], buf[2], (int16_t)buf[3] / 34 + 365, buf[4], buf[5], buf[6]);
-            SYS_Delay(100);
-        }
+        DS3231_GetTime(&t);
+        UART1_TxHex(t.year >> 8);
+        UART1_TxHex(t.year & 0xFF);
+        UART1_TxChar('-');
+        UART1_TxHex(t.month);
+        UART1_TxChar('-');
+        UART1_TxHex(t.date);
+        UART1_TxChar(' ');
+        UART1_TxHex(t.hour);
+        UART1_TxChar(':');
+        UART1_TxHex(t.minute);
+        UART1_TxChar(':');
+        UART1_TxHex(t.second);
+        UART1_TxString("\r\n");
+        SYS_Delay(1000);
     }
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /***
- * Demo: SSD1306 12864 OLED
+ * Demo: SSD1306/SSD1315 12864 OLED
  * Board: STC8H3K32
  * 
  *              P32   -> SCL
@@ -30,7 +30,7 @@ void I2C_Init(void)
     // Master mode
     I2C_SetWorkMode(I2C_WorkMode_Master);
     /**
-     * I2C clock = SYSCLK / 2 / (__prescaler__ * 2 + 4)
+     * I2C clock = FOSC / 2 / (__prescaler__ * 2 + 4)
      * SSD1306 works with i2c clock up to 1.3 MHz, beyond this value, display may fail.
     */
     I2C_SetClockPrescaler(0x10);
