@@ -40,6 +40,13 @@ void SYS_SetClock(void)
     while (--i); // Wait
 }
 
+void SYS_TrimClock(uint8_t vrtrim, uint8_t irtrim)
+{
+    uint16_t i = 0;
+    SYS_SetFOSC(__CONF_IRCBAND, vrtrim, irtrim, __CONF_LIRTRIM);
+    while (--i); // Wait
+}
+
 void SYS_Delay(uint16_t t)
 {
     uint16_t i;
