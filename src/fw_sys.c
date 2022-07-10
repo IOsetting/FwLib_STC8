@@ -14,9 +14,9 @@
 
 #include "fw_sys.h"
 
-static const uint16_t ticks_ms = (__CONF_FOSC / (float)1000 / 13 - 46);
-static const uint8_t ticks_us = (__CONF_FOSC / (float)12100000UL);
-static uint8_t clkdiv = 0x1;
+__CODE uint8_t  clkdiv      = ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV);
+__CODE uint16_t ticks_ms    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / 9000);
+__CODE uint8_t  ticks_us    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / 9000000UL);
 
 /**
  * Change system clock
@@ -35,7 +35,6 @@ void SYS_SetClock(void)
         } while (--j);
     }
     P_SW2 = 0x00;
-    clkdiv = (__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV;
     SYS_SetFOSC(__CONF_IRCBAND, __CONF_VRTRIM, __CONF_IRTRIM, __CONF_LIRTRIM);
     while (--i); // Wait
 }
