@@ -14,6 +14,9 @@
 
 #include "fw_hal.h"
 
+extern __CODE uint16_t ticks_ms;
+extern __CODE uint8_t  ticks_us, clkdiv;
+
 void main(void)
 {
     SYS_SetClock();
@@ -21,9 +24,13 @@ void main(void)
     UART1_Config8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
     while(1)
     {
-        UART1_TxChar('T');
-        UART1_TxHex(0x41);
-        UART1_TxString("U");
+        UART1_TxString("ms ticks:0x");
+        UART1_TxHex(ticks_ms >> 8);
+        UART1_TxHex(ticks_ms & 0xFF);
+        UART1_TxString(" us ticks:0x");
+        UART1_TxHex(ticks_us);
+        UART1_TxString(" clock div:0x");
+        UART1_TxHex(clkdiv);
         UART1_TxString(" string\r\n");
         SYS_Delay(1000);
     }
