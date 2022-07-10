@@ -25,6 +25,8 @@
 #include "fw_hal.h"
 #include "ds3231.h"
 
+__XDATA uint8_t time[9];
+
 void I2C_Init(void)
 {
     // Master mode
@@ -49,32 +51,45 @@ void GPIO_Init(void)
 
 int main(void)
 {
-    DS3231_Time_t t;
-    uint8_t i, buf[19];
-
     SYS_SetClock();
     // UART1 configuration: baud 115200 with Timer2, 1T mode, no interrupt
     UART1_Config8bitUart(UART1_BaudSource_Timer2, HAL_State_ON, 115200);
 
     GPIO_Init();
     I2C_Init();
-    DS3231_Init();
+    time[0] = DS3231_GetStatus();
+    UART1_TxString("Status:");
+    UART1_TxHex(time[0]);
+    UART1_TxString("\r\n");
+    // Set time
+    time[7] = DS3231_FORMAT_24H;
+    time[0] = 2022 - 1990; // year
+    time[1] = 7; // month
+    time[2] = 7; // week day
+    time[3] = 10; // date
+    time[4] = 14; // hour
+    time[5] = 21; // minute
+    time[6] = 10; // second
+    DS3231_SetTime(time);
 
     while(1)
     {
-        DS3231_GetTime(&t);
-        UART1_TxHex(t.year >> 8);
-        UART1_TxHex(t.year & 0xFF);
+        DS3231_GetTime(time);
+        UART1_TxHex(time[0]);
         UART1_TxChar('-');
-        UART1_TxHex(t.month);
+        UART1_TxHex(time[1]);
         UART1_TxChar('-');
-        UART1_TxHex(t.date);
+        UART1_TxHex(time[3]);
         UART1_TxChar(' ');
-        UART1_TxHex(t.hour);
+        UART1_TxHex(time[4]);
         UART1_TxChar(':');
-        UART1_TxHex(t.minute);
+        UART1_TxHex(time[5]);
         UART1_TxChar(':');
-        UART1_TxHex(t.second);
+        UART1_TxHex(time[6]);
+        UART1_TxChar(' ');
+        UART1_TxHex(time[7]);
+        UART1_TxChar(' ');
+        UART1_TxHex(time[8]);
         UART1_TxString("\r\n");
         SYS_Delay(1000);
     }

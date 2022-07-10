@@ -43,12 +43,6 @@
 
 typedef enum
 {
-    DS3231_BOOL_FALSE = 0x00,        /**< disable function */
-    DS3231_BOOL_TRUE  = 0x01,        /**< enable function */
-} DS3231_Bool_t;
-
-typedef enum
-{
     DS3231_ALARM_1 = 0x00,        /**< alarm 1 */
     DS3231_ALARM_2 = 0x01,        /**< alarm 2 */
 } DS3231_Alarm_t;
@@ -96,35 +90,39 @@ typedef enum
     DS3231_ALARM2_MODE_WEEK_HOUR_MINUTE_MATCH       = 0x10,        /**< interrupt week hour minute match */
 } DS3231_Alarm2Mode_t;
 
-typedef struct ds3231_time_s
-{
-    uint16_t year;                 /**< year */
-    uint8_t month;                 /**< month */
-    uint8_t week;                  /**< week */
-    uint8_t date;                  /**< date */
-    uint8_t hour;                  /**< hour */
-    uint8_t minute;                /**< minute */
-    uint8_t second;                /**< second */
-    DS3231_HourFormat_t format;    /**< hour format */
-    DS3231_AmPm_t am_pm;           /**< am pm */
-} DS3231_Time_t;
 
-typedef struct ds3231_handle_s
-{
-    uint8_t (*iic_init)(void);                                                          /**< point to a iic_init function address */
-    uint8_t (*iic_deinit)(void);                                                        /**< point to a iic_deinit function address */
-    uint8_t (*iic_write)(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);        /**< point to a iic_write function address */
-    uint8_t (*iic_read)(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);         /**< point to a iic_read function address */
-    void (*debug_print)(const char *const fmt, ...);                                    /**< point to a debug_print function address */
-    void (*receive_callback)(uint8_t type);                                             /**< point to a receive_callback function address */
-    void (*delay_ms)(uint32_t ms);                                                      /**< point to a delay_ms function address */
-    uint8_t inited;                                                                     /**< inited flag */
-} ds3231_handle_t;
+uint8_t DS3231_GetStatus(void);
 
+/**
+ * @brief 
+ * 
+ * @param t format
+ *  uint8_t year;
+    uint8_t month;
+    uint8_t week;
+    uint8_t date;
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
+    DS3231_HourFormat_t format;
+    DS3231_AmPm_t am_pm;
+    
+ * @return uint8_t 
+ */
+uint8_t DS3231_GetTime(uint8_t *t);
+uint8_t DS3231_SetTime(uint8_t *t);
+uint8_t DS3231_GetPin(DS3231_PinType_t *pin);
+uint8_t DS3231_SetPin(DS3231_PinType_t *pin);
 
-uint8_t DS3231_Init(void);
-uint8_t DS3231_GetTime(DS3231_Time_t *t);
-uint8_t DS3231_ReadAll(uint8_t *buf);
+uint8_t ds3231_GetSquareOutputState(HAL_State_t *state);
+uint8_t DS3231_SetSquareOutputState(HAL_State_t state);
+uint8_t DS3231_GetAlarmInterrupt(DS3231_Alarm_t alarm, HAL_State_t *state);
+uint8_t DS3231_SetAlarmInterrupt(DS3231_Alarm_t alarm, HAL_State_t state);
 
+uint8_t DS3231_GetAlarm1(uint8_t *t, DS3231_Alarm1Mode_t *mode);
+uint8_t DS3231_SetAlarm1(uint8_t *t, DS3231_Alarm1Mode_t mode);
+uint8_t DS3231_GetAlarm2(uint8_t *t, DS3231_Alarm2Mode_t *mode);
+uint8_t DS3231_SetAlarm2(uint8_t *t, DS3231_Alarm2Mode_t mode);
+uint8_t DS3231_ClearAlarm(DS3231_Alarm_t alarm);
 
 #endif
