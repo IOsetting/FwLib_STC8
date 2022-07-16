@@ -14,17 +14,33 @@
 
 #include "fw_sys.h"
 
+/**
+ * An approximate estimate of instruction cycles in one second, may vary in
+ * different compilers even differnt versions, adjust it if you find the
+ * delay too slow or fast.
+*/
+#if defined (__SDCC_SYNTAX_FIX)
+    #define __CLK_REF 10000
+#elif defined (SDCC) || defined (__SDCC)
+    #define __CLK_REF 9000
+#elif defined __CX51__
+    #define __CLK_REF 10000
+#endif
+
 __CODE uint8_t  clkdiv      = ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV);
-__CODE uint16_t ticks_ms    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / 9000);
-__CODE uint8_t  ticks_us    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / 9000000UL);
+__CODE uint16_t ticks_ms    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / __CLK_REF);
+__CODE uint8_t  ticks_us    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / __CLK_REF / 1000);
+
 
 /**
  * Change system clock
- * - invoke this in the beginning of code
- * - don't invoke this if the target frequency is already set by STC-ISP
+ * - For SDCC only.
+ * - For Keil C51, trim IRC in STC-ISP will be more accurate
+ * - Invoke this in the beginning of main()
 */
 void SYS_SetClock(void)
 {
+#if defined (SDCC) || defined (__SDCC)
     uint16_t i = 0; uint8_t j = 5;
     P_SW2 = 0x80;
     if (CLKDIV != (__CONF_CLKDIV))
@@ -37,6 +53,7 @@ void SYS_SetClock(void)
     P_SW2 = 0x00;
     SYS_SetFOSC(__CONF_IRCBAND, __CONF_VRTRIM, __CONF_IRTRIM, __CONF_LIRTRIM);
     while (--i); // Wait
+#endif
 }
 
 void SYS_TrimClock(uint8_t vrtrim, uint8_t irtrim)
