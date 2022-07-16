@@ -38,11 +38,13 @@ uint8_t RX8025T_GetTime(uint8_t *t)
 
 uint8_t RX8025T_SetTime(uint8_t *t)
 {
-    RX8025T_Write(RX8025T_REG_YEAR, t[0]);
-    RX8025T_Write(RX8025T_REG_MONTH, t[0]);
-    RX8025T_Write(RX8025T_REG_DAY, t[0]);
-    RX8025T_Write(RX8025T_REG_HOUR, t[0]);
-    RX8025T_Write(RX8025T_REG_MINUTE, t[0]);
     RX8025T_Write(RX8025T_REG_SECOND, t[0]);
+    RX8025T_Write(RX8025T_REG_MINUTE, t[1]);
+    RX8025T_Write(RX8025T_REG_HOUR, t[2]);
+    
+    RX8025T_Write(RX8025T_REG_WEEKDAY, t[3]);
+    RX8025T_Write(RX8025T_REG_DAY, t[4]);
+    RX8025T_Write(RX8025T_REG_MONTH, t[5]);
+    RX8025T_Write(RX8025T_REG_YEAR, t[6]);
     return HAL_OK;
 }

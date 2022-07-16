@@ -61,6 +61,14 @@ int main(void)
     GPIO_Init();
     I2C_Init();
     RX8025T_Init();
+    time[0] = 0x10; // second
+    time[1] = 0x10; // minute
+    time[2] = 0x10; // hour
+    time[3] = 0x40; // week day
+    time[4] = 0x16; // day
+    time[5] = 0x07; // month
+    time[6] = 0x22; // year
+    RX8025T_SetTime(time);
 
     while(1)
     {
