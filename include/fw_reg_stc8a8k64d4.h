@@ -58,76 +58,76 @@ SFR(RSTCFG,             0xFF);
 //FF00H-FFFFH
 /////////////////////////////////////////////////
 
-#define     PWMC        (*(unsigned int  volatile __XDATA *)0xff00)
+
 #define     PWMCH       (*(unsigned char volatile __XDATA *)0xff00)
 #define     PWMCL       (*(unsigned char volatile __XDATA *)0xff01)
 #define     PWMCKS      (*(unsigned char volatile __XDATA *)0xff02)
-#define     PWMTADC     (*(unsigned int  volatile __XDATA *)0xff03)
+
 #define     PWMTADCH    (*(unsigned char volatile __XDATA *)0xff03)
 #define     PWMTADCL    (*(unsigned char volatile __XDATA *)0xff04)
 #define     PWMIF       (*(unsigned char volatile __XDATA *)0xff05)
 #define     PWMFDCR     (*(unsigned char volatile __XDATA *)0xff06)
 #define     PWMDELSEL   (*(unsigned char volatile __XDATA *)0xff07)
-#define     PWM0T1      (*(unsigned int  volatile __XDATA *)0xff10)
+
 #define     PWM0T1H     (*(unsigned char volatile __XDATA *)0xff10)
 #define     PWM0T1L     (*(unsigned char volatile __XDATA *)0xff11)
-#define     PWM0T2      (*(unsigned int  volatile __XDATA *)0xff12)
+
 #define     PWM0T2H     (*(unsigned char volatile __XDATA *)0xff12)
 #define     PWM0T2L     (*(unsigned char volatile __XDATA *)0xff13)
 #define     PWM0CR      (*(unsigned char volatile __XDATA *)0xff14)
 #define     PWM0HLD     (*(unsigned char volatile __XDATA *)0xff15)
-#define     PWM1T1      (*(unsigned int  volatile __XDATA *)0xff18)
+
 #define     PWM1T1H     (*(unsigned char volatile __XDATA *)0xff18)
 #define     PWM1T1L     (*(unsigned char volatile __XDATA *)0xff19)
-#define     PWM1T2      (*(unsigned int  volatile __XDATA *)0xff1a)
+
 #define     PWM1T2H     (*(unsigned char volatile __XDATA *)0xff1a)
 #define     PWM1T2L     (*(unsigned char volatile __XDATA *)0xff1b)
 #define     PWM1CR      (*(unsigned char volatile __XDATA *)0xff1c)
 #define     PWM1HLD     (*(unsigned char volatile __XDATA *)0xff1d)
-#define     PWM2T1      (*(unsigned int  volatile __XDATA *)0xff20)
+
 #define     PWM2T1H     (*(unsigned char volatile __XDATA *)0xff20)
 #define     PWM2T1L     (*(unsigned char volatile __XDATA *)0xff21)
-#define     PWM2T2      (*(unsigned int  volatile __XDATA *)0xff22)
+
 #define     PWM2T2H     (*(unsigned char volatile __XDATA *)0xff22)
 #define     PWM2T2L     (*(unsigned char volatile __XDATA *)0xff23)
 #define     PWM2CR      (*(unsigned char volatile __XDATA *)0xff24)
 #define     PWM2HLD     (*(unsigned char volatile __XDATA *)0xff25)
-#define     PWM3T1      (*(unsigned int  volatile __XDATA *)0xff28)
+
 #define     PWM3T1H     (*(unsigned char volatile __XDATA *)0xff28)
 #define     PWM3T1L     (*(unsigned char volatile __XDATA *)0xff29)
-#define     PWM3T2      (*(unsigned int  volatile __XDATA *)0xff2a)
+
 #define     PWM3T2H     (*(unsigned char volatile __XDATA *)0xff2a)
 #define     PWM3T2L     (*(unsigned char volatile __XDATA *)0xff2b)
 #define     PWM3CR      (*(unsigned char volatile __XDATA *)0xff2c)
 #define     PWM3HLD     (*(unsigned char volatile __XDATA *)0xff2d)
-#define     PWM4T1      (*(unsigned int  volatile __XDATA *)0xff30)
+
 #define     PWM4T1H     (*(unsigned char volatile __XDATA *)0xff30)
 #define     PWM4T1L     (*(unsigned char volatile __XDATA *)0xff31)
-#define     PWM4T2      (*(unsigned int  volatile __XDATA *)0xff32)
+
 #define     PWM4T2H     (*(unsigned char volatile __XDATA *)0xff32)
 #define     PWM4T2L     (*(unsigned char volatile __XDATA *)0xff33)
 #define     PWM4CR      (*(unsigned char volatile __XDATA *)0xff34)
 #define     PWM4HLD     (*(unsigned char volatile __XDATA *)0xff35)
-#define     PWM5T1      (*(unsigned int  volatile __XDATA *)0xff38)
+
 #define     PWM5T1H     (*(unsigned char volatile __XDATA *)0xff38)
 #define     PWM5T1L     (*(unsigned char volatile __XDATA *)0xff39)
-#define     PWM5T2      (*(unsigned int  volatile __XDATA *)0xff3a)
+
 #define     PWM5T2H     (*(unsigned char volatile __XDATA *)0xff3a)
 #define     PWM5T2L     (*(unsigned char volatile __XDATA *)0xff3b)
 #define     PWM5CR      (*(unsigned char volatile __XDATA *)0xff3c)
 #define     PWM5HLD     (*(unsigned char volatile __XDATA *)0xff3d)
-#define     PWM6T1      (*(unsigned int  volatile __XDATA *)0xff40)
+
 #define     PWM6T1H     (*(unsigned char volatile __XDATA *)0xff40)
 #define     PWM6T1L     (*(unsigned char volatile __XDATA *)0xff41)
-#define     PWM6T2      (*(unsigned int  volatile __XDATA *)0xff42)
+
 #define     PWM6T2H     (*(unsigned char volatile __XDATA *)0xff42)
 #define     PWM6T2L     (*(unsigned char volatile __XDATA *)0xff43)
 #define     PWM6CR      (*(unsigned char volatile __XDATA *)0xff44)
 #define     PWM6HLD     (*(unsigned char volatile __XDATA *)0xff45)
-#define     PWM7T1      (*(unsigned int  volatile __XDATA *)0xff48)
+
 #define     PWM7T1H     (*(unsigned char volatile __XDATA *)0xff48)
 #define     PWM7T1L     (*(unsigned char volatile __XDATA *)0xff49)
-#define     PWM7T2      (*(unsigned int  volatile __XDATA *)0xff4a)
+
 #define     PWM7T2H     (*(unsigned char volatile __XDATA *)0xff4a)
 #define     PWM7T2L     (*(unsigned char volatile __XDATA *)0xff4b)
 #define     PWM7CR      (*(unsigned char volatile __XDATA *)0xff4c)
@@ -308,8 +308,8 @@ SFR(RSTCFG,             0xFF);
 #define     MD5         (*(unsigned char volatile __XDATA *)0xfcf4)
 #define     MD4         (*(unsigned char volatile __XDATA *)0xfcf5)
 #define     dwOP1       (*(unsigned long volatile __XDATA *)0xfcf0)
-#define     wOP1        (*(unsigned int  volatile __XDATA *)0xfcf2)
-#define     wOP2        (*(unsigned int  volatile __XDATA *)0xfcf4)
+
+
 #define     ARCON       (*(unsigned char volatile __XDATA *)0xfcf6)
 #define     OPCON       (*(unsigned char volatile __XDATA *)0xfcf7)
 
@@ -421,5 +421,30 @@ SFR(RSTCFG,             0xFF);
 #define DMA_LCM_TXAL      (*(unsigned char volatile __XDATA *)0xfa76)
 #define DMA_LCM_RXAH      (*(unsigned char volatile __XDATA *)0xfa77)
 #define DMA_LCM_RXAL      (*(unsigned char volatile __XDATA *)0xfa78)
+
+#if defined __CX51__
+
+#define     PWMC        (*(unsigned int  volatile __XDATA *)0xff00)
+#define     PWMTADC     (*(unsigned int  volatile __XDATA *)0xff03)
+#define     PWM0T1      (*(unsigned int  volatile __XDATA *)0xff10)
+#define     PWM0T2      (*(unsigned int  volatile __XDATA *)0xff12)
+#define     PWM1T1      (*(unsigned int  volatile __XDATA *)0xff18)
+#define     PWM1T2      (*(unsigned int  volatile __XDATA *)0xff1a)
+#define     PWM2T1      (*(unsigned int  volatile __XDATA *)0xff20)
+#define     PWM2T2      (*(unsigned int  volatile __XDATA *)0xff22)
+#define     PWM3T1      (*(unsigned int  volatile __XDATA *)0xff28)
+#define     PWM3T2      (*(unsigned int  volatile __XDATA *)0xff2a)
+#define     PWM4T1      (*(unsigned int  volatile __XDATA *)0xff30)
+#define     PWM4T2      (*(unsigned int  volatile __XDATA *)0xff32)
+#define     PWM5T1      (*(unsigned int  volatile __XDATA *)0xff38)
+#define     PWM5T2      (*(unsigned int  volatile __XDATA *)0xff3a)
+#define     PWM6T1      (*(unsigned int  volatile __XDATA *)0xff40)
+#define     PWM6T2      (*(unsigned int  volatile __XDATA *)0xff42)
+#define     PWM7T1      (*(unsigned int  volatile __XDATA *)0xff48)
+#define     PWM7T2      (*(unsigned int  volatile __XDATA *)0xff4a)
+#define     wOP1        (*(unsigned int  volatile __XDATA *)0xfcf2)
+#define     wOP2        (*(unsigned int  volatile __XDATA *)0xfcf4)
+
+#endif
 
 #endif

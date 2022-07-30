@@ -165,26 +165,26 @@ SFR(RSTCFG,             0xFF);
 #define PWM1_CCMR4        (*(unsigned char volatile __XDATA *)0xfecb)
 #define PWM1_CCER1        (*(unsigned char volatile __XDATA *)0xfecc)
 #define PWM1_CCER2        (*(unsigned char volatile __XDATA *)0xfecd)
-#define PWM1_CNTR         (*(unsigned int  volatile __XDATA *)0xfece)
+
 #define PWM1_CNTRH        (*(unsigned char volatile __XDATA *)0xfece)
 #define PWM1_CNTRL        (*(unsigned char volatile __XDATA *)0xfecf)
-#define PWM1_PSCR         (*(unsigned int  volatile __XDATA *)0xfed0)
+
 #define PWM1_PSCRH        (*(unsigned char volatile __XDATA *)0xfed0)
 #define PWM1_PSCRL        (*(unsigned char volatile __XDATA *)0xfed1)
-#define PWM1_ARR          (*(unsigned int  volatile __XDATA *)0xfed2)
+
 #define PWM1_ARRH         (*(unsigned char volatile __XDATA *)0xfed2)
 #define PWM1_ARRL         (*(unsigned char volatile __XDATA *)0xfed3)
 #define PWM1_RCR          (*(unsigned char volatile __XDATA *)0xfed4)
-#define PWM1_CCR1         (*(unsigned int  volatile __XDATA *)0xfed5)
+
 #define PWM1_CCR1H        (*(unsigned char volatile __XDATA *)0xfed5)
 #define PWM1_CCR1L        (*(unsigned char volatile __XDATA *)0xfed6)
-#define PWM1_CCR2         (*(unsigned int  volatile __XDATA *)0xfed7)
+
 #define PWM1_CCR2H        (*(unsigned char volatile __XDATA *)0xfed7)
 #define PWM1_CCR2L        (*(unsigned char volatile __XDATA *)0xfed8)
-#define PWM1_CCR3         (*(unsigned int  volatile __XDATA *)0xfed9)
+
 #define PWM1_CCR3H        (*(unsigned char volatile __XDATA *)0xfed9)
 #define PWM1_CCR3L        (*(unsigned char volatile __XDATA *)0xfeda)
-#define PWM1_CCR4         (*(unsigned int  volatile __XDATA *)0xfedb)
+
 #define PWM1_CCR4H        (*(unsigned char volatile __XDATA *)0xfedb)
 #define PWM1_CCR4L        (*(unsigned char volatile __XDATA *)0xfedc)
 #define PWM1_BKR          (*(unsigned char volatile __XDATA *)0xfedd)
@@ -204,31 +204,49 @@ SFR(RSTCFG,             0xFF);
 #define PWM2_CCMR4        (*(unsigned char volatile __XDATA *)0xfeeb)
 #define PWM2_CCER1        (*(unsigned char volatile __XDATA *)0xfeec)
 #define PWM2_CCER2        (*(unsigned char volatile __XDATA *)0xfeed)
-#define PWM2_CNTR         (*(unsigned int  volatile __XDATA *)0xfeee)
+
 #define PWM2_CNTRH        (*(unsigned char volatile __XDATA *)0xfeee)
 #define PWM2_CNTRL        (*(unsigned char volatile __XDATA *)0xfeef)
-#define PWM2_PSCR         (*(unsigned int  volatile __XDATA *)0xfef0)
+
 #define PWM2_PSCRH        (*(unsigned char volatile __XDATA *)0xfef0)
 #define PWM2_PSCRL        (*(unsigned char volatile __XDATA *)0xfef1)
-#define PWM2_ARR          (*(unsigned int  volatile __XDATA *)0xfef2)
+
 #define PWM2_ARRH         (*(unsigned char volatile __XDATA *)0xfef2)
 #define PWM2_ARRL         (*(unsigned char volatile __XDATA *)0xfef3)
 #define PWM2_RCR          (*(unsigned char volatile __XDATA *)0xfef4)
-#define PWM2_CCR1         (*(unsigned int  volatile __XDATA *)0xfef5)
+
 #define PWM2_CCR1H        (*(unsigned char volatile __XDATA *)0xfef5)
 #define PWM2_CCR1L        (*(unsigned char volatile __XDATA *)0xfef6)
-#define PWM2_CCR2         (*(unsigned int  volatile __XDATA *)0xfef7)
+
 #define PWM2_CCR2H        (*(unsigned char volatile __XDATA *)0xfef7)
 #define PWM2_CCR2L        (*(unsigned char volatile __XDATA *)0xfef8)
-#define PWM2_CCR3         (*(unsigned int  volatile __XDATA *)0xfef9)
+
 #define PWM2_CCR3H        (*(unsigned char volatile __XDATA *)0xfef9)
 #define PWM2_CCR3L        (*(unsigned char volatile __XDATA *)0xfefa)
-#define PWM2_CCR4         (*(unsigned int  volatile __XDATA *)0xfefb)
+
 #define PWM2_CCR4H        (*(unsigned char volatile __XDATA *)0xfefb)
 #define PWM2_CCR4L        (*(unsigned char volatile __XDATA *)0xfefc)
 #define PWM2_BKR          (*(unsigned char volatile __XDATA *)0xfefd)
 #define PWM2_DTR          (*(unsigned char volatile __XDATA *)0xfefe)
 #define PWM2_OISR         (*(unsigned char volatile __XDATA *)0xfeff)
+
+#if defined __CX51__
+#define PWM1_CNTR         (*(unsigned int  volatile __XDATA *)0xfece)
+#define PWM1_PSCR         (*(unsigned int  volatile __XDATA *)0xfed0)
+#define PWM1_ARR          (*(unsigned int  volatile __XDATA *)0xfed2)
+#define PWM1_CCR1         (*(unsigned int  volatile __XDATA *)0xfed5)
+#define PWM1_CCR2         (*(unsigned int  volatile __XDATA *)0xfed7)
+#define PWM1_CCR3         (*(unsigned int  volatile __XDATA *)0xfed9)
+#define PWM1_CCR4         (*(unsigned int  volatile __XDATA *)0xfedb)
+#define PWM2_CNTR         (*(unsigned int  volatile __XDATA *)0xfeee)
+#define PWM2_PSCR         (*(unsigned int  volatile __XDATA *)0xfef0)
+#define PWM2_ARR          (*(unsigned int  volatile __XDATA *)0xfef2)
+#define PWM2_CCR1         (*(unsigned int  volatile __XDATA *)0xfef5)
+#define PWM2_CCR2         (*(unsigned int  volatile __XDATA *)0xfef7)
+#define PWM2_CCR3         (*(unsigned int  volatile __XDATA *)0xfef9)
+#define PWM2_CCR4         (*(unsigned int  volatile __XDATA *)0xfefb)
+#endif
+
 */
 
 #define PWMA_ETRPS        (*(unsigned char volatile __XDATA *)0xfeb0)
@@ -254,26 +272,26 @@ SFR(RSTCFG,             0xFF);
 #define PWMA_CCMR4        (*(unsigned char volatile __XDATA *)0xfecb)
 #define PWMA_CCER1        (*(unsigned char volatile __XDATA *)0xfecc)
 #define PWMA_CCER2        (*(unsigned char volatile __XDATA *)0xfecd)
-#define PWMA_CNTR         (*(unsigned int  volatile __XDATA *)0xfece)
+
 #define PWMA_CNTRH        (*(unsigned char volatile __XDATA *)0xfece)
 #define PWMA_CNTRL        (*(unsigned char volatile __XDATA *)0xfecf)
-#define PWMA_PSCR         (*(unsigned int  volatile __XDATA *)0xfed0)
+
 #define PWMA_PSCRH        (*(unsigned char volatile __XDATA *)0xfed0)
 #define PWMA_PSCRL        (*(unsigned char volatile __XDATA *)0xfed1)
-#define PWMA_ARR          (*(unsigned int  volatile __XDATA *)0xfed2)
+
 #define PWMA_ARRH         (*(unsigned char volatile __XDATA *)0xfed2)
 #define PWMA_ARRL         (*(unsigned char volatile __XDATA *)0xfed3)
 #define PWMA_RCR          (*(unsigned char volatile __XDATA *)0xfed4)
-#define PWMA_CCR1         (*(unsigned int  volatile __XDATA *)0xfed5)
+
 #define PWMA_CCR1H        (*(unsigned char volatile __XDATA *)0xfed5)
 #define PWMA_CCR1L        (*(unsigned char volatile __XDATA *)0xfed6)
-#define PWMA_CCR2         (*(unsigned int  volatile __XDATA *)0xfed7)
+
 #define PWMA_CCR2H        (*(unsigned char volatile __XDATA *)0xfed7)
 #define PWMA_CCR2L        (*(unsigned char volatile __XDATA *)0xfed8)
-#define PWMA_CCR3         (*(unsigned int  volatile __XDATA *)0xfed9)
+
 #define PWMA_CCR3H        (*(unsigned char volatile __XDATA *)0xfed9)
 #define PWMA_CCR3L        (*(unsigned char volatile __XDATA *)0xfeda)
-#define PWMA_CCR4         (*(unsigned int  volatile __XDATA *)0xfedb)
+
 #define PWMA_CCR4H        (*(unsigned char volatile __XDATA *)0xfedb)
 #define PWMA_CCR4L        (*(unsigned char volatile __XDATA *)0xfedc)
 #define PWMA_BKR          (*(unsigned char volatile __XDATA *)0xfedd)
@@ -294,26 +312,26 @@ SFR(RSTCFG,             0xFF);
 #define PWMB_CCMR4        (*(unsigned char volatile __XDATA *)0xfeeb)
 #define PWMB_CCER1        (*(unsigned char volatile __XDATA *)0xfeec)
 #define PWMB_CCER2        (*(unsigned char volatile __XDATA *)0xfeed)
-#define PWMB_CNTR         (*(unsigned int  volatile __XDATA *)0xfeee)
+
 #define PWMB_CNTRH        (*(unsigned char volatile __XDATA *)0xfeee)
 #define PWMB_CNTRL        (*(unsigned char volatile __XDATA *)0xfeef)
-#define PWMB_PSCR         (*(unsigned int  volatile __XDATA *)0xfef0)
+
 #define PWMB_PSCRH        (*(unsigned char volatile __XDATA *)0xfef0)
 #define PWMB_PSCRL        (*(unsigned char volatile __XDATA *)0xfef1)
-#define PWMB_ARR          (*(unsigned int  volatile __XDATA *)0xfef2)
+
 #define PWMB_ARRH         (*(unsigned char volatile __XDATA *)0xfef2)
 #define PWMB_ARRL         (*(unsigned char volatile __XDATA *)0xfef3)
 #define PWMB_RCR          (*(unsigned char volatile __XDATA *)0xfef4)
-#define PWMB_CCR5         (*(unsigned int  volatile __XDATA *)0xfef5)
+
 #define PWMB_CCR5H        (*(unsigned char volatile __XDATA *)0xfef5)
 #define PWMB_CCR5L        (*(unsigned char volatile __XDATA *)0xfef6)
-#define PWMB_CCR6         (*(unsigned int  volatile __XDATA *)0xfef7)
+
 #define PWMB_CCR6H        (*(unsigned char volatile __XDATA *)0xfef7)
 #define PWMB_CCR6L        (*(unsigned char volatile __XDATA *)0xfef8)
-#define PWMB_CCR7         (*(unsigned int  volatile __XDATA *)0xfef9)
+
 #define PWMB_CCR7H        (*(unsigned char volatile __XDATA *)0xfef9)
 #define PWMB_CCR7L        (*(unsigned char volatile __XDATA *)0xfefa)
-#define PWMB_CCR8         (*(unsigned int  volatile __XDATA *)0xfefb)
+
 #define PWMB_CCR8H        (*(unsigned char volatile __XDATA *)0xfefb)
 #define PWMB_CCR8L        (*(unsigned char volatile __XDATA *)0xfefc)
 #define PWMB_BKR          (*(unsigned char volatile __XDATA *)0xfefd)
@@ -437,55 +455,55 @@ SFR(RSTCFG,             0xFF);
 #define TSSTA1            (*(unsigned char volatile __XDATA *)0xfb46)
 #define TSSTA2            (*(unsigned char volatile __XDATA *)0xfb47)
 #define TSRT              (*(unsigned char volatile __XDATA *)0xfb48)
-#define TSDAT             (*(unsigned int  volatile __XDATA *)0xfb49)
+
 #define TSDATH            (*(unsigned char volatile __XDATA *)0xfb49)
 #define TSDATL            (*(unsigned char volatile __XDATA *)0xfb4A)
-#define TSTH00            (*(unsigned int  volatile __XDATA *)0xfb50)
+
 #define TSTH00H           (*(unsigned char volatile __XDATA *)0xfb50)
 #define TSTH00L           (*(unsigned char volatile __XDATA *)0xfb51)
-#define TSTH01            (*(unsigned int  volatile __XDATA *)0xfb52)
+
 #define TSTH01H           (*(unsigned char volatile __XDATA *)0xfb52)
 #define TSTH01L           (*(unsigned char volatile __XDATA *)0xfb53)
-#define TSTH02            (*(unsigned int  volatile __XDATA *)0xfb54)
+
 #define TSTH02H           (*(unsigned char volatile __XDATA *)0xfb54)
 #define TSTH02L           (*(unsigned char volatile __XDATA *)0xfb55)
-#define TSTH03            (*(unsigned int  volatile __XDATA *)0xfb56)
+
 #define TSTH03H           (*(unsigned char volatile __XDATA *)0xfb56)
 #define TSTH03L           (*(unsigned char volatile __XDATA *)0xfb57)
-#define TSTH04            (*(unsigned int  volatile __XDATA *)0xfb58)
+
 #define TSTH04H           (*(unsigned char volatile __XDATA *)0xfb58)
 #define TSTH04L           (*(unsigned char volatile __XDATA *)0xfb59)
-#define TSTH05            (*(unsigned int  volatile __XDATA *)0xfb5a)
+
 #define TSTH05H           (*(unsigned char volatile __XDATA *)0xfb5a)
 #define TSTH05L           (*(unsigned char volatile __XDATA *)0xfb5b)
-#define TSTH06            (*(unsigned int  volatile __XDATA *)0xfb5c)
+
 #define TSTH06H           (*(unsigned char volatile __XDATA *)0xfb5c)
 #define TSTH06L           (*(unsigned char volatile __XDATA *)0xfb5d)
-#define TSTH07            (*(unsigned int  volatile __XDATA *)0xfb5e)
+
 #define TSTH07H           (*(unsigned char volatile __XDATA *)0xfb5e)
 #define TSTH07L           (*(unsigned char volatile __XDATA *)0xfb5f)
-#define TSTH08            (*(unsigned int  volatile __XDATA *)0xfb60)
+
 #define TSTH08H           (*(unsigned char volatile __XDATA *)0xfb60)
 #define TSTH08L           (*(unsigned char volatile __XDATA *)0xfb61)
-#define TSTH09            (*(unsigned int  volatile __XDATA *)0xfb62)
+
 #define TSTH09H           (*(unsigned char volatile __XDATA *)0xfb62)
 #define TSTH09L           (*(unsigned char volatile __XDATA *)0xfb63)
-#define TSTH10            (*(unsigned int  volatile __XDATA *)0xfb64)
+
 #define TSTH10H           (*(unsigned char volatile __XDATA *)0xfb64)
 #define TSTH10L           (*(unsigned char volatile __XDATA *)0xfb65)
-#define TSTH11            (*(unsigned int  volatile __XDATA *)0xfb66)
+
 #define TSTH11H           (*(unsigned char volatile __XDATA *)0xfb66)
 #define TSTH11L           (*(unsigned char volatile __XDATA *)0xfb67)
-#define TSTH12            (*(unsigned int  volatile __XDATA *)0xfb68)
+
 #define TSTH12H           (*(unsigned char volatile __XDATA *)0xfb68)
 #define TSTH12L           (*(unsigned char volatile __XDATA *)0xfb69)
-#define TSTH13            (*(unsigned int  volatile __XDATA *)0xfb6a)
+
 #define TSTH13H           (*(unsigned char volatile __XDATA *)0xfb6a)
 #define TSTH13L           (*(unsigned char volatile __XDATA *)0xfb6b)
-#define TSTH14            (*(unsigned int  volatile __XDATA *)0xfb6c)
+
 #define TSTH14H           (*(unsigned char volatile __XDATA *)0xfb6c)
 #define TSTH14L           (*(unsigned char volatile __XDATA *)0xfb6d)
-#define TSTH15            (*(unsigned int  volatile __XDATA *)0xfb6e)
+
 #define TSTH15H           (*(unsigned char volatile __XDATA *)0xfb6e)
 #define TSTH15L           (*(unsigned char volatile __XDATA *)0xfb6f)
 
@@ -593,6 +611,41 @@ SFR(RSTCFG,             0xFF);
 #define DMA_LCM_RXAH      (*(unsigned char volatile __XDATA *)0xfa77)
 #define DMA_LCM_RXAL      (*(unsigned char volatile __XDATA *)0xfa78)
 
+#if defined __CX51__
+
+#define PWMA_CNTR         (*(unsigned int  volatile __XDATA *)0xfece)
+#define PWMA_PSCR         (*(unsigned int  volatile __XDATA *)0xfed0)
+#define PWMA_ARR          (*(unsigned int  volatile __XDATA *)0xfed2)
+#define PWMA_CCR1         (*(unsigned int  volatile __XDATA *)0xfed5)
+#define PWMA_CCR2         (*(unsigned int  volatile __XDATA *)0xfed7)
+#define PWMA_CCR3         (*(unsigned int  volatile __XDATA *)0xfed9)
+#define PWMA_CCR4         (*(unsigned int  volatile __XDATA *)0xfedb)
+#define PWMB_CNTR         (*(unsigned int  volatile __XDATA *)0xfeee)
+#define PWMB_PSCR         (*(unsigned int  volatile __XDATA *)0xfef0)
+#define PWMB_ARR          (*(unsigned int  volatile __XDATA *)0xfef2)
+#define PWMB_CCR5         (*(unsigned int  volatile __XDATA *)0xfef5)
+#define PWMB_CCR6         (*(unsigned int  volatile __XDATA *)0xfef7)
+#define PWMB_CCR7         (*(unsigned int  volatile __XDATA *)0xfef9)
+#define PWMB_CCR8         (*(unsigned int  volatile __XDATA *)0xfefb)
+#define TSDAT             (*(unsigned int  volatile __XDATA *)0xfb49)
+#define TSTH00            (*(unsigned int  volatile __XDATA *)0xfb50)
+#define TSTH01            (*(unsigned int  volatile __XDATA *)0xfb52)
+#define TSTH02            (*(unsigned int  volatile __XDATA *)0xfb54)
+#define TSTH03            (*(unsigned int  volatile __XDATA *)0xfb56)
+#define TSTH04            (*(unsigned int  volatile __XDATA *)0xfb58)
+#define TSTH05            (*(unsigned int  volatile __XDATA *)0xfb5a)
+#define TSTH06            (*(unsigned int  volatile __XDATA *)0xfb5c)
+#define TSTH07            (*(unsigned int  volatile __XDATA *)0xfb5e)
+#define TSTH08            (*(unsigned int  volatile __XDATA *)0xfb60)
+#define TSTH09            (*(unsigned int  volatile __XDATA *)0xfb62)
+#define TSTH10            (*(unsigned int  volatile __XDATA *)0xfb64)
+#define TSTH11            (*(unsigned int  volatile __XDATA *)0xfb66)
+#define TSTH12            (*(unsigned int  volatile __XDATA *)0xfb68)
+#define TSTH13            (*(unsigned int  volatile __XDATA *)0xfb6a)
+#define TSTH14            (*(unsigned int  volatile __XDATA *)0xfb6c)
+#define TSTH15            (*(unsigned int  volatile __XDATA *)0xfb6e)
+
+#endif
 /////////////////////////////////////////////////
 
 #endif
