@@ -4,7 +4,7 @@ FwLib_STC8 is a lite firmware library for STC8G/STC8H series MCU.
 
 ## Official Datasheets, User Manuals
 
-* STC8A/8F: [Chinese](http://www.stcmcudata.com/STC8F-DATASHEET/STC8A-STC8F.pdf), [English](http://www.stcmcudata.com/STC8F-DATASHEET/STC8-english-20180320.pdf)
+* STC8A/8F: [Chinese](http://www.stcmcudata.com/STC8F-DATASHEET/STC8A-STC8F.pdf), [English](http://www.stcmcudata.com/STC8F-DATASHEET/STC8A-STC8F-EN.pdf)
 * STC8G: [Chinese](http://www.stcmcudata.com/STC8F-DATASHEET/STC8G.pdf), [English](https://www.stcmcudata.com/STC8F-DATASHEET/STC8G-EN.pdf)
 * STC8H: [Chinese](http://www.stcmcudata.com/STC8F-DATASHEET/STC8H.pdf), [English](https://www.stcmcudata.com/STC8F-DATASHEET/STC8H-EN.pdf)
 
