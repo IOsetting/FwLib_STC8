@@ -16,10 +16,13 @@
  * Demo:  28BYJ-48 Stepper Motor with ULN2003 Driver
  * 
  *    Pin connection:
+ *    MCU          ULN2003       External Power Supply
  *    P10           => IN1
  *    P11           => IN2
  *    P12           => IN3
- *    P13           => IN4
+ *    P13           => IN4       
+ *                     VCC   =>  5V ~ 12V
+ *                     GND   =>  GND
  * 
  * test-board: Minimum System; test-MCU: STC8H1K08,STC8H3K64S2
  */
