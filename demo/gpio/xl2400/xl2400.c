@@ -278,7 +278,7 @@ void XL2400_SetRxMode(void)
     XL2400_CE_Low();
     XL2400_ClearStatus();
     XL2400_WriteReg(XL2400_CMD_W_REGISTER | XL2400_REG_CFG_TOP, 0x7F);
-    XL2400_RxCalibrate();
+    // XL2400_RxCalibrate();
     XL2400_CE_High();
     SYS_Delay(1);
 }
@@ -289,7 +289,6 @@ uint8_t XL2400_Tx(uint8_t *ucPayload, uint8_t length)
     XL2400_ClearStatus();
     XL2400_WriteFromBuf(XL2400_CMD_W_TX_PAYLOAD, ucPayload, length);
     XL2400_CE_High();
-    SYS_DelayUs(100);
     // Retry until timeout
     while (y--)
     {
@@ -314,8 +313,8 @@ uint8_t XL2400_Rx(void)
         XL2400_CE_Low();
         rxplWidth = XL2400_ReadReg(XL2400_CMD_R_RX_PL_WID);
         XL2400_ReadToBuf(XL2400_CMD_R_RX_PAYLOAD, xbuf, rxplWidth);
-        XL2400_ClearStatus();
-        UART1_TxChar('>');
+        XL2400_WriteReg(XL2400_CMD_W_REGISTER | XL2400_REG_STATUS, status);
+        // UART1_TxChar('>');
         // for (i = 0; i < rxplWidth; i++)
         // {
         //     UART1_TxHex(*(xbuf + i));

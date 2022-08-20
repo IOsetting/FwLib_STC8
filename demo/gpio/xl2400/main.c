@@ -37,26 +37,6 @@ __CODE uint8_t RX_ADDRESS[5] = {0x33,0x55,0x33,0x44,0x33};
 
 uint8_t XL2400_PrintStatus(void);
 
-void SPI_Init(void)
-{
-    // SPI frequency
-    SPI_SetClockPrescaler(SPI_ClockPreScaler_16);
-    // Clock is low when idle
-    SPI_SetClockPolarity(HAL_State_OFF);
-    // Data transfer is driven by lower SS pin
-    SPI_SetClockPhase(SPI_ClockPhase_LeadingEdge);
-    // MSB first
-    SPI_SetDataOrder(SPI_DataOrder_MSB);
-    // Define the output pins
-    SPI_SetPort(SPI_AlterPort_P35_P34_P33_P32);
-    // Ignore SS pin, use MSTR to swith between master/slave mode
-    SPI_IgnoreSlaveSelect(HAL_State_ON);
-    // Master mode
-    SPI_SetMasterMode(HAL_State_ON);
-    // Start SPI
-    SPI_SetEnabled(HAL_State_ON);
-}
-
 void GPIO_Init(void)
 {
     GPIO_P3_SetMode(GPIO_Pin_4, GPIO_Mode_InOut_QBD);
@@ -71,8 +51,7 @@ int main(void)
         0x21, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x28,
         0x31, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x38,
         0x41, 0x12, 0x13, 0x14, 0x15, 0x16, 0x37, 0x48};
-    uint8_t i, status;
-    uint16_t j;
+    uint8_t i, j, status;
 
     SYS_SetClock();
     GPIO_Init();
@@ -80,9 +59,6 @@ int main(void)
     // UART1, baud 115200, baud source Timer1, 1T mode, no interrupt
     UART1_Config8bitUart(UART1_BaudSource_Timer1, HAL_State_ON, 115200);
     UART1_TxString("UART Initialized\r\n");
-
-    //SPI_Init();
-    UART1_TxString("SPI Initialized\r\n");
 
     while (XL2400_SPI_Test() == HAL_ERROR)
     {
@@ -94,59 +70,55 @@ int main(void)
     XL2400_Init();
     XL2400_SetPower(XL2400_RF_0DB);
 
-    if (XL2400_MODE == 0)
-    {
-        // TX
-        XL2400_SetChannel(78);
-        XL2400_SetTxAddress(RX_ADDRESS);
-        XL2400_SetRxAddress(TX_ADDRESS);
-        XL2400_SetTxMode();
-        UART1_TxString("XL2400 TX Initialized\r\n");
 
-        while(1)
-        {
-            //XL2400_PrintStatus();
-            status = XL2400_Tx(tmp, XL2400_PLOAD_WIDTH);
-            
-            i++;
-            if (status == 0x20)
-            {
-                j++;
-            }
-            if (i == 0)
-            {
-                UART1_TxHex(j >> 8);
-                UART1_TxHex(j & 0xFF);
-                UART1_TxString("\r\n");
-                j = 0;
-            }
-            // >= 2ms
-            SYS_Delay(2);
-        }
-    }
-    else
-    {
-        // RX
-        XL2400_SetChannel(77);
-        XL2400_SetTxAddress(RX_ADDRESS);
-        XL2400_SetRxAddress(TX_ADDRESS);
-        UART1_TxString("XL2400 RX Initialized\r\n");
+#if XL2400_MODE == 0
+    XL2400_SetChannel(78);
+    XL2400_SetTxAddress(RX_ADDRESS);
+    XL2400_SetRxAddress(TX_ADDRESS);
+    XL2400_SetTxMode();
+    UART1_TxString("XL2400 TX Initialized\r\n");
 
-        while(1)
+    while(1)
+    {
+        //XL2400_PrintStatus();
+        status = XL2400_Tx(tmp, XL2400_PLOAD_WIDTH);
+        
+        i++;
+        if (status == 0x20)
         {
-            XL2400_WakeUp();
-            XL2400_SetRxMode();
-            while (--j)
-            {
-                status = XL2400_Rx();
-                if (status & RX_DR_FLAG)
-                {
-                    UART1_TxString(" <\r\n");
-                }
-            }
-            //XL2400_PrintStatus();
-            //XL2400_Sleep();
-            //SYS_Delay(1);
+            j++;
         }
+        if (i == 0)
+        {
+            UART1_TxHex(j);
+            UART1_TxString("\r\n");
+            j = 0;
+        }
+        // >= 2ms
+        SYS_Delay(1);
     }
+#else
+    // RX
+    XL2400_SetChannel(77);
+    XL2400_SetTxAddress(RX_ADDRESS);
+    XL2400_SetRxAddress(TX_ADDRESS);
+    XL2400_WakeUp();
+    UART1_TxString("XL2400 RX Initialized\r\n");
+
+    while(1)
+    {
+        XL2400_SetRxMode();
+        while (--j)
+        {
+            status = XL2400_Rx();
+            if (status & RX_DR_FLAG)
+            {
+                UART1_TxString(".");
+            }
+        }
+        //XL2400_PrintStatus();
+        //XL2400_Sleep();
+        //SYS_Delay(1);
+    }
+#endif
 }
