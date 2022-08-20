@@ -131,7 +131,7 @@ void CI24R1_SetRxMode(void)
 
 uint8_t CI24R1_SPI_Test(void)
 {
-    uint8_t i, *ptr = (const uint8_t *)CI24R1_TEST_ADDR;
+    uint8_t i, *ptr = (uint8_t *)CI24R1_TEST_ADDR;
     CI24R1_CE_LOW();
     CI24R1_WriteReg(CI24R1_CMD_SELSPI, CI24R1_CMD_NOP);
     CI24R1_WriteFromBuf(CI24R1_CMD_W_REGISTER | CI24R1_REG_TX_ADDR, ptr, 5);
