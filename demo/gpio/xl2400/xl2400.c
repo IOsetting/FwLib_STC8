@@ -71,10 +71,10 @@ uint8_t XL2400_ReadByte(void)
 
 void XL2400_WriteReg(uint8_t reg,uint8_t value)
 {
-	XL2400_NSS_LOW();					
-	XL2400_WriteByte(reg);
-	XL2400_WriteByte(value);
-	XL2400_NSS_HIGH();
+    XL2400_NSS_LOW();
+    XL2400_WriteByte(reg);
+    XL2400_WriteByte(value);
+    XL2400_NSS_HIGH();
 }
 
 uint8_t XL2400_ReadReg(uint8_t reg)
@@ -109,7 +109,6 @@ void XL2400_ReadToBuf(uint8_t reg, uint8_t *pBuf, uint8_t len)
         pBuf[ctr] = XL2400_ReadByte();
     }
     XL2400_NSS_HIGH();
-
 }
 
 void XL2400_CE_Low(void)

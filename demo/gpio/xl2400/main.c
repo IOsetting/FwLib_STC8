@@ -95,7 +95,7 @@ int main(void)
             j = 0;
         }
         // >= 2ms
-        SYS_Delay(1);
+        SYS_Delay(3);
     }
 #else
     // RX
