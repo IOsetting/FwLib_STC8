@@ -1,6 +1,7 @@
 #include "fw_usb.h"
 #include "fw_sys.h"
 
+#if (__CONF_MCU_TYPE == 3)
 uint8_t USB_ReadReg(uint8_t addr)
 {
   while (USB_IsBusy());
@@ -35,3 +36,4 @@ void USB_WriteFIFO(uint8_t fifo, uint8_t *pdat, uint8_t cnt)
     USB_WriteReg(fifo, *pdat++);
   }
 }
+#endif
