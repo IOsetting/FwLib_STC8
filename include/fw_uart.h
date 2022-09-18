@@ -73,11 +73,20 @@ typedef enum
 */
 #define UART1_SwitchPort(__ALTER_PORT__)    (P_SW1 = P_SW1 & ~(0x03 << 6) | ((__ALTER_PORT__) << 6))
 /**
- * Mode1: 8-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
+ * Mode1:
+ *   8-bit UART; 
+ *   dynamic baud-rate; 
+ *   10-bit frame: 1 start, 8 data(lsb), 1 stop; 
+ *   clocked by Timer1 or Timer2
+ * 
 */
 void UART1_Config8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
 /**
- * Mode3: 9-bit UART, dynamic baud-rate, provided by Timer1 or Timer2
+ * Mode3: 
+ *   9-bit UART;
+ *   dynamic baud-rate;
+ *   11-bit frame: 1 start, 8 data(lsb), 1 programmable, 1 stop; 
+ *   clocked by Timer1 or Timer2
 */
 void UART1_Config9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
 
