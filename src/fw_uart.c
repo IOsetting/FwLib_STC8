@@ -16,8 +16,6 @@
 #include "fw_tim.h"
 #include "fw_sys.h"
 
-__IDATA char wptr, rptr, UART1_RxBuffer[UART_RX_BUFF_SIZE];
-__BIT busy;
 
 int16_t UART_Timer_InitValueCalculate(uint32_t sysclk, HAL_State_t _1TMode, uint32_t baudrate)
 {
@@ -73,39 +71,6 @@ void UART1_Config9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, ui
     sysclk = SYS_GetSysClock();
     init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
     _UART1_ConfigDynUart(baudSource, _1TMode, init);
-}
-
-void UART1_InterruptHandler(void)
-{
-    if (TI)
-    {
-        UART1_ClearTxInterrupt();
-        busy = 0;
-    }
-    if (RI)
-    {
-        UART1_ClearRxInterrupt();
-        UART1_RxBuffer[rptr++] = SBUF;
-        rptr = rptr % UART_RX_BUFF_SIZE;
-    }
-}
-
-void UART1_IntTxChar(char dat)
-{
-    while (busy);
-    busy = 1;
-    UART1_WriteBuffer(dat);
-}
-
-void UART1_IntTxHex(uint8_t hex)
-{
-    UART1_IntTxChar(HEX_TABLE[hex >> 4]);
-    UART1_IntTxChar(HEX_TABLE[hex & 0xF]);
-}
-
-void UART1_IntTxString(uint8_t *str)
-{
-    while (*str) UART1_IntTxChar(*str++);
 }
 
 void UART1_TxChar(char dat)

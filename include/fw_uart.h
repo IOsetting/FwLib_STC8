@@ -19,8 +19,6 @@
 #include "fw_types.h"
 #include "fw_exti.h"
 
-#define UART_RX_BUFF_SIZE 0x20
-
 extern __CODE char HEX_TABLE[16];
 
 int16_t UART_Timer_InitValueCalculate(uint32_t sysclk, HAL_State_t _1TMode, uint32_t baudrate);
@@ -89,12 +87,6 @@ void UART1_Config8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, ui
  *   clocked by Timer1 or Timer2
 */
 void UART1_Config9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate);
-
-void UART1_InterruptHandler(void);
-
-void UART1_IntTxChar(char dat);
-void UART1_IntTxHex(uint8_t hex);
-void UART1_IntTxString(uint8_t *str);
 
 /**
  * FIXME: If place this in first with following TXString(), sending may not work. didn't find the reason
