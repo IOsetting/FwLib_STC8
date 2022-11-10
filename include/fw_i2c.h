@@ -89,13 +89,20 @@ typedef enum
 
 #define I2C_ResetSlaveMode()                SFRX_SET(I2CSLCR, 0)
 /**
- * Call P_SW2=0x80 before invoking this
+ * Call SFRX_ON() before invoking these
 */
-#define I2C_IsSlaveBusy()                   (I2CSLST & 0x80)
-#define I2C_ClearSlaveStartInterrupt()      do {SFRX_ON(); I2CSLST &=  ~(0x01 << 6); SFRX_OFF();} while(0)
-#define I2C_ClearSlaveRecvInterrupt()       do {SFRX_ON(); I2CSLST &=  ~(0x01 << 5); SFRX_OFF();} while(0)
-#define I2C_ClearSlaveSendInterrupt()       do {SFRX_ON(); I2CSLST &=  ~(0x01 << 4); P_SW2 = 0x00;} while(0)
-#define I2C_ClearSlaveStopInterrupt()       do {SFRX_ON(); I2CSLST &=  ~(0x01 << 3); P_SW2 = 0x00;} while(0)
+#define I2C_IsSlaveBusy()                   (I2CSLST & (0x01 << 7))
+#define I2C_IsSlaveStartInterrupt()         (I2CSLST & (0x01 << 6))
+#define I2C_ClearSlaveStartInterrupt()      (I2CSLST &=  ~(0x01 << 6))
+#define I2C_IsSlaveRecvInterrupt()          (I2CSLST & (0x01 << 5))
+#define I2C_ClearSlaveRecvInterrupt()       (I2CSLST &=  ~(0x01 << 5))
+#define I2C_IsSlaveSendInterrupt()          (I2CSLST & (0x01 << 4))
+#define I2C_ClearSlaveSendInterrupt()       (I2CSLST &=  ~(0x01 << 4))
+#define I2C_IsSlaveStopInterrupt()          (I2CSLST & (0x01 << 3))
+#define I2C_ClearSlaveStopInterrupt()       (I2CSLST &=  ~(0x01 << 3))
+#define I2C_ReadSlaveAckIn()                (I2CSLST & (0x01 << 1))
+#define I2C_ReadSlaveAckOut()               (I2CSLST & (0x01 << 0))
+#define I2C_ClearAllSlaveInterrupts()       (I2CSLST = 0x00)
 
 #define I2C_SetSlaveAddrControl(__STATE__)  SFRX_ASSIGN(I2CSLADR, 0, __STATE__)
 /**
