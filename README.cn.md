@@ -103,6 +103,7 @@ __CX51__, __CONF_MCU_MODEL=MCU_MODEL_STC8H3K32S2,__CONF_FOSC=36864000UL
 | Macro | Keil C51 | SDCC |
 | ----------- | ---------------- | ----------------- |
 | __BIT | bit | __bit |
+| __DATA  | data  | __data  |
 | __IDATA | idata | __idata |
 | __PDATA | pdata | __pdata |
 | __XDATA | xdata | __xdata |

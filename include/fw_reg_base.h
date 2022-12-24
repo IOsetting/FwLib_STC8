@@ -20,6 +20,7 @@
     #include <lint.h>
     # warning unrecognized compiler
     #define __BIT   bool
+    #define __DATA
     #define __IDATA
     #define __PDATA 
     #define __XDATA 
@@ -35,6 +36,7 @@
 
 #elif defined (SDCC) || defined (__SDCC)
     #define __BIT   __bit
+    #define __DATA  __data
     #define __IDATA __idata
     #define __PDATA __pdata
     #define __XDATA __xdata
@@ -51,6 +53,7 @@
 
 #elif defined __CX51__
     #define __BIT   bit
+    #define __DATA  data
     #define __IDATA idata
     #define __PDATA pdata
     #define __XDATA xdata
