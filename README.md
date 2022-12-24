@@ -103,6 +103,7 @@ Here is a list of the macros:
 | Macro | Keil C51 | SDCC |
 | ----------- | ---------------- | ----------------- |
 | __BIT | bit | __bit |
+| __DATA  | data  | __data  |
 | __IDATA | idata | __idata |
 | __PDATA | pdata | __pdata |
 | __XDATA | xdata | __xdata |
