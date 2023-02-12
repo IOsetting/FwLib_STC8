@@ -57,16 +57,16 @@ typedef enum
         } while(0)
 
 #define RCC_SetCLKDivider(__DIV__)          do {SFRX_ON(); CLKDIV = (__DIV__ & 0xFF); SFRX_OFF();} while(0)
-#define RCC_SetPowerDownMode(__STATE__)     SFR_ASSIGN(PCON, 1)
-#define RCC_SetIdleMode(__STATE__)          SFR_ASSIGN(PCON, 0)
-#define RCC_SetPowerDownWakeupTimerState(__STATE__)     SFR_ASSIGN(WKTCH, 7)
-#define RCC_SetPowerDownWakeupTimerCountdown(__16BIT_COUNT__) do { \
-                            WKTCH = WKTCH & ~(0x7F) | (__16BIT_COUNT__ << 8); \
-                            WKTCL = (__16BIT_COUNT__ & 0xFF); \
+#define RCC_SetPowerDownMode(__STATE__)     SFR_ASSIGN(PCON, 1, __STATE__)
+#define RCC_SetIdleMode(__STATE__)          SFR_ASSIGN(PCON, 0, __STATE__)
+#define RCC_SetPowerDownWakeupTimerState(__STATE__)     SFR_ASSIGN(WKTCH, 7, __STATE__)
+#define RCC_SetPowerDownWakeupTimerCountdown(__15BIT_COUNT__) do { \
+                            WKTCH = WKTCH & ~(0x7F) | (__15BIT_COUNT__ >> 8); \
+                            WKTCL = (__15BIT_COUNT__ & 0xFF); \
                         }while(0)
 
-#define RCC_SetLowVoltResetState(__STATE__) SFR_ASSIGN(RSTCFG, 6)
-#define RCC_SetLowVoltResetPinAF(__PIN_AF__) SFR_ASSIGN(RSTCFG, 4)
+#define RCC_SetLowVoltResetState(__STATE__) SFR_ASSIGN(RSTCFG, 6, __STATE__)
+#define RCC_SetLowVoltResetPinAF(__PIN_AF__) SFR_ASSIGN(RSTCFG, 4, __PIN_AF__)
 #define RCC_SetLowVoltResetThreshold(__THRESHOLD__) (RSTCFG = RSTCFG & ~(0x03) | (__THRESHOLD__))
 
 

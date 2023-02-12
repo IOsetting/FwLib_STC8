@@ -78,7 +78,7 @@ typedef enum
 } CMP_Hysteresis_t;
 
 #define CMP_SetEnabled(__STATE__)           SFR_ASSIGN(CMPCR1, 7, __STATE__)
-#define CMP_ClearInterrupt()                SFR_ASSIGN(CMPCR1, 6)
+#define CMP_ClearInterrupt()                SFR_ASSIGN(CMPCR1, 6, 0)
 /**
  * for 2P+2N series. 
  * Set positive input pin, 0:P36, 1:ADC
