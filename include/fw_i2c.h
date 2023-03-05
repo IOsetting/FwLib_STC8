@@ -51,20 +51,30 @@ typedef enum
     I2C_AlterPort_P32_P33       = 0x03,
 } I2C_AlterPort_t;
 
+/**
+ * I2C bus clock = FOSC / 2 / (prescaler * 2 + 4)
+ * prescaler range is [0, 63]
+ */
+
+/* Compute i2c prescaler given frequency. If the result exceeds 63, i2c might not work as expeted */
+#define I2C_PRESCALER_COMPUTE(__FREQ__) ((((__SYSCLOCK / __FREQ__) / 2U) - 4U) / 2U)
+/* Compute i2c frequency given prescaler */
+#define I2C_FREQUENCY_COMPUTE(__PRESCALER__) ((__SYSCLOCK / 2U) / (((__PRESCALER__) * 2U) + 4U))
+
 #define I2C_SetEnabled(__STATE__)           SFRX_ASSIGN(I2CCFG, 7, __STATE__)
 #define I2C_SetWorkMode(__MODE__)           SFRX_ASSIGN(I2CCFG, 6, __MODE__)
 
 /**
  * I2C bus clock = FOSC / 2 / (__DIV__ * 2 + 4)
- * __DIV__ values range [0, 63]
+ * __DIV__ range [0, 63]
 */
-#define I2C_SetClockPrescaler(__DIV__) do {                                                     \
-                SFRX_ON();                                                             \
-                (I2CCFG) =  (I2CCFG) & ~(0x3F) | ((__DIV__) & 0x3F); \
-                SFRX_OFF();                                                             \
+#define I2C_SetClockPrescaler(__DIV__) do {                             \
+                SFRX_ON();                                              \
+                (I2CCFG) =  (I2CCFG) & ~(0x3F) | ((__DIV__) & 0x3F);    \
+                SFRX_OFF();                                             \
             } while(0)
 
-#define I2C_SendMasterCmd(__CMD__) {                                 \
+#define I2C_SendMasterCmd(__CMD__) {                                    \
                 (I2CMSCR) =  (I2CMSCR) & ~(0x0F) | ((__CMD__) & 0x0F);  \
                 while (!(I2CMSST & 0x40));                              \
                 I2CMSST &= ~0x40;                                       \
