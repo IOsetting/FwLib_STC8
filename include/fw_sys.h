@@ -39,6 +39,11 @@ typedef enum
  *  11 Internal 32KHz  |
 */
 
+/**
+ * Precompute system clock based on __CONF_FOSC and __CONF_CLKDIV
+*/
+#define __SYSCLOCK          (__CONF_FOSC / ((__CONF_CLKDIV == 0) ? 1 : __CONF_CLKDIV))
+
 #define SYS_SetFOSC(__IRCBAND__, __VRTRIM__, __IRTRIM__, __LIRTRIM__)  do {      \
                                      IRCBAND = ((__IRCBAND__) & 0x03);           \
                                      VRTRIM = (__VRTRIM__);                      \
@@ -165,6 +170,5 @@ void SYS_SetClock(void);
 void SYS_TrimClock(uint8_t vrtrim, uint8_t irtrim);
 void SYS_Delay(uint16_t t);
 void SYS_DelayUs(uint16_t t);
-uint32_t SYS_GetSysClock(void);
 
 #endif

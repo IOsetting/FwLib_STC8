@@ -56,20 +56,16 @@ void _UART1_ConfigDynUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, in
 void UART1_Config8bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
     SM0=0; SM1=1;
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     _UART1_ConfigDynUart(baudSource, _1TMode, init);
 }
 
 void UART1_Config9bitUart(UART1_BaudSource_t baudSource, HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
     SM0=1; SM1=1;
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     _UART1_ConfigDynUart(baudSource, _1TMode, init);
 }
 
@@ -106,9 +102,8 @@ int putchar(int dat) {
 void UART2_Config(HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     // Timer2: 1T mode and initial value. prescaler is ignored, no interrupt.
     TIM_Timer2_Set1TMode(_1TMode);
     TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
@@ -141,10 +136,9 @@ void UART2_TxString(uint8_t *str)
 void UART3_ConfigOnTimer2(HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
+
     UART3_SetBaudSource(0x00);
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     // Timer2: 1T mode and initial value. prescaler is ignored, no interrupt.
     TIM_Timer2_Set1TMode(_1TMode);
     TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
@@ -154,10 +148,9 @@ void UART3_ConfigOnTimer2(HAL_State_t _1TMode, uint32_t baudrate)
 void UART3_ConfigOnTimer3(HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
+
     UART3_SetBaudSource(0x01);
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     // Timer3: 1T mode and initial value. prescaler is ignored, no interrupt.
     TIM_Timer3_Set1TMode(_1TMode);
     TIM_Timer3_SetInitValue(init >> 8, init & 0xFF);
@@ -172,10 +165,9 @@ void UART3_ConfigOnTimer3(HAL_State_t _1TMode, uint32_t baudrate)
 void UART4_ConfigOnTimer2(HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
+
     UART4_SetBaudSource(0x00);
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     TIM_Timer2_Set1TMode(_1TMode);
     TIM_Timer2_SetInitValue(init >> 8, init & 0xFF);
     TIM_Timer2_SetRunState(HAL_State_ON);
@@ -184,10 +176,9 @@ void UART4_ConfigOnTimer2(HAL_State_t _1TMode, uint32_t baudrate)
 void UART4_ConfigOnTimer4(HAL_State_t _1TMode, uint32_t baudrate)
 {
     uint16_t init;
-    uint32_t sysclk;
+
     UART4_SetBaudSource(0x01);
-    sysclk = SYS_GetSysClock();
-    init = UART_Timer_InitValueCalculate(sysclk, _1TMode, baudrate);
+    init = UART_Timer_InitValueCalculate(__SYSCLOCK, _1TMode, baudrate);
     TIM_Timer4_Set1TMode(_1TMode);
     TIM_Timer4_SetInitValue(init >> 8, init & 0xFF);
     TIM_Timer4_SetRunState(HAL_State_ON);

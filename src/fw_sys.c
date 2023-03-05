@@ -27,7 +27,6 @@
     #define __CLK_REF 10000
 #endif
 
-__CODE uint8_t  clkdiv      = ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV);
 __CODE uint16_t ticks_ms    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / __CLK_REF);
 __CODE uint8_t  ticks_us    = (__CONF_FOSC / ((__CONF_CLKDIV == 0)? 1 : __CONF_CLKDIV) / __CLK_REF / 1000);
 
@@ -81,9 +80,4 @@ void SYS_DelayUs(uint16_t t)
         i = ticks_us;
         while (--i);
     } while (--t);
-}
-
-uint32_t SYS_GetSysClock(void)
-{
-    return ((uint32_t)__CONF_FOSC) / clkdiv;
 }

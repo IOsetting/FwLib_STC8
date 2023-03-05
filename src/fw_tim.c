@@ -25,7 +25,7 @@
 */
 int16_t TIM_Timer0n1_CalculateInitValue(uint16_t frequency, HAL_State_t freq1t, uint16_t limit)
 {
-    uint32_t value = SYS_GetSysClock();
+    uint32_t value = __SYSCLOCK;
     if (!freq1t)
         value = value / 12;
     value = value / frequency;
@@ -72,7 +72,7 @@ void TIM_Timer1_Config(HAL_State_t freq1t, TIM_TimerMode_t mode, uint16_t freque
 int16_t _TIM_Timer234_InitValueCalculate(
     uint16_t frequency, uint8_t prescaler, HAL_State_t freq1t)
 {
-    uint32_t value = SYS_GetSysClock();
+    uint32_t value = __SYSCLOCK;
     if (!freq1t)
         value = value / 12;
     value = value / ((prescaler + 1) * frequency);
