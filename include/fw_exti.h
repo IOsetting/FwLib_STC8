@@ -47,11 +47,7 @@ typedef enum
 #define EXTI_VectInt2       10
 #define EXTI_VectInt3       11
 #define EXTI_VectTimer2     12
-
-#if (__CONF_MCU_TYPE == 1  )
-#define EXTI_VectUser       13
-#endif
-
+#define EXTI_VectUser       13  // 006BH, for Cx51 vector hack
 #define EXTI_VectInt4       16
 #define EXTI_VectUART3      17
 #define EXTI_VectUART4      18
@@ -77,28 +73,30 @@ typedef enum
 #define EXTI_VectPWM2       29
 #define EXTI_VectPWM3       30
 #define EXTI_VectPWM4       31
-#define EXTI_VectPWM5       32
-#define EXTI_VectPWM2FD     33
-#define EXTI_VectPWM4FD     34
+#define EXTI_VectPWM5       32  // 0103H
+#define EXTI_VectPWM2FD     33  // 010BH
+#define EXTI_VectPWM4FD     34  // 0113H
 #endif
 
 #if (__CONF_MCU_TYPE == 2  ) || (__CONF_MCU_TYPE == 3  )
-#define EXTI_VectTKSU       35
+#define EXTI_VectTKSU       35  // 011BH
 #endif
 
 #if (__CONF_MCU_TYPE == 3  )
-#define EXTI_VectRTC        36
+#define EXTI_VectRTC        36  // 0123H
 #endif
 
 #if (__CONF_MCU_TYPE == 1  ) || (__CONF_MCU_TYPE == 3  )
-#define EXTI_VectP0         37
-#define EXTI_VectP1         38
-#define EXTI_VectP2         39
-#define EXTI_VectP3         40
-#define EXTI_VectP4         41
-#define EXTI_VectP5         42
-#define EXTI_VectP6         43
-#define EXTI_VectP7         44
+#define EXTI_VectP0         37  // 012BH
+#define EXTI_VectP1         38  // 0133H
+#define EXTI_VectP2         39  // 013BH
+#define EXTI_VectP3         40  // 0143H
+#define EXTI_VectP4         41  // 014BH
+#define EXTI_VectP5         42  // 0153H
+#define EXTI_VectP6         43  // 015BH
+#define EXTI_VectP7         44  // 0163H
+#define EXTI_VectP8         45  // 016BH
+#define EXTI_VectP9         46  // 0173H
 #define EXTI_VectDMA_M2M    47
 #define EXTI_VectDMA_ADC    48
 #define EXTI_VectDMA_SPI    49

@@ -1,0 +1,5 @@
+;For Cx51 interrupt > 31 hack
+                CSEG       AT 0123H    ;vector address of EXTI_VectRTC
+                LJMP       006BH       ;jump to vector address of EXTI_VectUser
+
+                END

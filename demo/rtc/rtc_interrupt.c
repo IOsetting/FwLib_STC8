@@ -15,13 +15,31 @@
 /***
  * Demo: RTC
  * Board: STC8H8K64U
+ *
+ * Note: Cx51 compiler supports interrupt 0~31 only, for interrupts greater 
+ *       than 31, you need to 
+         1. Define the handler in EXTI_VectUser(vector:006BH)
+         2. add an asm code to redirect the interrupt from EXTI_VectRTC(
+            vector:0123H) to EXTI_VectUser(vector:006BH)
+         
+         ASM code example:
+         
+         CSEG       AT 0123H    ; vector address of EXTI_VectRTC
+         LJMP       006BH       ; jump to vector address of EXTI_VectUser
+         END
+ * 
+ *
  */
 
 #include "fw_hal.h"
 
 uint8_t year, month, day, hour, minute, second;
 
+#if defined __CX51__ || defined __C51__
+INTERRUPT(RTC_Routine, EXTI_VectUser)
+#else
 INTERRUPT(RTC_Routine, EXTI_VectRTC)
+#endif
 {
     SFRX_ON();
     if (RTC_IsSecondInterrupt())
