@@ -15,7 +15,7 @@
 #include "fw_hal.h"
 
 extern __CODE uint16_t ticks_ms;
-extern __CODE uint8_t  ticks_us, clkdiv;
+extern __CODE uint8_t  ticks_us;
 
 void main(void)
 {
@@ -30,7 +30,7 @@ void main(void)
         UART1_TxString(" us ticks:0x");
         UART1_TxHex(ticks_us);
         UART1_TxString(" clock div:0x");
-        UART1_TxHex(clkdiv);
+        UART1_TxHex(__CONF_CLKDIV);
         UART1_TxString(" string\r\n");
         SYS_Delay(1000);
     }

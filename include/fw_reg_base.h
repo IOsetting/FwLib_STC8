@@ -51,7 +51,7 @@
     #define INTERRUPT_USING(name, vector, regnum) void name (void) __interrupt (vector) __using (regnum)
     #define NOP() __asm NOP __endasm
 
-#elif defined __CX51__
+#elif defined __CX51__ || defined __C51__
     #define __BIT   bit
     #define __DATA  data
     #define __IDATA idata

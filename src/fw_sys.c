@@ -23,7 +23,7 @@
     #define __CLK_REF 10000
 #elif defined (SDCC) || defined (__SDCC)
     #define __CLK_REF 9000
-#elif defined __CX51__
+#elif defined __CX51__ || defined __C51__
     #define __CLK_REF 10000
 #endif
 
