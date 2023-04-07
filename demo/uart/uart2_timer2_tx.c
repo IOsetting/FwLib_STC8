@@ -12,11 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/***
+ * Demo:  UART2 TX
+ * 
+ *   Pin connection:
+ *   STC8G/STC8H       USB2TTL
+ *   P10            -> TX
+ *   P11            -> RX
+ */
 #include "fw_hal.h"
 
 void main(void)
 {
     SYS_SetClock();
+    // P10:RX, P11:TX
+    UART2_SwitchPort(UART2_AlterPort_P10_P11);
+    // GPIO Config
+    GPIO_P1_SetMode(GPIO_Pin_0|GPIO_Pin_1, GPIO_Mode_InOut_QBD);
     // UART2, baud 115200, baud source Timer2, 1T mode, no interrupt
     UART2_Set8bitUART();
     UART2_Config(HAL_State_ON, 115200);

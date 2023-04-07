@@ -99,6 +99,11 @@ void UART1_TxString(uint8_t *str);
 /**************************************************************************** /
  * UART2
 */
+typedef enum
+{
+    UART2_AlterPort_P10_P11      = 0x00,
+    UART2_AlterPort_P46_P47      = 0x01,
+} UART2_AlterPort_t;
 
 #define UART2_SetRxState(__STATE__)         SFR_ASSIGN(S2CON, 4, __STATE__)
 #define UART2_ClearTxInterrupt()            SFR_RESET(S2CON, 1)
@@ -107,6 +112,10 @@ void UART1_TxString(uint8_t *str);
 #define UART2_TxFinished()                  (S2CON & (0x01 << 1))
 #define UART2_Set8bitUART()                 SFR_RESET(S2CON, 7)
 #define UART2_Set9bitUART()                 SFR_SET(S2CON, 7)
+/**
+ * Alternative port selection: P10:rx/P11:tx, P46:rx/P47:tx
+*/
+#define UART2_SwitchPort(__ALTER_PORT__)    (P_SW2 = P_SW1 & ~(0x01 << 0) | ((__ALTER_PORT__) << 0))
 /**
  * Dynamic baud-rate, provided by Timer2
 */
