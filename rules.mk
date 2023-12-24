@@ -34,7 +34,7 @@ USER_INCFLAGS  := $(addprefix -I$(TOP)/, $(USER_INCLUDES))
 
 
 # Arch and target specified flags: --model-large
-ARCH_FLAGS    := -mmcs51
+ARCH_FLAGS    := -mmcs51 --model-large
 DEBUG_FLAGS   ?= 
 # c flags
 OPT           ?= --opt-code-size
@@ -86,3 +86,6 @@ $(BDIR)/$(PROJECT).hex: $(USER_RELS) $(BDIR)/$(LIB_FWLIB)
 
 clean:
 	rm -rf $(BDIR)/*
+
+flash:
+	/opt/stc8prog/stc8prog -p /dev/ttyUSB0 -e -f $(BDIR)/$(PROJECT).hex
