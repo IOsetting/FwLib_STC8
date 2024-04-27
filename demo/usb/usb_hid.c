@@ -117,8 +117,10 @@ INTERRUPT(USB_Routine, EXTI_VectUSB)
                 {
                     usb_ep0_stag.bStage = USB_CtrlState_SettingUp;
                     USB_ReadFIFO(FIFO0, (uint8_t *)&usb_request);
+#if defined __CX51__ || defined __C51__
                     ((uint8_t *)&usb_ep0_stag.wResidue)[0] = usb_request.wLength.bb.bh;
                     ((uint8_t *)&usb_ep0_stag.wResidue)[1] = usb_request.wLength.bb.bl;
+#endif
                     switch (usb_request.bmRequestType & REQUEST_TYPE_MASK)
                     {
                         case USB_RequestType_Standard:
