@@ -16,6 +16,50 @@ FwLib_STC8 是面向 STC8G/STC8H 系列 MCU 的C语言封装库
 * 以易读的代码形式提供片上资源的操作
 * 丰富的演示例程用于快速上手
 
+# SDCC 快速上手
+
+1. 将代码仓库克隆到本地目录
+```bash
+# GitHub
+git clone https://github.com/IOsetting/FwLib_STC8.git FwLib_STC8
+# or Giteee (for Chinese users)
+git clone https://gitee.com/iosetting/fw-lib_-stc8.git FwLib_STC8
+```
+2. 编辑 Makefile
+
+根据你的MCU型号修改
+```
+## STC8H1K08 STC8H8K64U
+MCU                 ?= STC8H1K08
+MCU_IRAM            ?= 256
+# 1024, 2048, 3072, 4096, 8192
+MCU_XRAM            ?= 1024
+# 8192, 16384, 32768, 65536
+MCU_CODE_SIZE       ?= 8192
+```
+修改 SDCC 路径
+```
+TOOCHAIN_PREFIX     ?= /opt/sdcc/sdcc-4.3.0/bin/
+```
+修改编译参数
+```
+## STC8H1K08 36.864MHz
+LIB_FLAGS           := __CONF_FOSC=36864000UL \
+					__CONF_MCU_MODEL=MCU_MODEL_STC8H1K08 \
+					__CONF_CLKDIV=0x00 \
+					__CONF_IRCBAND=0x01 \
+					__CONF_VRTRIM=0x1F \
+					__CONF_IRTRIM=0xB5 \
+					__CONF_LIRTRIM=0x00 
+```
+
+3. 编译
+
+```bash
+make clean; make
+```
+
+
 # PlatformIO 快速上手
 
 1. 将代码仓库克隆到本地目录

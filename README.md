@@ -15,6 +15,51 @@ FwLib_STC8 is a lite firmware library for STC8G/STC8H series MCU.
 * Readable code for on-chip resources operation
 * Demos for quick start
 
+# SDCC Makefile Quick Start
+
+1. Clone this repository to local file system
+```bash
+# GitHub
+git clone https://github.com/IOsetting/FwLib_STC8.git FwLib_STC8
+# or Giteee (for Chinese users)
+git clone https://gitee.com/iosetting/fw-lib_-stc8.git FwLib_STC8
+```
+2. Edit Makefile
+
+Change according to your MCU part
+```
+## STC8H1K08 STC8H8K64U
+MCU                 ?= STC8H1K08
+MCU_IRAM            ?= 256
+# 1024, 2048, 3072, 4096, 8192
+MCU_XRAM            ?= 1024
+# 8192, 16384, 32768, 65536
+MCU_CODE_SIZE       ?= 8192
+```
+And the SDCC path
+```
+TOOCHAIN_PREFIX     ?= /opt/sdcc/sdcc-4.3.0/bin/
+```
+And the compile flags
+```
+## STC8H1K08 36.864MHz
+LIB_FLAGS           := __CONF_FOSC=36864000UL \
+					__CONF_MCU_MODEL=MCU_MODEL_STC8H1K08 \
+					__CONF_CLKDIV=0x00 \
+					__CONF_IRCBAND=0x01 \
+					__CONF_VRTRIM=0x1F \
+					__CONF_IRTRIM=0xB5 \
+					__CONF_LIRTRIM=0x00 
+```
+
+3. Compile
+
+```bash
+make clean; make
+```
+
+
+
 # PlatformIO Quick Start
 
 1. Clone this repository to local file system
