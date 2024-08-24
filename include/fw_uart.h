@@ -115,7 +115,7 @@ typedef enum
 /**
  * Alternative port selection: P10:rx/P11:tx, P46:rx/P47:tx
 */
-#define UART2_SwitchPort(__ALTER_PORT__)    (P_SW2 = P_SW1 & ~(0x01 << 0) | ((__ALTER_PORT__) << 0))
+#define UART2_SwitchPort(__ALTER_PORT__)    (P_SW2 = P_SW2 & ~(0x01 << 0) | ((__ALTER_PORT__) << 0))
 /**
  * Dynamic baud-rate, provided by Timer2
 */
