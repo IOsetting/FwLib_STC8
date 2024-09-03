@@ -44,8 +44,8 @@ typedef enum
 {
     UART1_AlterPort_P30_P31      = 0x00,
     UART1_AlterPort_P36_P37      = 0x01,
-    UART1_AlterPort_P16_P17      = 0x10,
-    UART1_AlterPort_P43_P44      = 0x11,
+    UART1_AlterPort_P16_P17      = 0x02,
+    UART1_AlterPort_P43_P44      = 0x03,
 } UART1_AlterPort_t;
 
 #define UART1_SetRxState(__STATE__)         SBIT_ASSIGN(REN, __STATE__)
