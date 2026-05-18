@@ -57,7 +57,7 @@ typedef enum
     //           ECI CCP0 CCP1 CCP2
     PCA_AlterPort_P12_P11_P10_P37 = 0x00,
     PCA_AlterPort_P34_P35_P36_P37 = 0x01,
-    PCA_AlterPort_P24_P25_P26_P27 = 0x10,
+    PCA_AlterPort_P24_P25_P26_P27 = 0x02,
 } PCA_AlterPort_t;
 
 typedef enum
@@ -65,7 +65,7 @@ typedef enum
     //                  ECI CCP0 CCP1 CCP2
     PCA_AlterPort_G1K08A_P55_P32_P33_P54 = 0x00,
     PCA_AlterPort_G1K08A_P55_P31_P33_P54 = 0x01,
-    PCA_AlterPort_G1K08A_P31_P32_P33_P55 = 0x10,
+    PCA_AlterPort_G1K08A_P31_P32_P33_P55 = 0x02,
 } PCA_AlterPort_G1K08A_t;
 
 typedef enum
@@ -73,7 +73,7 @@ typedef enum
     //                   ECI CCP0 CCP1 CCP2
     PCA_AlterPort_G1K08T_P13_P11_P10_P37 = 0x00,
     PCA_AlterPort_G1K08T_P34_P35_P36_P37 = 0x01,
-    PCA_AlterPort_G1K08T_P54_P13_P14_P15 = 0x10,
+    PCA_AlterPort_G1K08T_P54_P13_P14_P15 = 0x02,
 } PCA_AlterPort_G1K08T_t;
 
 
